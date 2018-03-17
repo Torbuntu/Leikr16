@@ -86,7 +86,7 @@ public class Leikr extends ApplicationAdapter implements InputProcessor {
 		float carriage = cg;
 		float line = ln;
 		for(String item : historyBuffer){
-			carriage = 0;
+			carriage = -1f;
 			for(char C : item.toCharArray()){
 				if(carriage >= viewport.getWorldWidth()-8f){
 					carriage = -1f;
@@ -97,7 +97,7 @@ public class Leikr extends ApplicationAdapter implements InputProcessor {
 				batch.draw(font, carriage, line, X, Y,8,8);
 				carriage +=8f;
 			}
-			line +=8f;
+			line -=8f;
 		}
 		return line;
 	}
@@ -111,7 +111,7 @@ public class Leikr extends ApplicationAdapter implements InputProcessor {
 		if(historyBuffer.size() > 0){
 			line = nDisplayHistoryString(carriage, line);
 		}
-		System.out.println(line + ": line value");
+
 		nWritePath(carriage, line);
 		carriage += 16f;
 		for(char C : result.toCharArray()){
@@ -124,10 +124,10 @@ public class Leikr extends ApplicationAdapter implements InputProcessor {
 			batch.draw(font, carriage, line, X, Y,8,8);
 			carriage +=8f;
 		}
-
-		if(line >= viewport.getWorldHeight()){
-			System.out.println(historyBuffer.remove(0));
-		}
+//
+//		if(line <= viewport.getWorldHeight()+8){
+//			System.out.println(historyBuffer.remove(0));
+//		}
 	}
 	public void backspaceHandler(){
 		if(commandBuffer.size() > 0){
@@ -164,6 +164,10 @@ public class Leikr extends ApplicationAdapter implements InputProcessor {
 					break;
 				case "exit": //close on exit command.
 					System.exit(0);
+					break;
+				case "clear":
+					historyBuffer.clear();
+					commandBuffer.clear();
 					break;
 				default: //Default, command not recognized.
 					try {
