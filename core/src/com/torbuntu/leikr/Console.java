@@ -10,241 +10,269 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import groovy.lang.GroovyShell;
+import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Console implements InputProcessor{
+public class Console implements InputProcessor {
 
-	//global variables for the console.
-	SpriteBatch batch;
-	Texture font;
-	Camera camera;
-	Viewport viewport;
-	static final int WIDTH = 260;
-	static final int HEIGHT = 160;
+    //global variables for the console.
+    SpriteBatch batch;
+    Texture font;
+    Camera camera;
+    Viewport viewport;
+    static final int WIDTH = 260;
+    static final int HEIGHT = 160;
 
-	//New groovy shell.
-	GroovyShell groovyShell = new GroovyShell();
+    //New groovy shell.
+    GroovyShell groovyShell = new GroovyShell();
 
-	//The buffer for drawing commands and history
-	ArrayList<String> commandBuffer = new ArrayList<>();
-	ArrayList<String> historyBuffer = new ArrayList<>();
+    //The buffer for drawing commands and history
+    ArrayList<String> commandBuffer = new ArrayList<>();
+    ArrayList<String> historyBuffer = new ArrayList<>();
 
-	//Primary constructor. Sets a new SpriteBatch for drawing fonts. Loads the font texture.
-	// Camera and Viewport initialized and the input processor set to this item.
-	public Console(){
-		batch = new SpriteBatch();
-		font = new Texture("LeikrFontA.png");
+    BiosLoader biosLoader;
+    //Primary constructor. Sets a new SpriteBatch for drawing fonts. Loads the font texture.
+    // Camera and Viewport initialized and the input processor set to this item.
 
-		camera = new OrthographicCamera(260, 160);
-		viewport = new FitViewport(260, 160, camera);
-		camera.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);//Sets the camera to the correct position.
-		Gdx.input.setInputProcessor(this);
-	}
+    public Console() {
+        batch = new SpriteBatch();
+        font = new Texture("LeikrFontA.png");
 
-	//Sets the camera projection. Begins the sprite batch, runs the console buffer to display text.
-	public void renderConsole(){
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		nDisplayBufferedString();
-		batch.end();
-	}
+        try {
+            biosLoader = new BiosLoader();
+        } catch (IOException ex) {
+            Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        historyBuffer.add("Bios: " + biosLoader.getBiosVersion());
 
-	//Disposes batch and font
-	public void disposeConsole(){
-		batch.dispose();
-		font.dispose();
-	}
+        camera = new OrthographicCamera(260, 160);
+        viewport = new FitViewport(260, 160, camera);
+        camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);//Sets the camera to the correct position.
+        Gdx.input.setInputProcessor(this);
+    }
 
-	//Updates the view on resize in the Leikr main.
-	public void updateViewport(int width, int height){
-		viewport.update(width, height, true);
-	}
+    //Sets the camera projection. Begins the sprite batch, runs the console buffer to display text.
+    public void renderConsole() {
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        nDisplayBufferedString();
+        batch.end();
+    }
 
-	//writes the path pre-pending the command buffer.
-	private void nWritePath(float carriage, float line){
-		int X;
-		int Y;
-		// Set the variable test for evaluating the x and y position of the ASCII set.
-		X = ((int)'~' % 16) * 8;
-		Y = ((int)'~' / 16) * 8;
-		batch.draw(font, carriage, line, X, Y,8,8);
-		X = ((int)'>' % 16) * 8;
-		Y = ((int)'>' / 16) * 8;
-		batch.draw(font, carriage+8f, line, X, Y,8,8);
-	}
+    //Disposes batch and font
+    public void disposeConsole() {
+        batch.dispose();
+        font.dispose();
+    }
 
-	//Runs through the history buffer and sets the items to the screen. Returns the line position to correctly set the command buffer input.
-	public float nDisplayHistoryString(float ln){
-		int X;
-		int Y;
-		float carriage;
-		float line = ln;
-		for(String item : historyBuffer){
-			carriage = 0;
-			for(char C : item.toCharArray()){
-				if(carriage >= viewport.getWorldWidth()-8f){
-					carriage = 0;
-					line -= 8f;
-				}
-				X = ((int)C%16)*8;
-				Y = ((int)C/16)*8;
-				batch.draw(font, carriage, line, X, Y,8,8);
-				carriage +=8f;
-			}
-			line -= 8f;
-		}
-		return line;
-	}
+    //Updates the view on resize in the Leikr main.
+    public void updateViewport(int width, int height) {
+        viewport.update(width, height, true);
+    }
 
-	//Displays the command buffer after running the history and new path. Checks the height and removes history to keep on screen. Displays blank box for cursor.
-	public void nDisplayBufferedString(){
-		float carriage = 0;
-		float line = viewport.getWorldHeight()-8f;
-		int X;
-		int Y;
+    //writes the path pre-pending the command buffer.
+    private void nWritePath(float carriage, float line) {
+        int X;
+        int Y;
+        // Set the variable test for evaluating the x and y position of the ASCII set.
+        X = ((int) '~' % 16) * 8;
+        Y = ((int) '~' / 16) * 8;
+        batch.draw(font, carriage, line, X, Y, 8, 8);
+        X = ((int) '>' % 16) * 8;
+        Y = ((int) '>' / 16) * 8;
+        batch.draw(font, carriage + 8f, line, X, Y, 8, 8);
+    }
 
-		String result = String.join(",", commandBuffer).replaceAll(",","");
-		if(historyBuffer.size() > 0){
-			line = nDisplayHistoryString(line);
-		}
+    //Runs through the history buffer and sets the items to the screen. Returns the line position to correctly set the command buffer input.
+    public float nDisplayHistoryString(float ln) {
+        int X;
+        int Y;
+        float carriage;
+        float line = ln;
+        for (String item : historyBuffer) {
+            carriage = 0;
+            for (char C : item.toCharArray()) {
+                if (carriage >= viewport.getWorldWidth() - 8f) {
+                    carriage = 0;
+                    line -= 8f;
+                }
+                X = ((int) C % 16) * 8;
+                Y = ((int) C / 16) * 8;
+                batch.draw(font, carriage, line, X, Y, 8, 8);
+                carriage += 8f;
+            }
+            line -= 8f;
+        }
+        return line;
+    }
 
-		nWritePath(carriage, line);
-		carriage += 16f;
-		for(char C : result.toCharArray()){
-			if(carriage >= viewport.getWorldWidth()-8f){
-				carriage = -1f;
-				line -= 8f;
-			}
-			X = ((int)C%16)*8;
-			Y = ((int)C/16)*8;
-			batch.draw(font, carriage, line, X, Y,8,8);
-			carriage +=8f;
-		}
+    //Displays the command buffer after running the history and new path. Checks the height and removes history to keep on screen. Displays blank box for cursor.
+    public void nDisplayBufferedString() {
+        float carriage = 0;
+        float line = viewport.getWorldHeight() - 8f;
+        int X;
+        int Y;
 
-		if(line <= -8f && historyBuffer.size() > 0){
-			System.out.println(historyBuffer.remove(0));
-		}
+        String result = String.join(",", commandBuffer).replaceAll(",", "");
+        if (historyBuffer.size() > 0) {
+            line = nDisplayHistoryString(line);
+        }
 
-		batch.draw(font, carriage, line, 0,0,8,8);
-	}
+        nWritePath(carriage, line);
+        carriage += 16f;
+        for (char C : result.toCharArray()) {
+            if (carriage >= viewport.getWorldWidth() - 8f) {
+                carriage = -1f;
+                line -= 8f;
+            }
+            X = ((int) C % 16) * 8;
+            Y = ((int) C / 16) * 8;
+            batch.draw(font, carriage, line, X, Y, 8, 8);
+            carriage += 8f;
+        }
 
-	public void backspaceHandler(){
-		if(commandBuffer.size() > 0){
-			commandBuffer.remove(commandBuffer.size() - 1);
-		}
-	}
+        if (line <= -8f && historyBuffer.size() > 0) {
+            System.out.println(historyBuffer.remove(0));
+        }
 
-	// Handles the command input.
-	public void shellHandler(){
-		//parse the command buffer into a String.
-		String in = String.join(",", commandBuffer).replaceAll(",","");
-		historyBuffer.add("~>"+ in);
+        batch.draw(font, carriage, line, 0, 0, 8, 8);
+    }
 
-		System.out.println("HBuffer: "+historyBuffer);
+    public void backspaceHandler() {
+        if (commandBuffer.size() > 0) {
+            commandBuffer.remove(commandBuffer.size() - 1);
+        }
+    }
 
-		//Default command not recognized.
-		String notRecognized = "Command '"+in+"' is not recognized...";
+    // Handles the command input.
+    public void shellHandler() {
+        //parse the command buffer into a String.
+        String in = String.join(",", commandBuffer).replaceAll(",", "");
+        historyBuffer.add("~>" + in);
 
-		String result;
+        System.out.println("HBuffer: " + historyBuffer);
 
-		//Convert to switch.
-		if(in.length() > 3 && in.substring(0,4).equals("echo")) { // Process echo command
-			in = in.replaceFirst("echo ", "");
-			historyBuffer.add(in);
-		}
-		else{
-			switch (in){
-				case "":
-					//cursorPos[1] -= 8;
-					//printPath();
-					break;
-				case "help":
-					historyBuffer.add("There is no help here yet...");
-					break;
-				case "exit": //close on exit command.
-					System.exit(0);
-					break;
-				case "clear":
-					historyBuffer.clear();
-					commandBuffer.clear();
-					break;
-				default: //Default, command not recognized.
-					try {
-						result = groovyShell.evaluate(in).toString();
-						System.out.println(result);
-					}catch (Exception e){
-						System.out.println(e.toString());
-						result = "";
-					}
-					if(result.length() > 0){
-						historyBuffer.add(result);
-					}else {
-						historyBuffer.add(notRecognized);
-					}
-					break;
-			}
-		}
-	}
+        //Default command not recognized.
+        String notRecognized = "Command '" + in + "' is not recognized...";
 
+        String result;
 
+        //Convert to switch.
+        if (in.length() > 3 && in.substring(0, 4).equals("echo")) { // Process echo command
+            in = in.replaceFirst("echo ", "");
+            historyBuffer.add(in);
 
-	@Override
-	public boolean keyDown(int keycode) {
-		return false;
-	}
+        } else if (in.length() > 2 && in.substring(0, 2).equals("./")) {
+            in = in.replaceFirst("./", "");
+            String invokeMethodResult;
+            try {
+                invokeMethodResult = (String) biosLoader.runRegisteredMethod(in);
+            } catch (Exception e) {
+                invokeMethodResult = e.getMessage();
+            }
+            historyBuffer.add(invokeMethodResult);
 
-	@Override
-	public boolean keyUp(int keycode) {
-		if(keycode == Input.Keys.BACKSPACE){
-			backspaceHandler();
-		}
-		switch (keycode){
-			case Input.Keys.BACKSPACE:
-				backspaceHandler();
-				break;
-			case Input.Keys.ENTER:
-				shellHandler();
-				commandBuffer.clear();
-				break;
-			default:
-				break;
-		}
-		return false;
-	}
+        } else {
+            switch (in) {
+                case "":
+                    //cursorPos[1] -= 8;
+                    //printPath();
+                    break;
+                case "help":
+                    historyBuffer.add("There is no help here yet...");
+                    break;
+                case "exit": //close on exit command.
+                    System.exit(0);
+                    break;
+                case "clear":
+                    historyBuffer.clear();
+                    commandBuffer.clear();
+                    break;
+                default: //Default, command not recognized.
+                    try {
+                        result = groovyShell.evaluate(in).toString();
+                        System.out.println(result);
+                    } catch (Exception e) {
+                        System.out.println(e.toString());
+                        result = "";
+                    }
+                    try {
+                        result = (String) biosLoader.runRegisteredMethod(in);
+                    } catch (Exception e) {
+                        System.out.println(e.toString());
+                        result = "";
+                    }
 
-	@Override
-	public boolean keyTyped(char character) {
-		//If the character not backspace or enter.
-		System.out.println((int)character);
-		if((int)character != 8 && (int)character != 10){
-			commandBuffer.add(String.valueOf(character));
-		}
-		return false;
-	}
+                    if (result.length() > 0) {
+                        historyBuffer.add(result);
+                    } else {
+                        historyBuffer.add(notRecognized);
+                    }
+                    break;
+            }
+        }
+    }
 
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
 
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
+    @Override
+    public boolean keyUp(int keycode) {
+        switch (keycode) {
+            case Input.Keys.BACKSPACE:
+                backspaceHandler();
+                break;
+            case Input.Keys.ENTER:
+                shellHandler();
+                commandBuffer.clear();
+                break;
+            default:
+                break;
+        }
+        return false;
+    }
 
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
-	}
+    @Override
+    public boolean keyTyped(char character) {
+        //If the character not backspace or enter.
+        System.out.println((int) character);
+        if ((int) character != 8 && (int) character != 10) {
+            commandBuffer.add(String.valueOf(character));
+        }
+        return false;
+    }
 
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
 
-	@Override
-	public boolean scrolled(int amount) {
-		return false;
-	}
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
+    }
 }

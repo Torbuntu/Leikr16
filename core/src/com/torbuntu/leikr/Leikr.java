@@ -4,34 +4,35 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 
-public class Leikr extends ApplicationAdapter  {
+public class Leikr extends ApplicationAdapter {
 
-	//Primary Console
-	Console console;
-	@Override
-	public void create () {
-		//Init new console
-		console = new Console();
-	}
+    //Primary Console
+    Console console;
 
-	@Override
-	public void render () {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    @Override
+    public void create() {
+        //Init new console
+        console = new Console();
+    }
 
-		//Update the console items
-		console.renderConsole();
-	}
-	
-	@Override
-	public void dispose () {
-		//dispose console items
-		console.disposeConsole();
-	}
+    @Override
+    public void render() {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-	public void resize(int width, int height){
-		//resize the viewport in console.
-		console.updateViewport(width, height);
-	}
+        //Update the console items
+        console.renderConsole();
+    }
+
+    @Override
+    public void dispose() {
+        //dispose console items
+        console.disposeConsole();
+    }
+
+    public void resize(int width, int height) {
+        //resize the viewport in console.
+        console.updateViewport(width, height);
+    }
 
 }

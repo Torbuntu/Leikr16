@@ -5,10 +5,10 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.torbuntu.leikr.Leikr;
 
 public class DesktopLauncher {
-	public static void main (String[] arg) {
-		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setTitle("Leikr-16");
-		config.setWindowedMode(260, 160);
-		new Lwjgl3Application(new Leikr(), config);
-	}
+    public static void main (String[] arg) {
+        Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        config.setTitle("Leikr-16");
+        config.setWindowedMode(260, 160);
+        new Lwjgl3Application(new Leikr(), config);
+    }
 }
