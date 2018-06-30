@@ -63,8 +63,8 @@ public class Console implements InputProcessor{
 
 	//writes the path pre-pending the command buffer.
 	private void nWritePath(float carriage, float line){
-		int X = 0;
-		int Y = 0;
+		int X;
+		int Y;
 		// Set the variable test for evaluating the x and y position of the ASCII set.
 		X = ((int)'~' % 16) * 8;
 		Y = ((int)'~' / 16) * 8;
@@ -76,8 +76,8 @@ public class Console implements InputProcessor{
 
 	//Runs through the history buffer and sets the items to the screen. Returns the line position to correctly set the command buffer input.
 	public float nDisplayHistoryString(float ln){
-		int X = 0;
-		int Y = 0;
+		int X;
+		int Y;
 		float carriage;
 		float line = ln;
 		for(String item : historyBuffer){
@@ -101,8 +101,8 @@ public class Console implements InputProcessor{
 	public void nDisplayBufferedString(){
 		float carriage = 0;
 		float line = viewport.getWorldHeight()-8f;
-		int X = 0;
-		int Y = 0;
+		int X;
+		int Y;
 
 		String result = String.join(",", commandBuffer).replaceAll(",","");
 		if(historyBuffer.size() > 0){
