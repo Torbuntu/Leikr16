@@ -1,7 +1,13 @@
 apply plugin: "java"
+apply plugin: "groovy"
 
-sourceCompatibility = 1.9
-sourceSets.main.java.srcDirs = [ "src/" ]
+sourceCompatibility = 1.8
+sourceSets {
+    main {
+        java { srcDirs = [] }
+        groovy { srcDirs += ['src/'] }
+    }
+}
 
 project.ext.mainClassName = "com.torbuntu.leikr.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../core/assets");

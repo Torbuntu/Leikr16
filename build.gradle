@@ -7,8 +7,7 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         jcenter()
     }
-    dependencies {
-        
+    dependencies {        
 
     }
 }
@@ -38,6 +37,7 @@ allprojects {
 
 project(":desktop") {
     apply plugin: "java"
+    apply plugin: 'groovy'
 
 
     dependencies {
@@ -50,14 +50,17 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
-
-        compile 'org.codehaus.groovy:groovy-groovysh:3.0.0-alpha-1'
         
+        compile 'org.codehaus.groovy:groovy-all:3.0.0-alpha-3'
+        compile 'org.codehaus.groovy:groovy-groovysh:3.0.0-alpha-3'
+        
+
     }
 }
 
 project(":core") {
     apply plugin: "java"
+    apply plugin: 'groovy'
 
 
     dependencies {
@@ -70,8 +73,9 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
 
-        compile 'org.codehaus.groovy:groovy-groovysh:3.0.0-alpha-1'
-        
+        compile 'org.codehaus.groovy:groovy-all:3.0.0-alpha-3'
+        compile 'org.codehaus.groovy:groovy-groovysh:3.0.0-alpha-3'
+
     }
 }
 

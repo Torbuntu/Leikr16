@@ -19,24 +19,35 @@ public class BiosLoader {
     Class biosClass;
     GroovyObject biosObject;
     
+    Bios bios = new Bios();
+   
+    
     public BiosLoader() throws IOException, InstantiationException, IllegalAccessException{
         classLoader = new GroovyClassLoader();
         biosClass = classLoader.parseClass(new File("LeikrVirtualDrive/Bios.groovy"));
-        biosObject = (GroovyObject)biosClass.newInstance();
+        biosObject = (GroovyObject)biosClass.newInstance();        
+        
     }
     
     public String getBiosVersion(){
-        return biosObject.getProperty("BiosVersion").toString();
+        return bios.getBiosVersion();
     }
     
     public Object runRegisteredMethod(String methodName){
         Object result;
-        try{
-            result = biosObject.invokeMethod(methodName, new Object[] {});
-        }catch(Exception e){
-            result = e.getMessage();
+
+        if(methodName.substring(0, 5).equals("mkdir") ){
+            String[] dirName = methodName.split(" ");
+            bios.mkdir(dirName[1]);
+            result = "success";
+        }else{
+            try{            
+                result = biosObject.invokeMethod(methodName, new Object[] {});
+            }catch(Exception e){
+                result = e.getMessage();
+            }
         }
-        return result;
+        return result.toString();
     }
     
 }

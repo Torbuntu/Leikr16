@@ -21,6 +21,6 @@ class Bios {
     }
     
     def mkdir(def name){
-        new File(name).mkdir();
+        new File("LeikrVirtualDrive/"+name).mkdir();
     }    
 }
