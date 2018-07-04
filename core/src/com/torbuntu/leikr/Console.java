@@ -155,7 +155,9 @@ public class Console implements InputProcessor {
     public void shellHandler() {
         //parse the command buffer into a String.
         String in = String.join(",", commandBuffer).replaceAll(",", "");
-        historyBuffer.add("~>" + in);
+        String[] inputList = in.split(" ");
+        
+        historyBuffer.add("~$" + in);
 
         System.out.println("HBuffer: " + historyBuffer);
 
@@ -165,19 +167,9 @@ public class Console implements InputProcessor {
         String result;
 
         //Convert to switch.
-        if (in.length() > 3 && in.substring(0, 4).equals("echo")) { // Process echo command
+        if (inputList[0].equals("echo")) { // Process echo command
             in = in.replaceFirst("echo ", "");
             historyBuffer.add(in);
-
-        } else if (in.length() > 2 && in.substring(0, 2).equals("./")) {
-            in = in.replaceFirst("./", "");
-            String invokeMethodResult;
-            try {
-                invokeMethodResult = (String) biosLoader.runRegisteredMethod(in);
-            } catch (Exception e) {
-                invokeMethodResult = e.getMessage();
-            }
-            historyBuffer.add(invokeMethodResult);
 
         } else {
             switch (in) {
@@ -204,7 +196,7 @@ public class Console implements InputProcessor {
                         result = "";
                     }
                     try {
-                        result = (String) biosLoader.runRegisteredMethod(in);
+                        result = (String) biosLoader.runRegisteredMethod(inputList);
                     } catch (Exception e) {
                         System.out.println(e.toString());
                         result = "";

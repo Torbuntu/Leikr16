@@ -19,6 +19,7 @@ public class BiosLoader {
     Class biosClass;
     GroovyObject biosObject;
     
+    // The class of Bios. Eventually replace the biosClass and biosObject
     Bios bios = new Bios();
    
     
@@ -33,19 +34,23 @@ public class BiosLoader {
         return bios.getBiosVersion();
     }
     
-    public Object runRegisteredMethod(String methodName){
+    public Object runRegisteredMethod(String[] methodName){
         Object result;
 
-        if(methodName.substring(0, 5).equals("mkdir") ){
-            String[] dirName = methodName.split(" ");
-            bios.mkdir(dirName[1]);
-            result = "success";
-        }else{
-            try{            
-                result = biosObject.invokeMethod(methodName, new Object[] {});
-            }catch(Exception e){
-                result = e.getMessage();
-            }
+        switch (methodName[0]) {
+            case "mkdir":
+                bios.mkdir(methodName[1]);
+                result = "success";
+                break;
+            case "ls":
+                result = bios.ls();
+                break;
+            default:
+                try{
+                    result = biosObject.invokeMethod(methodName[0], methodName);
+                }catch(Exception e){
+                    result = e.getMessage();
+                }   break;
         }
         return result.toString();
     }

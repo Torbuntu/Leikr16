@@ -6,6 +6,7 @@
 
 package com.torbuntu.leikr
 
+import groovy.io.FileType;
 /**
  *
  * @author tor
@@ -23,4 +24,20 @@ class Bios {
     def mkdir(def name){
         new File("LeikrVirtualDrive/"+name).mkdir();
     }    
+    
+    // Update this to use the current directory after CD is implemented
+    def ls(){
+        def list = [];
+        def dir = new File("LeikrVirtualDrive/");
+        String lsResult = ". ..";
+        dir.eachFileRecurse(){
+            file -> list << file;
+        }
+        list.each {
+            lsResult += it.path.replace("LeikrVirtualDrive", "") + " ";
+        }
+        return lsResult;
+    }
+    
+    
 }
