@@ -38,9 +38,15 @@ public class BiosLoader {
         Object result;
 
         switch (methodName[0]) {
-            case "mkdir":
-                bios.mkdir(methodName[1]);
-                result = "success";
+            case "mkdir":                
+                result = bios.mkdir(methodName[1]);
+                break;
+            case "rm":
+                if(methodName[1].equals("-rf")){
+                    result = bios.rmdir(methodName[2]);
+                }else{
+                    result = bios.rm(methodName[1]);
+                }
                 break;
             case "ls":
                 result = bios.ls();

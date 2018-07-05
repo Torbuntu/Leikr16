@@ -6,10 +6,10 @@
 
 package com.torbuntu.leikr
 
-/**
- *
- * @author tor
- */
+import groovy.io.FileType;
+import com.badlogic.gdx.Gdx;
+
+
 class Bios {
     String BiosVersion = "V0.0.1";
     String SystemName = "Leikr 16";
@@ -21,6 +21,24 @@ class Bios {
     }
     
     def mkdir(def name){
-        new File(name).mkdir();
+        println (gdx.files.getExternalStoragePath());
+        new File(Gdx.files.getExternalStoragePath()+"LeikrVirtualDrive/"+name).mkdir();
+        //new File("LeikrVirtualDrive/"+name).mkdir();
     }    
+    
+    // Update this to use the current directory after CD is implemented
+    def ls(){
+        def list = [];
+        def dir = new File("LeikrVirtualDrive/");
+        String lsResult = ". ..";
+        dir.eachFileRecurse(){
+            file -> list << file;
+        }
+        list.each {
+            lsResult += it.path.replace("LeikrVirtualDrive", "") + " ";
+        }
+        return lsResult;
+    }
+    
+    
 }
