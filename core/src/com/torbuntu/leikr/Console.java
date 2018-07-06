@@ -85,8 +85,8 @@ public class Console implements InputProcessor {
         X = ((int) '~' % 16) * 8;
         Y = ((int) '~' / 16) * 8;
         batch.draw(font, carriage, line, X, Y, 8, 8);
-        X = ((int) '>' % 16) * 8;
-        Y = ((int) '>' / 16) * 8;
+        X = ((int) '$' % 16) * 8;
+        Y = ((int) '$' / 16) * 8;
         batch.draw(font, carriage + 8f, line, X, Y, 8, 8);
     }
 
@@ -186,6 +186,10 @@ public class Console implements InputProcessor {
                 case "clear":
                     historyBuffer.clear();
                     commandBuffer.clear();
+                    break;                    
+                case "test":
+                  
+            
                     break;
                 default: //Default, command not recognized.
                     try {
@@ -236,7 +240,6 @@ public class Console implements InputProcessor {
     @Override
     public boolean keyTyped(char character) {
         //If the character not backspace or enter.
-        System.out.println((int) character);
         if ((int) character != 8 && (int) character != 10) {
             commandBuffer.add(String.valueOf(character));
         }

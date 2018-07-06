@@ -10,6 +10,10 @@ import groovy.lang.GroovyObject;
 import java.io.File;
 import java.io.IOException;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import java.util.Arrays;
+
 /**
  *
  * @author tor
@@ -25,7 +29,7 @@ public class BiosLoader {
     
     public BiosLoader() throws IOException, InstantiationException, IllegalAccessException{
         classLoader = new GroovyClassLoader();
-        biosClass = classLoader.parseClass(new File("LeikrVirtualDrive/Bios.groovy"));
+        biosClass = classLoader.parseClass(new File("Root/Bios.groovy"));
         biosObject = (GroovyObject)biosClass.newInstance();        
         
     }
@@ -50,10 +54,28 @@ public class BiosLoader {
                 break;
             case "ls":
                 result = bios.ls();
+                break;                
+            case "exec":
+                try{
+                    Class tempClass;
+                    if(!methodName[1].contains(".groovy")){
+                        tempClass = classLoader.parseClass(new File(Gdx.files.getExternalStoragePath()+"LeikrVirtualDrive/"+methodName[1]+".groovy"));
+                    }else{
+                        tempClass = classLoader.parseClass(new File(Gdx.files.getExternalStoragePath()+"LeikrVirtualDrive/"+methodName[1]));
+                    }
+                    GroovyObject tempObject = (GroovyObject)tempClass.newInstance();
+                    
+                    String[] args = Arrays.copyOfRange(methodName, 3, methodName.length);
+                    result = tempObject.invokeMethod(methodName[2], args);
+                }catch(Exception e){
+                    result = String.format("`%s` is not a known script or does not contain method `%s`. ", methodName[1], methodName[2]) + e.getMessage();
+                }
+                
                 break;
             default:
                 try{
-                    result = biosObject.invokeMethod(methodName[0], methodName);
+                    String[] args = Arrays.copyOfRange(methodName, 0, methodName.length);
+                    result = biosObject.invokeMethod(methodName[0], args);
                 }catch(Exception e){
                     result = e.getMessage();
                 }   break;
