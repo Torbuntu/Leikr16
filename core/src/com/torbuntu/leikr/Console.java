@@ -188,8 +188,8 @@ public class Console implements InputProcessor {
                     commandBuffer.clear();
                     break;                    
                 case "test":
-                  
-            
+           
+                    
                     break;
                 default: //Default, command not recognized.
                     try {

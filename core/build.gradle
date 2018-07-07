@@ -1,13 +1,15 @@
 apply plugin: "java"
 apply plugin: "groovy"
 
+def HOME_DIR = System.getProperty("user.home") + "/LeikrVirtualDrive/ChipSpace/"
+
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets {
     main {
         java { srcDirs = [] }
-        groovy { srcDirs += ['src/'] }
+        groovy { srcDirs += ['src/', "$HOME_DIR" ] }
     }
 }
 
