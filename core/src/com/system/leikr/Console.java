@@ -1,4 +1,4 @@
-package com.torbuntu.leikr;
+package com.system.leikr;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -36,9 +36,13 @@ public class Console implements InputProcessor {
     BiosLoader biosLoader;
     //Primary constructor. Sets a new SpriteBatch for drawing fonts. Loads the font texture.
     // Camera and Viewport initialized and the input processor set to this item.
-
-    public Console() {
-        batch = new SpriteBatch();
+    final Leikr game;
+    ConsoleScreen consoleScreen;
+    
+    public Console(final Leikr game, ConsoleScreen consoleScreen) {
+        this.game = game;
+        this.consoleScreen = consoleScreen;
+        batch = game.batch;
         font = new Texture("LeikrFontA.png");
 
         try {
@@ -63,12 +67,12 @@ public class Console implements InputProcessor {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         nDisplayBufferedString();
-        batch.end();
+        batch.end();        
+        
     }
 
     //Disposes batch and font
     public void disposeConsole() {
-        batch.dispose();
         font.dispose();
     }
 
@@ -188,8 +192,8 @@ public class Console implements InputProcessor {
                     commandBuffer.clear();
                     break;                    
                 case "test":
-           
-                    
+                    game.setScreen(new LeikrGameScreen(game));
+                    consoleScreen.dispose();
                     break;
                 default: //Default, command not recognized.
                     try {

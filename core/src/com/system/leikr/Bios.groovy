@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.torbuntu.leikr
+package com.system.leikr
 
 import groovy.io.FileType;
 import com.badlogic.gdx.Gdx;

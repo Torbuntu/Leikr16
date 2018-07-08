@@ -9,7 +9,7 @@ sourceSets {
     }
 }
 
-project.ext.mainClassName = "com.torbuntu.leikr.desktop.DesktopLauncher"
+project.ext.mainClassName = "com.system.leikr.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../core/assets");
 
 task run(dependsOn: classes, type: JavaExec) {
