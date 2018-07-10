@@ -175,7 +175,17 @@ public class Console implements InputProcessor {
             in = in.replaceFirst("echo ", "");
             historyBuffer.add(in);
 
-        } else {
+        } else if(inputList[0].equals("gv")){
+            in = in.replaceFirst("gv ", "");
+            try {
+                result = groovyShell.evaluate(in).toString();
+                historyBuffer.add(result);
+            } catch (Exception e) {
+                System.out.println(e.toString());
+                historyBuffer.add(notRecognized);
+            }
+        
+        }else {
             switch (in) {
                 case "":
                     //cursorPos[1] -= 8;
@@ -196,13 +206,7 @@ public class Console implements InputProcessor {
                     consoleScreen.dispose();
                     break;
                 default: //Default, command not recognized.
-                    try {
-                        result = groovyShell.evaluate(in).toString();
-                        System.out.println(result);
-                    } catch (Exception e) {
-                        System.out.println(e.toString());
-                        result = "";
-                    }
+                   
                     try {
                         result = (String) biosLoader.runRegisteredMethod(inputList);
                     } catch (Exception e) {
