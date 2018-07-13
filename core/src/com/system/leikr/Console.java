@@ -25,6 +25,8 @@ public class Console implements InputProcessor {
     Viewport viewport;
     static final int WIDTH = 260;
     static final int HEIGHT = 160;
+    
+    float blink = 0;
 
     //New groovy shell.
     GroovyShell groovyShell = new GroovyShell();
@@ -63,10 +65,10 @@ public class Console implements InputProcessor {
     }
 
     //Sets the camera projection. Begins the sprite batch, runs the console buffer to display text.
-    public void renderConsole() {
+    public void renderConsole(float delta) {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        nDisplayBufferedString();
+        nDisplayBufferedString(delta);
         batch.end();        
         
     }
@@ -118,7 +120,7 @@ public class Console implements InputProcessor {
     }
 
     //Displays the command buffer after running the history and new path. Checks the height and removes history to keep on screen. Displays blank box for cursor.
-    public void nDisplayBufferedString() {
+    public void nDisplayBufferedString(float delta) {
         float carriage = 0;
         float line = viewport.getWorldHeight() - 8f;
         int X;
@@ -145,8 +147,19 @@ public class Console implements InputProcessor {
         if (line <= -8f && historyBuffer.size() > 0) {
             System.out.println(historyBuffer.remove(0));
         }
+        
+        if(blink > 0.4){
+            batch.draw(font, carriage, line, 0, 0, 8, 8);
+            blink += delta;
+            if(blink > 1){
+                blink = 0;
+            }
+            System.out.println(blink);
+        }else{
+            blink += delta;
+            System.out.println(blink);
+        }
 
-        batch.draw(font, carriage, line, 0, 0, 8, 8);
     }
 
     public void backspaceHandler() {
