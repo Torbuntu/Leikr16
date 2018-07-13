@@ -17,6 +17,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import groovy.lang.Binding;
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyObject;
+import groovy.util.GroovyScriptEngine;
+import groovy.util.ResourceException;
+import groovy.util.ScriptException;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,24 +35,35 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class LeikrGameScreen implements Screen, InputProcessor {
 
     final Leikr game;
-    LeikrGame lGame;
+    
     private Object bucket;
 
     public Camera camera;
     public Viewport viewport;
+    
+    final GroovyClassLoader classLoader;
+    Class biosClass;
+    ILeikrEngine leikrGame;
 
-    LeikrGameScreen(Leikr game) {
+    LeikrGameScreen(Leikr game) throws IOException {
         this.game = game;
-
+        String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/";
+        classLoader = new GroovyClassLoader();
+        biosClass = classLoader.parseClass(new File(filePath+"LeikrGame.groovy"));
+        try {
+            leikrGame = (ILeikrEngine) biosClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(LeikrGameScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public void show() {
+
         camera = new OrthographicCamera(260, 160);
         viewport = new FitViewport(260, 160, camera);
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);//Sets the camera to the correct position.
-        lGame = new LeikrGame();
-        lGame.create();
+        leikrGame.create();
         Gdx.input.setInputProcessor(this);
     }
 
@@ -54,7 +75,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        lGame.render(game.batch);
+        //leikrGame.render(game.batch);
         game.batch.end();
     }
 

@@ -9,7 +9,8 @@ sourceCompatibility = 1.8
 sourceSets {
     main {
         java { srcDirs = [] }
-        groovy { srcDirs += ['src/', "$HOME_DIR" ] }
+        groovy { srcDirs += ['src/' ] }
+//        groovy { srcDirs += ['src/', "$HOME_DIR" ] }
     }
 }
 

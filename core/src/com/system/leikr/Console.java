@@ -25,7 +25,7 @@ public class Console implements InputProcessor {
     Viewport viewport;
     static final int WIDTH = 260;
     static final int HEIGHT = 160;
-    
+
     float blink = 0;
 
     //New groovy shell.
@@ -40,7 +40,7 @@ public class Console implements InputProcessor {
     // Camera and Viewport initialized and the input processor set to this item.
     final Leikr game;
     ConsoleScreen consoleScreen;
-    
+
     public Console(final Leikr game, ConsoleScreen consoleScreen) {
         this.game = game;
         this.consoleScreen = consoleScreen;
@@ -69,8 +69,8 @@ public class Console implements InputProcessor {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         displayBufferedString(delta);
-        batch.end();        
-        
+        batch.end();
+
     }
 
     //Disposes batch and font
@@ -147,15 +147,15 @@ public class Console implements InputProcessor {
         if (line <= -8f && historyBuffer.size() > 0) {
             System.out.println(historyBuffer.remove(0));
         }
-        
-        if(blink > 0.4){
+
+        if (blink > 0.4) {
             batch.draw(font, carriage, line, 0, 0, 8, 8);
             blink += delta;
-            if(blink > 1){
+            if (blink > 1) {
                 blink = 0;
             }
             System.out.println(blink);
-        }else{
+        } else {
             blink += delta;
             System.out.println(blink);
         }
@@ -169,11 +169,11 @@ public class Console implements InputProcessor {
     }
 
     // Handles the command input.
-    public void shellHandler() {
+    public void shellHandler() throws IOException {
         //parse the command buffer into a String.
         String in = String.join(",", commandBuffer).replaceAll(",", "");
         String[] inputList = in.split(" ");
-        
+
         historyBuffer.add("~$" + in);
 
         System.out.println("HBuffer: " + historyBuffer);
@@ -198,7 +198,8 @@ public class Console implements InputProcessor {
                 } catch (Exception e) {
                     System.out.println(e.toString());
                     historyBuffer.add(notRecognized);
-                }   break;
+                }
+                break;
             default:
                 switch (in) {
                     case "":
@@ -220,21 +221,22 @@ public class Console implements InputProcessor {
                         consoleScreen.dispose();
                         break;
                     default: //Default, command not recognized.
-                        
+
                         try {
                             result = (String) systemLoader.runRegisteredMethod(inputList);
                         } catch (Exception e) {
                             System.out.println(e.toString());
                             result = "";
                         }
-                        
+
                         if (result.length() > 0) {
                             historyBuffer.add(result);
                         } else {
                             historyBuffer.add(notRecognized);
                         }
                         break;
-                }   break;
+                }
+                break;
         }
     }
 
@@ -249,10 +251,15 @@ public class Console implements InputProcessor {
             case Input.Keys.BACKSPACE:
                 backspaceHandler();
                 break;
-            case Input.Keys.ENTER:
-                shellHandler();
-                commandBuffer.clear();
-                break;
+            case Input.Keys.ENTER: {
+                try {
+                    shellHandler();
+                } catch (IOException ex) {
+                    Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            commandBuffer.clear();
+            break;
             default:
                 break;
         }
