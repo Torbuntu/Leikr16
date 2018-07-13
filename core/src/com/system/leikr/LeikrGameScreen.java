@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -21,19 +22,20 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  *
  * @author tor
  */
-public class LeikrGameScreen implements Screen, InputProcessor{
+public class LeikrGameScreen implements Screen, InputProcessor {
+
     final Leikr game;
     LeikrGame lGame;
     private Object bucket;
-    
+
     public Camera camera;
     public Viewport viewport;
-    
-    LeikrGameScreen(Leikr game){
+
+    LeikrGameScreen(Leikr game) {
         this.game = game;
-        
-        
+
     }
+
     @Override
     public void show() {
         camera = new OrthographicCamera(260, 160);
@@ -50,7 +52,7 @@ public class LeikrGameScreen implements Screen, InputProcessor{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
-        
+
         game.batch.begin();
         lGame.render(game.batch);
         game.batch.end();
@@ -84,8 +86,9 @@ public class LeikrGameScreen implements Screen, InputProcessor{
 
     @Override
     public boolean keyUp(int keycode) {
-        if(keycode == Keys.ESCAPE){
-            System.exit(0);
+        if (keycode == Keys.ESCAPE) {
+            game.setScreen(new ConsoleScreen(game));
+            this.dispose();
         }
         return false;
     }
@@ -119,5 +122,5 @@ public class LeikrGameScreen implements Screen, InputProcessor{
     public boolean scrolled(int amount) {
         return false;
     }
-    
+
 }
