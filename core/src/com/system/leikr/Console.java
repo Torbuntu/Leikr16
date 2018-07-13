@@ -35,7 +35,7 @@ public class Console implements InputProcessor {
     ArrayList<String> commandBuffer = new ArrayList<>();
     ArrayList<String> historyBuffer = new ArrayList<>();
 
-    BiosLoader biosLoader;
+    SystemLoader systemLoader;
     //Primary constructor. Sets a new SpriteBatch for drawing fonts. Loads the font texture.
     // Camera and Viewport initialized and the input processor set to this item.
     final Leikr game;
@@ -48,7 +48,7 @@ public class Console implements InputProcessor {
         font = new Texture("LeikrFontA.png");
 
         try {
-            biosLoader = new BiosLoader();
+            systemLoader = new SystemLoader();
         } catch (IOException ex) {
             Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -56,7 +56,7 @@ public class Console implements InputProcessor {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
         }
-        historyBuffer.add("Bios: " + biosLoader.getBiosVersion());
+        historyBuffer.add("Bios: " + systemLoader.getBiosVersion());
 
         camera = new OrthographicCamera(260, 160);
         viewport = new FitViewport(260, 160, camera);
@@ -68,7 +68,7 @@ public class Console implements InputProcessor {
     public void renderConsole(float delta) {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        nDisplayBufferedString(delta);
+        displayBufferedString(delta);
         batch.end();        
         
     }
@@ -84,7 +84,7 @@ public class Console implements InputProcessor {
     }
 
     //writes the path pre-pending the command buffer.
-    private void nWritePath(float carriage, float line) {
+    private void writePath(float carriage, float line) {
         int X;
         int Y;
         // Set the variable test for evaluating the x and y position of the ASCII set.
@@ -97,7 +97,7 @@ public class Console implements InputProcessor {
     }
 
     //Runs through the history buffer and sets the items to the screen. Returns the line position to correctly set the command buffer input.
-    public float nDisplayHistoryString(float ln) {
+    public float displayHistoryString(float ln) {
         int X;
         int Y;
         float carriage;
@@ -120,7 +120,7 @@ public class Console implements InputProcessor {
     }
 
     //Displays the command buffer after running the history and new path. Checks the height and removes history to keep on screen. Displays blank box for cursor.
-    public void nDisplayBufferedString(float delta) {
+    public void displayBufferedString(float delta) {
         float carriage = 0;
         float line = viewport.getWorldHeight() - 8f;
         int X;
@@ -128,10 +128,10 @@ public class Console implements InputProcessor {
 
         String result = String.join(",", commandBuffer).replaceAll(",", "");
         if (historyBuffer.size() > 0) {
-            line = nDisplayHistoryString(line);
+            line = displayHistoryString(line);
         }
 
-        nWritePath(carriage, line);
+        writePath(carriage, line);
         carriage += 16f;
         for (char C : result.toCharArray()) {
             if (carriage >= viewport.getWorldWidth() - 8f) {
@@ -184,56 +184,57 @@ public class Console implements InputProcessor {
         String result;
 
         //Convert to switch.
-        if (inputList[0].equals("echo")) { // Process echo command
-            in = in.replaceFirst("echo ", "");
-            historyBuffer.add(in);
-
-        } else if(inputList[0].equals("gv")){
-            in = in.replaceFirst("gv ", "");
-            try {
-                result = groovyShell.evaluate(in).toString();
-                historyBuffer.add(result);
-            } catch (Exception e) {
-                System.out.println(e.toString());
-                historyBuffer.add(notRecognized);
-            }
-        
-        }else {
-            switch (in) {
-                case "":
-                    //cursorPos[1] -= 8;
-                    //printPath();
-                    break;
-                case "help":
-                    historyBuffer.add("There is no help here yet...");
-                    break;
-                case "exit": //close on exit command.
-                    System.exit(0);
-                    break;
-                case "clear":
-                    historyBuffer.clear();
-                    commandBuffer.clear();
-                    break;                    
-                case "test":
-                    game.setScreen(new LeikrGameScreen(game));
-                    consoleScreen.dispose();
-                    break;
-                default: //Default, command not recognized.
-                   
-                    try {
-                        result = (String) biosLoader.runRegisteredMethod(inputList);
-                    } catch (Exception e) {
-                        System.out.println(e.toString());
-                        result = "";
-                    }
-
-                    if (result.length() > 0) {
-                        historyBuffer.add(result);
-                    } else {
-                        historyBuffer.add(notRecognized);
-                    }
-                    break;
-            }
+        switch (inputList[0]) {
+            case "echo":
+                // Process echo command
+                in = in.replaceFirst("echo ", "");
+                historyBuffer.add(in);
+                break;
+            case "gv":
+                in = in.replaceFirst("gv ", "");
+                try {
+                    result = groovyShell.evaluate(in).toString();
+                    historyBuffer.add(result);
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                    historyBuffer.add(notRecognized);
+                }   break;
+            default:
+                switch (in) {
+                    case "":
+                        //cursorPos[1] -= 8;
+                        //printPath();
+                        break;
+                    case "help":
+                        historyBuffer.add("There is no help here yet...");
+                        break;
+                    case "exit": //close on exit command.
+                        System.exit(0);
+                        break;
+                    case "clear":
+                        historyBuffer.clear();
+                        commandBuffer.clear();
+                        break;
+                    case "test":
+                        game.setScreen(new LeikrGameScreen(game));
+                        consoleScreen.dispose();
+                        break;
+                    default: //Default, command not recognized.
+                        
+                        try {
+                            result = (String) systemLoader.runRegisteredMethod(inputList);
+                        } catch (Exception e) {
+                            System.out.println(e.toString());
+                            result = "";
+                        }
+                        
+                        if (result.length() > 0) {
+                            historyBuffer.add(result);
+                        } else {
+                            historyBuffer.add(notRecognized);
+                        }
+                        break;
+                }   break;
         }
     }
 

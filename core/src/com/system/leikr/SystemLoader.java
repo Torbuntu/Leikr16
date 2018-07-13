@@ -17,7 +17,7 @@ import java.util.Arrays;
  *
  * @author tor
  */
-public class BiosLoader {
+public class SystemLoader {
 
     final GroovyClassLoader classLoader;
     Class biosClass;
@@ -26,7 +26,7 @@ public class BiosLoader {
     // The class of Bios. Eventually replace the biosClass and biosObject
     Bios bios = new Bios();
 
-    public BiosLoader() throws IOException, InstantiationException, IllegalAccessException {
+    public SystemLoader() throws IOException, InstantiationException, IllegalAccessException {
         classLoader = new GroovyClassLoader();
         biosClass = classLoader.parseClass(new File("Root/Bios.groovy"));
         biosObject = (GroovyObject) biosClass.newInstance();
