@@ -1,8 +1,8 @@
-package com.system.leikr.desktop;
+package com.leikr.desktop;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.system.leikr.Leikr;
+import com.leikr.Leikr;
 
 public class DesktopLauncher {
     public static void main (String[] arg) {
