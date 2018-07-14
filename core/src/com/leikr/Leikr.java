@@ -1,4 +1,4 @@
-package com.system.leikr;
+package com.leikr;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;

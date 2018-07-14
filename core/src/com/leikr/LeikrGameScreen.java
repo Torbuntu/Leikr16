@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.system.leikr;
+package com.leikr;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -34,24 +34,24 @@ import java.util.logging.Logger;
  */
 public class LeikrGameScreen implements Screen, InputProcessor {
 
-    final Leikr game;
-    
+    static Leikr game;
+
     private Object bucket;
 
     public Camera camera;
     public Viewport viewport;
-    
+
     final GroovyClassLoader classLoader;
     Class biosClass;
-    ILeikrEngine leikrGame;
+    LeikrEngine leikrGame;
 
     LeikrGameScreen(Leikr game) throws IOException {
         this.game = game;
         String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/";
         classLoader = new GroovyClassLoader();
-        biosClass = classLoader.parseClass(new File(filePath+"LeikrGame.groovy"));
+        biosClass = classLoader.parseClass(new File(filePath + "LeikrGame.groovy"));
         try {
-            leikrGame = (ILeikrEngine) biosClass.newInstance();
+            leikrGame = (LeikrEngine) biosClass.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(LeikrGameScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -64,7 +64,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         viewport = new FitViewport(260, 160, camera);
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);//Sets the camera to the correct position.
         leikrGame.create();
-        Gdx.input.setInputProcessor(this);
+        Gdx.input.setInputProcessor(leikrGame);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        //leikrGame.render(game.batch);
+        leikrGame.render();
         game.batch.end();
     }
 

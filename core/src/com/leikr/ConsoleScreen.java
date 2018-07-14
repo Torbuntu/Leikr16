@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.system.leikr;
+package com.leikr;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

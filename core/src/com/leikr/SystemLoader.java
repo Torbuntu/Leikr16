@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.system.leikr;
+package com.leikr;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
 import java.util.Arrays;
+import org.codehaus.groovy.control.CompilationFailedException;
 
 /**
  *
@@ -66,7 +67,7 @@ public class SystemLoader {
 
                     String[] args = Arrays.copyOfRange(methodName, 3, methodName.length);
                     result = tempObject.invokeMethod(methodName[2], args);
-                } catch (Exception e) {
+                } catch (IOException | IllegalAccessException | InstantiationException | CompilationFailedException e) {
                     result = String.format("`%s` is not a known script or does not contain method `%s`. ", methodName[1], methodName[2]) + e.getMessage();
                 }
 
