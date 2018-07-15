@@ -5,15 +5,16 @@
  */
 package com.leikr.core;
 
-import java.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import static com.leikr.core.LeikrGameScreen.game;
 
 /**
  *
@@ -23,21 +24,30 @@ public class LeikrEngine implements InputProcessor {
 
     Leikr game = LeikrGameScreen.game;
     ShapeRenderer shapeRenderer;
+    Camera camera;
+    Viewport viewport;
 
     public boolean rightKeyPressed = false;
     public boolean leftKeyPressed = false;
     public boolean upKeyPressed = false;
     public boolean downKeyPressed = false;
 
-    public int screenWidth = 260;
-    public int screenHeight = 160;
+    public float screenWidth = Leikr.WIDTH;
+    public float screenHeight = Leikr.HEIGHT;
 
     public void create() {
 
         shapeRenderer = new ShapeRenderer();
+        viewport = new FitViewport(screenWidth, screenHeight);
+        camera = viewport.getCamera();
     }
 
     public void render() {
+    }
+    public void renderCamera(){
+        //camera.update();
+        game.batch.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
     }
 
     public void dispose() {
@@ -45,14 +55,17 @@ public class LeikrEngine implements InputProcessor {
     }
     
     
-    
+    //Updates the view on resize in the Leikr main.
+    public void updateViewport(int width, int height) {
+        viewport.update(width, height, true);
+    }
     
 
-    public int getScreenWidth() {
+    public float getScreenWidth() {
         return screenWidth;
     }
 
-    public int getScreenHeight() {
+    public float getScreenHeight() {
         return screenHeight;
     }
 

@@ -23,8 +23,6 @@ public class Console implements InputProcessor {
     Texture font;
     Camera camera;
     Viewport viewport;
-    static final int WIDTH = 260;
-    static final int HEIGHT = 160;
 
     float blink = 0;
 
@@ -54,9 +52,9 @@ public class Console implements InputProcessor {
         }
         historyBuffer.add("Bios: " + systemLoader.getBiosVersion());
 
-        camera = new OrthographicCamera(260, 160);
-        viewport = new FitViewport(260, 160, camera);
-        camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);//Sets the camera to the correct position.
+        //camera = new OrthographicCamera(260, 160);
+        viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
+        camera = viewport.getCamera();
         Gdx.input.setInputProcessor(this);
     }
 

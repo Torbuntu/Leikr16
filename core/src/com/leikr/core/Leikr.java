@@ -17,6 +17,8 @@ public class Leikr extends Game {
     
     public SpriteBatch batch;
     public BitmapFont font;
+    
+    public static final float WIDTH = 260, HEIGHT = 160;
 
     @Override
     public void create() {
