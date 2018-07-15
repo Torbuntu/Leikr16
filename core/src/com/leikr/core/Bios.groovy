@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.leikr
+package com.leikr.core;
 
 import groovy.io.FileType;
 import com.badlogic.gdx.Gdx;

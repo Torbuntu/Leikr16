@@ -1,4 +1,4 @@
-package com.leikr;
+package com.leikr.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -49,11 +49,7 @@ public class Console implements InputProcessor {
 
         try {
             systemLoader = new SystemLoader();
-        } catch (IOException ex) {
-            Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
+        } catch (IOException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
         }
         historyBuffer.add("Bios: " + systemLoader.getBiosVersion());
@@ -154,10 +150,8 @@ public class Console implements InputProcessor {
             if (blink > 1) {
                 blink = 0;
             }
-            System.out.println(blink);
         } else {
             blink += delta;
-            System.out.println(blink);
         }
 
     }

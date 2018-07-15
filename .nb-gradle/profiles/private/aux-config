@@ -7,7 +7,17 @@
             
       <group>
                 
-        <file>file:/home/tor/NetBeansProjects/Leikr16/desktop/src/com/system/leikr/desktop/DesktopLauncher.java</file>
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/build.gradle</file>
+                
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/Console.java</file>
+                
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/LeikrEngine.java</file>
+                
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/SystemLoader.java</file>
+                
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/Bios.groovy</file>
+                
+        <file>file:/home/tor/LeikrVirtualDrive/ChipSpace/LeikrGame.groovy</file>
               
       </group>
           

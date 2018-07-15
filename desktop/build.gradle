@@ -4,13 +4,14 @@ apply plugin: "groovy"
 sourceCompatibility = 1.8
 sourceSets {
     main {
-        java { srcDirs = [] }
-        groovy { srcDirs += ['src/'] }
+        java { srcDirs = ['src/'] }
     }
 }
 
 project.ext.mainClassName = "com.leikr.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../core/assets");
+
+
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName

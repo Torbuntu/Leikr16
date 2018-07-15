@@ -3,14 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.leikr;
+package com.leikr.core;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
-import java.io.File;
 import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import groovy.lang.Binding;
+import groovy.util.GroovyScriptEngine;
+import java.io.File;
 import java.util.Arrays;
 import org.codehaus.groovy.control.CompilationFailedException;
 
@@ -24,12 +27,16 @@ public class SystemLoader {
     Class biosClass;
     GroovyObject biosObject;
 
+    GroovyScriptEngine groovyScriptEngine;
+    Binding binding;
+    String[] rootDirectory = new String[]{Gdx.files.getLocalStoragePath()};
+
     // The class of Bios. Eventually replace the biosClass and biosObject
     Bios bios = new Bios();
 
     public SystemLoader() throws IOException, InstantiationException, IllegalAccessException {
         classLoader = new GroovyClassLoader();
-        biosClass = classLoader.parseClass(new File("Root/Bios.groovy"));
+        biosClass = classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Methods.groovy"));
         biosObject = (GroovyObject) biosClass.newInstance();
 
     }
