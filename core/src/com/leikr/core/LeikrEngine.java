@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import static com.leikr.core.LeikrGameScreen.game;
+import java.util.Random;
 
 /**
  *
@@ -67,6 +68,10 @@ public class LeikrEngine implements InputProcessor {
 
     public float getScreenHeight() {
         return screenHeight;
+    }
+    
+    public int getRandom(int range){
+        return new Random().nextInt(range);
     }
 
     /**
