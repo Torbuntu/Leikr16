@@ -208,7 +208,7 @@ public class Console implements InputProcessor {
                         historyBuffer.clear();
                         commandBuffer.clear();
                         break;
-                    case "test":
+                    case "run":
                         game.setScreen(new LeikrGameScreen(game));
                         consoleScreen.dispose();
                         break;

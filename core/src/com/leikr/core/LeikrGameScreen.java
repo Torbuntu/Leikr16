@@ -52,14 +52,11 @@ public class LeikrGameScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        leikrGame.preRender();
         
         leikrGame.renderCamera();
         
-        game.batch.begin();
         leikrGame.render();
-        game.batch.end();
     }
 
     @Override
@@ -82,6 +79,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
+        leikrGame.dispose();
     }
 
     @Override

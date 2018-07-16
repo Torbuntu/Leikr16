@@ -9,7 +9,9 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -27,25 +29,57 @@ public class LeikrEngine implements InputProcessor {
     ShapeRenderer shapeRenderer;
     Camera camera;
     Viewport viewport;
+    Texture font;
 
     public boolean rightKeyPressed = false;
     public boolean leftKeyPressed = false;
     public boolean upKeyPressed = false;
     public boolean downKeyPressed = false;
+    public boolean zKeyPressed = false;
+    public boolean xKeyPressed = false;
+    public boolean spaceKeyPressed = false;
 
-    public float screenWidth = Leikr.WIDTH;
-    public float screenHeight = Leikr.HEIGHT;
+    public int screenWidth = 260;
+    public int screenHeight = 160;
+
+    public String backgroundColor = "BLACK";
 
     public void create() {
 
         shapeRenderer = new ShapeRenderer();
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
+        font = new Texture("LeikrFontA.png");
+    }
+
+    public void setBackgroundColor(String color) {
+        backgroundColor = color.toUpperCase();
+    }
+
+    public void preRender() {
+        switch (backgroundColor) {
+            case "RED":
+                Gdx.gl.glClearColor(1, 0, 0, 1);
+                break;
+            case "BLUE":
+                Gdx.gl.glClearColor(0, 0, 1, 1);
+                break;
+            case "GREEN":
+                Gdx.gl.glClearColor(0, 1, 0, 1);
+                break;
+            default:
+                Gdx.gl.glClearColor(0, 0, 0, 1);
+                break;
+
+        }
+
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
     public void render() {
     }
-    public void renderCamera(){
+
+    public void renderCamera() {
         //camera.update();
         game.batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -53,25 +87,38 @@ public class LeikrEngine implements InputProcessor {
 
     public void dispose() {
         shapeRenderer.dispose();
+        font.dispose();
     }
-    
-    
+
     //Updates the view on resize in the Leikr main.
     public void updateViewport(int width, int height) {
         viewport.update(width, height, true);
     }
-    
 
-    public float getScreenWidth() {
+    public int getScreenWidth() {
         return screenWidth;
     }
 
-    public float getScreenHeight() {
+    public int getScreenHeight() {
         return screenHeight;
     }
-    
-    public int getRandom(int range){
+
+    public int getRandom(int range) {
         return new Random().nextInt(range);
+    }
+
+    public void drawText(String text, int x, int y) {
+        int fontX;
+        int fontY;
+        // Set the variable test for evaluating the x and y position of the ASCII set.
+        game.batch.begin();
+        for (char C : text.toCharArray()) {
+            fontX = ((int) C % 16) * 8;
+            fontY = ((int) C / 16) * 8;
+            game.batch.draw(font, x, y, fontX, fontY, 8, 8);
+            x = x + 8;
+        }
+        game.batch.end();
     }
 
     /**
@@ -103,6 +150,12 @@ public class LeikrEngine implements InputProcessor {
             case "GREEN":
                 shapeRenderer.setColor(Color.GREEN);
                 break;
+            case "BLUE":
+                shapeRenderer.setColor(Color.BLUE);
+                break;
+            case "WHITE":
+                shapeRenderer.setColor(Color.WHITE);
+                break;
             default:
                 shapeRenderer.setColor(Color.BLACK);
                 break;
@@ -132,6 +185,12 @@ public class LeikrEngine implements InputProcessor {
             case "GREEN":
                 shapeRenderer.setColor(Color.GREEN);
                 break;
+            case "BLUE":
+                shapeRenderer.setColor(Color.BLUE);
+                break;
+            case "WHITE":
+                shapeRenderer.setColor(Color.WHITE);
+                break;
             default:
                 shapeRenderer.setColor(Color.BLACK);
                 break;
@@ -156,6 +215,17 @@ public class LeikrEngine implements InputProcessor {
         return downKeyPressed;
     }
 
+    public boolean zKeyPressed() {
+        return zKeyPressed;
+    }
+
+    public boolean xKeyPressed() {
+        return xKeyPressed;
+    }
+    public boolean spaceKeyPressed(){
+        return spaceKeyPressed;
+    }
+
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
@@ -174,6 +244,15 @@ public class LeikrEngine implements InputProcessor {
             case Keys.DOWN:
                 downKeyPressed = true;
 
+                break;
+            case Keys.Z:
+                zKeyPressed = true;
+                break;
+            case Keys.X:
+                xKeyPressed = true;
+                break;
+            case Keys.SPACE:
+                spaceKeyPressed = true;
                 break;
         }
         return false;
@@ -198,6 +277,15 @@ public class LeikrEngine implements InputProcessor {
                 break;
             case Keys.DOWN:
                 downKeyPressed = false;
+                break;
+            case Keys.Z:
+                zKeyPressed = false;
+                break;
+            case Keys.X:
+                xKeyPressed = false;
+                break;
+            case Keys.SPACE:
+                spaceKeyPressed = false;
                 break;
         }
         return false;
