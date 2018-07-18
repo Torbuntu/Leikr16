@@ -23,6 +23,7 @@ public class Console implements InputProcessor {
     Texture font;
     Camera camera;
     Viewport viewport;
+    public static String fileName = "LeikrGame.groovy";
 
     float blink = 0;
 
@@ -181,6 +182,10 @@ public class Console implements InputProcessor {
                 // Process echo command
                 in = in.replaceFirst("echo ", "");
                 historyBuffer.add(in);
+                break;
+            case "load":
+                fileName = (inputList[1].contains(".groovy")) ? inputList[1].trim() : inputList[1].trim() + ".groovy";
+                historyBuffer.add("File has been loaded");
                 break;
             case "gv":
                 in = in.replaceFirst("gv ", "");

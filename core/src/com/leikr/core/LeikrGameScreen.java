@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 public class LeikrGameScreen implements Screen, InputProcessor {
 
     static Leikr game;
+    String fileName;
 
     final GroovyClassLoader classLoader;
     Class biosClass;
@@ -30,9 +31,10 @@ public class LeikrGameScreen implements Screen, InputProcessor {
 
     LeikrGameScreen(Leikr game) throws IOException {
         this.game = game;
+        fileName = Console.fileName;
         String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/";
         classLoader = new GroovyClassLoader();
-        biosClass = classLoader.parseClass(new File(filePath + "LeikrGame.groovy"));
+        biosClass = classLoader.parseClass(new File(filePath + fileName));
         try {
             leikrGame = (LeikrEngine) biosClass.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
