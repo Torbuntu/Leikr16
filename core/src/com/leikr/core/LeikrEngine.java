@@ -67,6 +67,9 @@ public class LeikrEngine implements InputProcessor {
             case "GREEN":
                 Gdx.gl.glClearColor(0, 1, 0, 1);
                 break;
+            case "YELLOW":
+                Gdx.gl.glClearColor(1, 1, 0, 1);
+                break;
             default:
                 Gdx.gl.glClearColor(0, 0, 0, 1);
                 break;
@@ -156,6 +159,21 @@ public class LeikrEngine implements InputProcessor {
             case "WHITE":
                 shapeRenderer.setColor(Color.WHITE);
                 break;
+            case "YELLOW":
+                shapeRenderer.setColor(Color.YELLOW);
+                break;
+            case "PINK":
+                shapeRenderer.setColor(Color.PINK);
+                break;
+            case "PURPLE":
+                shapeRenderer.setColor(Color.PURPLE);
+                break;
+            case "ORANGE":
+                shapeRenderer.setColor(Color.ORANGE);
+                break;
+            case "BROWN":
+                shapeRenderer.setColor(Color.BROWN);
+                break;
             default:
                 shapeRenderer.setColor(Color.BLACK);
                 break;
@@ -222,7 +240,8 @@ public class LeikrEngine implements InputProcessor {
     public boolean xKeyPressed() {
         return xKeyPressed;
     }
-    public boolean spaceKeyPressed(){
+
+    public boolean spaceKeyPressed() {
         return spaceKeyPressed;
     }
 
