@@ -29,6 +29,11 @@ class Bios {
         if(!Gdx.files.external("LeikrVirtualDrive/").exists()){
             result += "No root file system detected. Initializing...   ";
             new File(RootFileSystem+"LeikrVirtualDrive/").mkdir();
+            new File(RootFileSystem+"LeikrVirtualDrive/"+"ChipSpace").mkdir();
+            new File(RootFileSystem+"LeikrVirtualDrive/"+"OS").mkdir();
+            new File(RootFileSystem+"LeikrVirtualDrive/OS/"+"Methods.groovy").createNewFile();
+            new File(RootFileSystem+"LeikrVirtualDrive/ChipSpace/"+"LeikrGame.groovy").createNewFile();
+            result += "Directories initialized";
         }
         new File(RootFileSystem+"LeikrVirtualDrive/"+name).mkdir();
         return result += "New directory `$name` successfully created.";
