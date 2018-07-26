@@ -15,3 +15,7 @@ A Java(libgdx) based Fantasy Computer(Console) that uses groovy scripted game fi
 - More advanced terminal/console
 
 ![Alt text](console.png?raw=true "Console")
+
+![Alt text](loadgame.png?raw=true "loadGame")
+
+![Alt text](pong.png?raw=true "Pong")
