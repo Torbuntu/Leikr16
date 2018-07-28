@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,7 +16,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.codehaus.groovy.control.CompilationFailedException;
 
+// TODO: This class is way too big. Needs to be cut up into solid pieces
 public class Console implements InputProcessor {
 
     //global variables for the console.
@@ -26,6 +29,14 @@ public class Console implements InputProcessor {
     public static String fileName = "LeikrGame.groovy";
 
     float blink = 0;
+
+    float fontRed = 1;
+    float fontGreen = 1;
+    float fontBlue = 1;
+
+    float bgRed = 0;
+    float bgGreen = 0;
+    float bgBlue = 0;
 
     //New groovy shell.
     GroovyShell groovyShell = new GroovyShell();
@@ -61,8 +72,12 @@ public class Console implements InputProcessor {
 
     //Sets the camera projection. Begins the sprite batch, runs the console buffer to display text.
     public void renderConsole(float delta) {
+        Gdx.gl.glClearColor(bgRed, bgGreen, bgBlue, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
+        batch.setColor(fontRed, fontGreen, fontBlue, 1); // sets font color
+
         displayBufferedString(delta);
         batch.end();
 
@@ -152,13 +167,24 @@ public class Console implements InputProcessor {
         } else {
             blink += delta;
         }
-
     }
 
     public void backspaceHandler() {
         if (commandBuffer.size() > 0) {
             commandBuffer.remove(commandBuffer.size() - 1);
         }
+    }
+
+    private void setFontColor(String red, String green, String blue) {
+        fontRed = Float.valueOf(red);
+        fontGreen = Float.valueOf(green);
+        fontBlue = Float.valueOf(blue);
+    }
+
+    private void setBgColor(String red, String green, String blue) {
+        bgRed = Float.valueOf(red);
+        bgGreen = Float.valueOf(green);
+        bgBlue = Float.valueOf(blue);
     }
 
     // Handles the command input.
@@ -184,17 +210,32 @@ public class Console implements InputProcessor {
                 historyBuffer.add(in);
                 break;
             case "load":
-                fileName = (inputList[1].contains(".groovy")) ? inputList[1].trim() : inputList[1].trim() + ".groovy";
-                historyBuffer.add("File has been loaded");
+                fileName = inputList[1];
+                historyBuffer.add("File "+inputList[1]+" has been loaded");
                 break;
             case "gv":
                 in = in.replaceFirst("gv ", "");
                 try {
                     result = groovyShell.evaluate(in).toString();
                     historyBuffer.add(result);
-                } catch (Exception e) {
+                } catch (CompilationFailedException e) {
                     System.out.println(e.toString());
                     historyBuffer.add(notRecognized);
+                }
+                break;
+
+            case "setFontColor":
+                try {
+                    setFontColor(inputList[1], inputList[2], inputList[3]);
+                } catch (Exception e) {
+                    historyBuffer.add(e.getMessage());
+                }
+                break;
+            case "setBgColor":
+                try {
+                    setBgColor(inputList[1], inputList[2], inputList[3]);
+                } catch (Exception e) {
+                    historyBuffer.add(e.getMessage());
                 }
                 break;
             default:
@@ -296,4 +337,5 @@ public class Console implements InputProcessor {
     public boolean scrolled(int amount) {
         return false;
     }
+
 }

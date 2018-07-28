@@ -51,7 +51,7 @@ public class SystemLoader {
             Logger.getLogger(SystemLoader.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(RootFileSystem + "LeikrVirtualDrive/ChipSpace/LeikrGame.groovy"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(RootFileSystem + "LeikrVirtualDrive/ChipSpace/LeikrGame/LeikrGame.groovy"))) {
             String gameContent = "import com.leikr.core.LeikrEngine; // Required for extending LeikrEngine\n"
                     + "\n"
                     + "class LeikrGame extends LeikrEngine{\n"

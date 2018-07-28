@@ -10,6 +10,8 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import groovy.lang.GroovyClassLoader;
 import java.io.File;
 import java.io.IOException;
@@ -26,17 +28,23 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     String fileName;
 
     final GroovyClassLoader classLoader;
-    Class biosClass;
+    Class gameLoader;
     LeikrEngine leikrGame;
+    
+    Texture spriteSheet;
 
     LeikrGameScreen(Leikr game) throws IOException {
-        this.game = game;
+        LeikrGameScreen.game = game;
         fileName = Console.fileName;
-        String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/";
+        String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/"+fileName+"/";//sets game path
         classLoader = new GroovyClassLoader();
-        biosClass = classLoader.parseClass(new File(filePath + fileName));
+        gameLoader = classLoader.parseClass(new File(filePath + fileName + ".groovy"));//loads the game code
+        
+        spriteSheet = new Texture(filePath + "FirstSpriteSheet.png");
+        System.out.println(filePath + "FirstSpriteSheet.png");
+        
         try {
-            leikrGame = (LeikrEngine) biosClass.newInstance();
+            leikrGame = (LeikrEngine) gameLoader.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(LeikrGameScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -45,10 +53,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     @Override
     public void show() {
 
-//        camera = new OrthographicCamera(260, 160);
-//        viewport = new FitViewport(260, 160, camera);
-//        camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);//Sets the camera to the correct position.
-        leikrGame.create();
+        leikrGame.create(spriteSheet);
         Gdx.input.setInputProcessor(leikrGame);
     }
 

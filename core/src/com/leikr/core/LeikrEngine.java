@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -43,9 +44,10 @@ public class LeikrEngine implements InputProcessor {
     public int screenHeight = 160;
 
     public String backgroundColor = "BLACK";
+    Texture spriteSheet;
 
-    public void create() {
-
+    public void create(Texture spriteSheet) {
+        this.spriteSheet = spriteSheet;
         shapeRenderer = new ShapeRenderer();
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
@@ -110,11 +112,31 @@ public class LeikrEngine implements InputProcessor {
         return new Random().nextInt(range);
     }
 
-    public void drawText(String text, int x, int y) {
+    public void drawText(String text, int x, int y, String color) {
         int fontX;
         int fontY;
         // Set the variable test for evaluating the x and y position of the ASCII set.
         game.batch.begin();
+        switch (color) {
+            case "RED":
+                game.batch.setColor(Color.RED);
+                break;
+            case "GREEN":
+                game.batch.setColor(Color.GREEN);
+                break;
+            case "BLUE":
+                game.batch.setColor(Color.BLUE);
+                break;
+            case "WHITE":
+                game.batch.setColor(Color.WHITE);
+                break;
+            case "BLACK":
+                game.batch.setColor(Color.BLACK);
+                break;
+            default:
+                game.batch.setColor(Color.WHITE);
+                break;
+        }
         for (char C : text.toCharArray()) {
             fontX = ((int) C % 16) * 8;
             fontY = ((int) C / 16) * 8;
@@ -122,6 +144,16 @@ public class LeikrEngine implements InputProcessor {
             x = x + 8;
         }
         game.batch.end();
+    }
+
+    void drawSprite(int id, float x, float y) {
+        switch (id) {
+            case 0:
+                game.batch.begin();
+                game.batch.draw(spriteSheet, x, y, 0, 0, 8, 8);
+                game.batch.end();
+                break;
+        }
     }
 
     /**
