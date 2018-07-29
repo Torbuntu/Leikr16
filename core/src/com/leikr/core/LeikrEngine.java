@@ -45,9 +45,11 @@ public class LeikrEngine implements InputProcessor {
 
     public String backgroundColor = "BLACK";
     Texture spriteSheet;
+    TextureRegion[][] regions;
 
-    public void create(Texture spriteSheet) {
-        this.spriteSheet = spriteSheet;
+    public void create() {
+        this.spriteSheet = LeikrGameScreen.spriteSheet;
+        regions = TextureRegion.split(spriteSheet, 8, 8);
         shapeRenderer = new ShapeRenderer();
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
@@ -150,7 +152,17 @@ public class LeikrEngine implements InputProcessor {
         switch (id) {
             case 0:
                 game.batch.begin();
-                game.batch.draw(spriteSheet, x, y, 0, 0, 8, 8);
+                game.batch.draw(regions[0][0], x, y);
+                game.batch.end();
+                break;
+        }
+    }
+    
+    void drawSprite(int id, float x, float y, int scaleX, int scaleY) {
+        switch (id) {
+            case 0:
+                game.batch.begin();
+                game.batch.draw(regions[0][0], x, y,scaleX, scaleY);
                 game.batch.end();
                 break;
         }

@@ -31,7 +31,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     Class gameLoader;
     LeikrEngine leikrGame;
     
-    Texture spriteSheet;
+    public static Texture spriteSheet;
 
     LeikrGameScreen(Leikr game) throws IOException {
         LeikrGameScreen.game = game;
@@ -53,7 +53,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     @Override
     public void show() {
 
-        leikrGame.create(spriteSheet);
+        leikrGame.create();
         Gdx.input.setInputProcessor(leikrGame);
     }
 
