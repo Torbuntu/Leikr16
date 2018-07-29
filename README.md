@@ -4,11 +4,12 @@ A Java(libgdx) based Fantasy Computer(Console) that uses groovy scripted game fi
 # Current features
 - Terminal Emulator. Not very many commands yet.
 - Groovysh repl by prefixing commands with gv.
-- Small groovy games can be loaded and played by typing `load Game.groovy` then `run` games loaded from the ChipSpace directory.
+- Small groovy games can be loaded and played by typing `load GameNameHere` then `run` games loaded from the ChipSpace directory.
 - Exit a game with ESC
 
+
 # Planned Features
-- Sprites
+- Sprites(In progress)
 - Music
 - SFX
 - Online repository of game packages. example: `sudo lkpm install Game.lkr`
