@@ -21,4 +21,5 @@ A Java(libgdx) based Fantasy Computer(Console) that uses groovy scripted game fi
 
 ![Alt text](pong.png?raw=true "Pong")
 
+# Demo file showing a Sprite being drawn to the screen. The Sprite is 8x8 pixels but it is stretched to 32x32. In the demo it bounces around the screen like a sort of primitive screen saver.
 ![Alt text](BounceDemo.png?raw=true "Bounce demo")
