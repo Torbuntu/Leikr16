@@ -5,6 +5,8 @@
  */
 package com.leikr.core;
 
+import com.leikr.core.ConsoleDirectory.ConsoleScreen;
+import com.leikr.core.ConsoleDirectory.Console;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.leikr.core.Leikr;
 import groovy.lang.GroovyClassLoader;
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +36,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     
     public static Texture spriteSheet;
 
-    LeikrGameScreen(Leikr game) throws IOException {
+    public LeikrGameScreen(Leikr game) throws IOException {
         LeikrGameScreen.game = game;
         fileName = Console.fileName;
         String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/"+fileName+"/";//sets game path

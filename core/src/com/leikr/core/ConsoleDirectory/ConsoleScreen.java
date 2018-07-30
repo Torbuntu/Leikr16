@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.leikr.core;
+package com.leikr.core.ConsoleDirectory;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
+import com.leikr.core.Leikr;
 
 /**
  *
@@ -17,7 +16,7 @@ public class ConsoleScreen implements Screen{
     final Leikr game;
     
     Console console;
-    ConsoleScreen(final Leikr game){
+    public ConsoleScreen(final Leikr game){
         this.game = game;
     }
     
@@ -30,7 +29,6 @@ public class ConsoleScreen implements Screen{
     @Override
     public void render(float delta) {
         
-
         //Update the console items
         console.renderConsole(delta);
         

@@ -5,6 +5,7 @@
  */
 package com.leikr.core;
 
+import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Camera;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.leikr.core.Leikr;
 import static com.leikr.core.LeikrGameScreen.game;
 import java.util.HashMap;
 import java.util.Map;

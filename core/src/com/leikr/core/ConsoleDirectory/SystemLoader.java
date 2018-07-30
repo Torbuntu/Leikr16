@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.leikr.core;
+package com.leikr.core.ConsoleDirectory;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+import com.leikr.core.Bios;
 import groovy.lang.Binding;
 import groovy.util.GroovyScriptEngine;
 import java.io.BufferedWriter;
@@ -122,18 +122,11 @@ public class SystemLoader {
                 break;
             case "exec":
                 try {
-                    Class tempClass;
-                    if (!methodName[1].contains(".groovy")) {
-                        tempClass = classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/" + methodName[1] + ".groovy"));
-                    } else {
-                        tempClass = classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/" + methodName[1]));
-                    }
-                    GroovyObject tempObject = (GroovyObject) tempClass.newInstance();
-
-                    String[] args = Arrays.copyOfRange(methodName, 3, methodName.length);
-                    result = tempObject.invokeMethod(methodName[2], args);
+                    GroovyObject tempObject = (GroovyObject) classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Methods.groovy")).newInstance();
+                    String[] args = Arrays.copyOfRange(methodName, 2, methodName.length);
+                    result = tempObject.invokeMethod(methodName[1], args);
                 } catch (IOException | IllegalAccessException | InstantiationException | CompilationFailedException e) {
-                    result = String.format("`%s` is not a known script or does not contain method `%s`. ", methodName[1], methodName[2]) + e.getMessage();
+                    result = String.format("`%s` is not a known method. ", methodName[1]) + e.getMessage();
                 }
 
                 break;

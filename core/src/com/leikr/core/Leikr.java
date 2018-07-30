@@ -1,5 +1,7 @@
 package com.leikr.core;
 
+import com.leikr.core.ConsoleDirectory.ConsoleScreen;
+import com.leikr.core.ConsoleDirectory.Console;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
