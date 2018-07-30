@@ -40,8 +40,8 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         classLoader = new GroovyClassLoader();
         gameLoader = classLoader.parseClass(new File(filePath + fileName + ".groovy"));//loads the game code
         
-        spriteSheet = new Texture(filePath + "FirstSpriteSheet.png");
-        System.out.println(filePath + "FirstSpriteSheet.png");
+        spriteSheet = new Texture(filePath + fileName + ".png");
+        System.out.println(filePath + fileName+".png");
         
         try {
             leikrGame = (LeikrEngine) gameLoader.newInstance();

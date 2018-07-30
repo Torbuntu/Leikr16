@@ -18,6 +18,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import static com.leikr.core.LeikrGameScreen.game;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -47,9 +49,15 @@ public class LeikrEngine implements InputProcessor {
     Texture spriteSheet;
     TextureRegion[][] regions;
 
+    Map<Integer, TextureRegion> sprites;
+
     public void create() {
         this.spriteSheet = LeikrGameScreen.spriteSheet;
         regions = TextureRegion.split(spriteSheet, 8, 8);
+        sprites = new HashMap<>();
+        mapAllSprites();
+        
+        System.out.println(sprites.size());
         shapeRenderer = new ShapeRenderer();
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
@@ -95,6 +103,17 @@ public class LeikrEngine implements InputProcessor {
     public void dispose() {
         shapeRenderer.dispose();
         font.dispose();
+    }
+
+    //adds all of the split textures from regions to the sprites map for easier calling.
+    void mapAllSprites() {
+        int id = 0;
+        for (int row = 0; row < regions.length; row++) {
+            for (int col = 0; col < regions[row].length; col++) {
+                sprites.put(id, regions[row][col]);
+                id++;
+            }
+        }
     }
 
     //Updates the view on resize in the Leikr main.
@@ -149,23 +168,17 @@ public class LeikrEngine implements InputProcessor {
     }
 
     void drawSprite(int id, float x, float y) {
-        switch (id) {
-            case 0:
-                game.batch.begin();
-                game.batch.draw(regions[0][0], x, y);
-                game.batch.end();
-                break;
-        }
+        game.batch.begin();
+        game.batch.draw(sprites.get(id), x, y);
+        game.batch.end();
+
     }
-    
+
     void drawSprite(int id, float x, float y, int scaleX, int scaleY) {
-        switch (id) {
-            case 0:
-                game.batch.begin();
-                game.batch.draw(regions[0][0], x, y,scaleX, scaleY);
-                game.batch.end();
-                break;
-        }
+        game.batch.begin();
+        game.batch.draw(sprites.get(id), x, y, scaleX, scaleY);
+        game.batch.end();
+
     }
 
     /**
