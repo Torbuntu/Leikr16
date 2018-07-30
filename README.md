@@ -6,10 +6,10 @@ A Java(libgdx) based Fantasy Computer(Console) that uses groovy scripted game fi
 - Groovysh repl by prefixing commands with gv.
 - Small groovy games can be loaded and played by typing `load GameNameHere` then `run` games loaded from the ChipSpace directory.
 - Exit a game with ESC
+- 256 8x8 sprites loaded from GameName.png in the same folder as the GameName.groovy file.
 
 
 # Planned Features
-- Sprites(In progress)
 - Music
 - SFX
 - Online repository of game packages. example: `sudo lkpm install Game.lkr`
@@ -18,6 +18,8 @@ A Java(libgdx) based Fantasy Computer(Console) that uses groovy scripted game fi
 ![Alt text](console.png?raw=true "Console")
 
 ![Alt text](loadgame.png?raw=true "loadGame")
+
+- The method `load` now only takes the name of the game package. not .groovy extension.
 
 ![Alt text](pong.png?raw=true "Pong")
 
