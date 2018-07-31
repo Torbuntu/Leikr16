@@ -8,12 +8,18 @@ A Java(libgdx) based Fantasy Computer(Console) that uses groovy scripted game fi
 - Exit a game with ESC
 - 256 8x8 sprites loaded from GameName.png in the same folder as the GameName.groovy file.
 
-
 # Planned Features
+- 16 color palette (WIP)
+- 'large' sprites by combining 2 or 4 sprite ID's (WIP)
+- Tiled Maps (256x256 map file)
 - Music
 - SFX
-- Online repository of game packages. example: `sudo lkpm install Game.lkr`
+- Online repository of game packages. example: `lkpm install Game.lkr`
 - More advanced terminal/console
+- Text Editor
+- Sprite Editor
+- SFX Editor
+- Music Editor
 
 ![Alt text](console.png?raw=true "Console")
 
