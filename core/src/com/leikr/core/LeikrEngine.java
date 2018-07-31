@@ -5,21 +5,19 @@
  */
 package com.leikr.core;
 
+import Graphics.LeikrPalette;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.leikr.core.Leikr;
-import static com.leikr.core.LeikrGameScreen.game;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -52,12 +50,14 @@ public class LeikrEngine implements InputProcessor {
     TextureRegion[][] regions;
 
     Map<Integer, TextureRegion> sprites;
+    LeikrPalette leikrPalette;
 
     public void create() {
         this.spriteSheet = LeikrGameScreen.spriteSheet;
         regions = TextureRegion.split(spriteSheet, 8, 8);
         sprites = new HashMap<>();
         mapAllSprites();
+        leikrPalette = new LeikrPalette();
         
         System.out.println(sprites.size());
         shapeRenderer = new ShapeRenderer();
@@ -68,6 +68,16 @@ public class LeikrEngine implements InputProcessor {
 
     public void setBackgroundColor(String color) {
         backgroundColor = color.toUpperCase();
+    }
+    
+    public void drawPalette(int x, int y, int w, int h){
+        shapeRenderer.begin(ShapeType.Filled);
+        for(int c : leikrPalette.palette){
+            shapeRenderer.setColor(new Color(c));
+            shapeRenderer.rect(x, y, w, h);
+            x+=w;
+        }
+        shapeRenderer.end();
     }
 
     public void preRender() {
