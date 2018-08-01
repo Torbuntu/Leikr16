@@ -192,76 +192,17 @@ public class LeikrEngine implements InputProcessor {
      */
     public void drawRect(int x, int y, int width, int height, int color, String type) {
         paintBrush.drawRect(x, y, width, height, color, type);
-        
-//        switch (color) {
-//            case "RED":
-//                shapeRenderer.setColor(Color.RED);
-//                break;
-//            case "GREEN":
-//                shapeRenderer.setColor(Color.GREEN);
-//                break;
-//            case "BLUE":
-//                shapeRenderer.setColor(Color.BLUE);
-//                break;
-//            case "WHITE":
-//                shapeRenderer.setColor(Color.WHITE);
-//                break;
-//            case "YELLOW":
-//                shapeRenderer.setColor(Color.YELLOW);
-//                break;
-//            case "PINK":
-//                shapeRenderer.setColor(Color.PINK);
-//                break;
-//            case "PURPLE":
-//                shapeRenderer.setColor(Color.PURPLE);
-//                break;
-//            case "ORANGE":
-//                shapeRenderer.setColor(Color.ORANGE);
-//                break;
-//            case "BROWN":
-//                shapeRenderer.setColor(Color.BROWN);
-//                break;
-//            default:
-//                shapeRenderer.setColor(Color.BLACK);
-//                break;
-//        }
-
-        shapeRenderer.rect(x, y, width, height);
-        shapeRenderer.end();
-
     }
 
-    public void drawCircle(int x, int y, int radius, String color, String type) {
-        switch (type) {
-            case "Filled":
-                shapeRenderer.begin(ShapeType.Filled);
-                break;
-            case "Line":
-                shapeRenderer.begin(ShapeType.Line);
-                break;
-            default:
-                shapeRenderer.begin(ShapeType.Line);
-                break;
-        }
-        switch (color) {
-            case "RED":
-                shapeRenderer.setColor(Color.RED);
-                break;
-            case "GREEN":
-                shapeRenderer.setColor(Color.GREEN);
-                break;
-            case "BLUE":
-                shapeRenderer.setColor(Color.BLUE);
-                break;
-            case "WHITE":
-                shapeRenderer.setColor(Color.WHITE);
-                break;
-            default:
-                shapeRenderer.setColor(Color.BLACK);
-                break;
-        }
-        shapeRenderer.circle(x, y, radius);
-        shapeRenderer.end();
+    public void drawCircle(int x, int y, int radius, int color, String type) {
+        paintBrush.drawCircle(x, y, radius, color, type);
+    }
+    
+    public void drawArc(int x, int y, int radius, int start, int degrees, int color, String type){
+        paintBrush.drawArc(x, y, radius, start, degrees, color, type);
+    }
+    public void drawLine(int x, int y, int x2, int y2, int color){
+        paintBrush.drawLine(x, y, x2, y2, color);
     }
 
     public boolean rightKeyPressed() {
