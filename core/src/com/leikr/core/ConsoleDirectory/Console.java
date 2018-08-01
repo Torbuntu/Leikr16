@@ -25,7 +25,6 @@ public class Console implements InputProcessor {
     Viewport viewport;
     public static String fileName = "LeikrGame";
 
-
     final Leikr game;
     ConsoleScreen consoleScreen;
 
@@ -71,7 +70,6 @@ public class Console implements InputProcessor {
         fontHandler.updateViewport(width, height);
     }
 
-
     @Override
     public boolean keyDown(int keycode) {
         return false;
@@ -85,7 +83,7 @@ public class Console implements InputProcessor {
                 break;
             case Input.Keys.ENTER: {
                 try {
-                    shellHandler.handleInput(fontHandler.commandBuffer, fontHandler.historyBuffer);
+                    shellHandler.handleInput(fontHandler.getCommands(), fontHandler.getHistory());
                 } catch (IOException ex) {
                     Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
                 }

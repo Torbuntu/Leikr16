@@ -5,7 +5,7 @@
  */
 package com.leikr.core;
 
-import Graphics.LeikrPalette;
+import com.leikr.core.Graphics.LeikrPalette;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.Input.Keys;
@@ -18,6 +18,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.leikr.core.Graphics.PaintBrush;
+import com.leikr.core.Graphics.SpriteHandler;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -28,7 +30,7 @@ import java.util.Random;
  */
 public class LeikrEngine implements InputProcessor {
 
-    Leikr game = LeikrGameScreen.game;
+    public static Leikr game;
     ShapeRenderer shapeRenderer;
     Camera camera;
     Viewport viewport;
@@ -46,36 +48,38 @@ public class LeikrEngine implements InputProcessor {
     public int screenHeight = 160;
 
     public String backgroundColor = "BLACK";
-    Texture spriteSheet;
-    TextureRegion[][] regions;
 
-    Map<Integer, TextureRegion> sprites;
     LeikrPalette leikrPalette;
+    SpriteHandler spriteHandler;
+    PaintBrush paintBrush;
 
     public void create() {
-        this.spriteSheet = LeikrGameScreen.spriteSheet;
-        regions = TextureRegion.split(spriteSheet, 8, 8);
-        sprites = new HashMap<>();
-        mapAllSprites();
-        leikrPalette = new LeikrPalette();
-        
-        System.out.println(sprites.size());
+        game = LeikrGameScreen.game;
         shapeRenderer = new ShapeRenderer();
+
+        spriteHandler = new SpriteHandler(game);
+        paintBrush = new PaintBrush(shapeRenderer, game);
+        leikrPalette = new LeikrPalette();
+
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
         font = new Texture("LeikrFontA.png");
+    }
+    
+    public void drawColor(int id, int x, int y){
+        paintBrush.drawColor(id, x, y);
     }
 
     public void setBackgroundColor(String color) {
         backgroundColor = color.toUpperCase();
     }
-    
-    public void drawPalette(int x, int y, int w, int h){
+
+    public void drawPalette(int x, int y, int w, int h) {
         shapeRenderer.begin(ShapeType.Filled);
-        for(int c : leikrPalette.palette){
+        for (int c : leikrPalette.palette) {
             shapeRenderer.setColor(new Color(c));
             shapeRenderer.rect(x, y, w, h);
-            x+=w;
+            x += w;
         }
         shapeRenderer.end();
     }
@@ -115,17 +119,6 @@ public class LeikrEngine implements InputProcessor {
     public void dispose() {
         shapeRenderer.dispose();
         font.dispose();
-    }
-
-    //adds all of the split textures from regions to the sprites map for easier calling.
-    void mapAllSprites() {
-        int id = 0;
-        for (int row = 0; row < regions.length; row++) {
-            for (int col = 0; col < regions[row].length; col++) {
-                sprites.put(id, regions[row][col]);
-                id++;
-            }
-        }
     }
 
     //Updates the view on resize in the Leikr main.
@@ -180,17 +173,12 @@ public class LeikrEngine implements InputProcessor {
     }
 
     void drawSprite(int id, float x, float y) {
-        game.batch.begin();
-        game.batch.draw(sprites.get(id), x, y);
-        game.batch.end();
+        spriteHandler.drawSprite(id, x, y);
 
     }
 
     void drawSprite(int id, float x, float y, int scaleX, int scaleY) {
-        game.batch.begin();
-        game.batch.draw(sprites.get(id), x, y, scaleX, scaleY);
-        game.batch.end();
-
+        spriteHandler.drawSprite(id, x, y, scaleX, scaleY);
     }
 
     /**
@@ -202,51 +190,41 @@ public class LeikrEngine implements InputProcessor {
      * @param color
      * @param type
      */
-    public void drawRect(int x, int y, int width, int height, String color, String type) {
-
-        switch (type) {
-            case "Filled":
-                shapeRenderer.begin(ShapeType.Filled);
-                break;
-            case "Line":
-                shapeRenderer.begin(ShapeType.Line);
-                break;
-            default:
-                shapeRenderer.begin(ShapeType.Line);
-                break;
-        }
-        switch (color) {
-            case "RED":
-                shapeRenderer.setColor(Color.RED);
-                break;
-            case "GREEN":
-                shapeRenderer.setColor(Color.GREEN);
-                break;
-            case "BLUE":
-                shapeRenderer.setColor(Color.BLUE);
-                break;
-            case "WHITE":
-                shapeRenderer.setColor(Color.WHITE);
-                break;
-            case "YELLOW":
-                shapeRenderer.setColor(Color.YELLOW);
-                break;
-            case "PINK":
-                shapeRenderer.setColor(Color.PINK);
-                break;
-            case "PURPLE":
-                shapeRenderer.setColor(Color.PURPLE);
-                break;
-            case "ORANGE":
-                shapeRenderer.setColor(Color.ORANGE);
-                break;
-            case "BROWN":
-                shapeRenderer.setColor(Color.BROWN);
-                break;
-            default:
-                shapeRenderer.setColor(Color.BLACK);
-                break;
-        }
+    public void drawRect(int x, int y, int width, int height, int color, String type) {
+        paintBrush.drawRect(x, y, width, height, color, type);
+        
+//        switch (color) {
+//            case "RED":
+//                shapeRenderer.setColor(Color.RED);
+//                break;
+//            case "GREEN":
+//                shapeRenderer.setColor(Color.GREEN);
+//                break;
+//            case "BLUE":
+//                shapeRenderer.setColor(Color.BLUE);
+//                break;
+//            case "WHITE":
+//                shapeRenderer.setColor(Color.WHITE);
+//                break;
+//            case "YELLOW":
+//                shapeRenderer.setColor(Color.YELLOW);
+//                break;
+//            case "PINK":
+//                shapeRenderer.setColor(Color.PINK);
+//                break;
+//            case "PURPLE":
+//                shapeRenderer.setColor(Color.PURPLE);
+//                break;
+//            case "ORANGE":
+//                shapeRenderer.setColor(Color.ORANGE);
+//                break;
+//            case "BROWN":
+//                shapeRenderer.setColor(Color.BROWN);
+//                break;
+//            default:
+//                shapeRenderer.setColor(Color.BLACK);
+//                break;
+//        }
 
         shapeRenderer.rect(x, y, width, height);
         shapeRenderer.end();

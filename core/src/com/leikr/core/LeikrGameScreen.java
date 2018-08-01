@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class LeikrGameScreen implements Screen, InputProcessor {
 
-    static Leikr game;
+    public static Leikr game;
     String fileName;
 
     final GroovyClassLoader classLoader;

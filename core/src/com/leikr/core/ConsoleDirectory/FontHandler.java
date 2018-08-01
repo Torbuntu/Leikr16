@@ -15,26 +15,25 @@ import java.util.ArrayList;
  * @author tor
  */
 public class FontHandler {
-
-    //New groovy shell.
-    ArrayList<String> commandBuffer = new ArrayList<>();
-    ArrayList<String> historyBuffer = new ArrayList<>();
+    
+    TextBuffer textBuffer;
     SpriteBatch batch;
     Texture font;
     Viewport viewport;
     float blink;
-
+    
     float line;
     float carriage;
-
+    
     public FontHandler(SpriteBatch batch, Viewport viewport) {
         this.batch = batch;
         this.viewport = viewport;
-
+        textBuffer = new TextBuffer();
+        
         font = new Texture("LeikrFontA.png");
         blink = 0;
     }
-
+    
     private void drawFont(String characters) {
         for (char C : characters.toCharArray()) {
             if (carriage >= viewport.getWorldWidth() - 8f) {
@@ -51,7 +50,7 @@ public class FontHandler {
     //Runs through the history buffer and sets the items to the screen. Returns the line position to correctly set the command buffer input.
     public void displayHistoryString(float ln) {
         line = ln;
-        for (String item : historyBuffer) {
+        for (String item : textBuffer.history) {
             carriage = 0;
             drawFont(item);
             line -= 8f;
@@ -62,19 +61,20 @@ public class FontHandler {
     public void displayBufferedString(float delta) {
         carriage = 0;
         line = viewport.getWorldHeight() - 8f;
-
-        String result = String.join(",", commandBuffer).replaceAll(",", "");
-        if (historyBuffer.size() > 0) {
+        
+        String result = textBuffer.getCommandString();
+        
+        if (textBuffer.history.size() > 0) {
             displayHistoryString(line);
             carriage = 0;
         }
         
         drawFont("~$" + result);//pre-pend the path chars
 
-        if (line <= -8f && historyBuffer.size() > 0) {
-            System.out.println(historyBuffer.remove(0));
+        if (line <= -8f && textBuffer.history.size() > 0) {
+            System.out.println(textBuffer.history.remove(0));
         }
-
+        
         if (blink > 0.4) {
             batch.draw(font, carriage, line, 0, 0, 8, 8);
             blink += delta;
@@ -85,35 +85,38 @@ public class FontHandler {
             blink += delta;
         }
     }
-
+    
     public void addKeyStroke(char character) {
         //If the character not backspace or enter.
-        if ((int) character != 8 && (int) character != 10) {
-            commandBuffer.add(String.valueOf(character));
-        }
+        textBuffer.addCommand(character);
     }
-
+    
     public void clearCommandBuffer() {
-        commandBuffer.clear();
+        textBuffer.command.clear();
     }
-
+    
     public void clearHistoryBuffer() {
-        historyBuffer.clear();
+        textBuffer.history.clear();
     }
-
+    
     public void backspaceHandler() {
-        if (commandBuffer.size() > 0) {
-            commandBuffer.remove(commandBuffer.size() - 1);
-        }
+        textBuffer.performBackspace();
+    }
+    
+    public ArrayList<String> getHistory(){
+        return textBuffer.history;
+    }
+    public ArrayList<String> getCommands(){
+        return textBuffer.command;
     }
 
     //Updates the view on resize in the Leikr main.
     public void updateViewport(int width, int height) {
         viewport.update(width, height, true);
     }
-
+    
     public void disposeFont() {
         font.dispose();
     }
-
+    
 }
