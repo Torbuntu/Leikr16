@@ -8,6 +8,7 @@ package com.leikr.core.ConsoleDirectory;
 import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import com.leikr.core.Leikr;
 import com.leikr.core.LeikrGameScreen;
+import com.leikr.core.SpriteEditor.SpriteEditorScreen;
 import groovy.lang.GroovyShell;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,6 +124,10 @@ public class ShellHandler {
                 break;
             case "run":
                 game.setScreen(new LeikrGameScreen(game));
+                consoleScreen.dispose();
+                break;
+            case "SpriteEditor":
+                game.setScreen(new SpriteEditorScreen(game));
                 consoleScreen.dispose();
                 break;
             default: //Default, command not recognized.
