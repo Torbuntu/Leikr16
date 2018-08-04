@@ -10,6 +10,7 @@ A Java(libgdx) based Fantasy Computer(Console) that uses groovy scripted game fi
 
 # Planned Features
 - 16 color palette (WIP)
+- Sprite Editor(WIP)
 - 'large' sprites by combining 2 or 4 sprite ID's (WIP)
 - Tiled Maps (256x256 map file)
 - Music
@@ -17,7 +18,6 @@ A Java(libgdx) based Fantasy Computer(Console) that uses groovy scripted game fi
 - Online repository of game packages. example: `lkpm install Game.lkr`
 - More advanced terminal/console
 - Text Editor
-- Sprite Editor
 - SFX Editor
 - Music Editor
 
@@ -31,3 +31,6 @@ A Java(libgdx) based Fantasy Computer(Console) that uses groovy scripted game fi
 
 # Demo file showing a Sprite being drawn to the screen. The Sprite is 8x8 pixels but it is stretched to 32x32. In the demo it bounces around the screen like a sort of primitive screen saver.
 ![Alt text](BounceDemo.png?raw=true "Bounce demo")
+
+# Work in progress sprite editor.
+![Alt text](spriteEditor.png?raw=true "spriteEditor")
