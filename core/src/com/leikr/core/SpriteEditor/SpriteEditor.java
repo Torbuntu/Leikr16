@@ -8,13 +8,21 @@ package com.leikr.core.SpriteEditor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
+import com.leikr.core.Graphics.LeikrPalette;
 import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Leikr;
 import static com.leikr.core.LeikrEngine.game;
@@ -33,26 +41,62 @@ class SpriteEditor implements InputProcessor {
     Camera camera;
     ShapeRenderer renderer;
     PaintBrush paintBrush;
-    HashMap<Integer, Integer[]> position;
+
+    SpriteBatch batch;
+    Pixmap pixmap;
+    Texture texture;
+    String filePath;
+    Color drawColor;
 
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
+        batch = game.batch;
         sriteEditorScreen = speScreen;
+        drawColor = Color.BLACK;
+
         renderer = new ShapeRenderer();
         paintBrush = new PaintBrush(renderer, game);
 
-        position = new HashMap<>();
+        if (fileName == null) {
+            filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/LeikrGame/LeikrGame.png";//sets game path
+        } else {
+            filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/" + fileName + ".png";//sets game path
+        }
+        pixmap = new Pixmap(new FileHandle(filePath));
+        texture = new Texture(pixmap);
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
+        camera.position.set(260 / 2f, 160 / 2f, 0);
+
         Gdx.input.setInputProcessor(this);
     }
 
     public void renderSpriteEditor(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(.1f, .1f, .1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        game.batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(camera.combined);
         renderer.setProjectionMatrix(camera.combined);
+        int count = 0;
+        int color = 0;
+        for (float item : paintBrush.leikrPalette.palette) {
+            paintBrush.drawRect(count, 0, 8, 8, color, "filled");
+            count += 10;
+            color++;
+        }
+
+        renderer.begin(ShapeRenderer.ShapeType.Line);
+        renderer.setColor(Color.RED);
+        renderer.rect(1, 10, texture.getWidth() + 2, texture.getHeight() + 2);
+        renderer.end();
+        batch.begin();
+
+        if (texture != null) {
+            batch.draw(texture, 2, 10);
+        }
+
+        batch.end();
+
     }
 
     public void updateViewport(int width, int height) {
@@ -60,7 +104,8 @@ class SpriteEditor implements InputProcessor {
     }
 
     public void disposeSpriteEditor() {
-
+        renderer.dispose();
+        game.batch.dispose();
     }
 
     @Override
@@ -84,8 +129,64 @@ class SpriteEditor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.println(screenX + " : " + screenY);
+        Vector3 coords = camera.unproject(new Vector3(screenX, screenY, 0));
+
+        System.out.println("X: " + coords.x);
+        System.out.println("Y: " + coords.y);
+        System.out.println("Button: " + button);
+
+        if (button == 0) {
+            int graphicsY = (int) (camera.viewportHeight - coords.y) - 22;
+            pixmap.setColor(drawColor);
+            pixmap.drawPixel((int) coords.x, graphicsY);
+            texture.draw(pixmap, 0, 0);
+        } else if (button == 1) {
+            switch ((int) coords.x) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                    System.out.println("transparent");
+                    drawColor.set(paintBrush.leikrPalette.palette.get(0));
+                    break;
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                case 18:
+                case 19:
+                case 20:
+                    System.out.println("light blue");
+                    drawColor.set(paintBrush.leikrPalette.palette.get(1));
+                    break;
+                case 21:
+                case 22:
+                case 23:
+                case 24:
+                case 25:
+                case 26:
+                case 27:
+                case 28:
+                case 29:
+                case 30:
+                    System.out.println("Dark blue");
+                    drawColor.set(paintBrush.leikrPalette.palette.get(2));
+                    break;
+
+            }
+            //Color color = new Color(ScreenUtils.getFrameBufferPixmap(0, 0, (int) camera.viewportWidth, (int) camera.viewportHeight).getPixel((int) coords.x, graphicsY));
+        }
         return false;
+
     }
 
     @Override
@@ -95,6 +196,7 @@ class SpriteEditor implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+
         return false;
     }
 

@@ -18,7 +18,7 @@ public class PaintBrush {
 
     ShapeRenderer shapeRenderer;
     Leikr game;
-    LeikrPalette leikrPalette;
+    public LeikrPalette leikrPalette;
 
     public PaintBrush(ShapeRenderer sr, Leikr game) {
         this.game = game;
