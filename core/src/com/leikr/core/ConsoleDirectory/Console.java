@@ -24,6 +24,7 @@ public class Console implements InputProcessor {
     Camera camera;
     Viewport viewport;
     public static String fileName = "LeikrGame";
+    public static String gameType = "groovy";
 
     final Leikr game;
     ConsoleScreen consoleScreen;

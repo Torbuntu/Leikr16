@@ -6,6 +6,7 @@
 package com.leikr.core.ConsoleDirectory;
 
 import static com.leikr.core.ConsoleDirectory.Console.fileName;
+import static com.leikr.core.ConsoleDirectory.Console.gameType;
 import com.leikr.core.Leikr;
 import com.leikr.core.LeikrGameScreen;
 import com.leikr.core.SpriteEditor.SpriteEditorScreen;
@@ -82,7 +83,12 @@ public class ShellHandler {
         switch (inputList[0]) {
             case "load":
                 fileName = inputList[1];
-                historyBuffer.add("File " + inputList[1] + " has been loaded");
+                String out = "File " + inputList[1] + " has been loaded";
+                if (inputList.length > 2) {
+                    gameType = inputList[2];
+                    out += ". Game type "+inputList[2]+ " set.";
+                }
+                historyBuffer.add(out);
                 break;
             case "gv":
                 inputString = inputString.replaceFirst("gv ", "");

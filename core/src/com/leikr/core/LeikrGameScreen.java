@@ -14,12 +14,22 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import static com.leikr.core.ConsoleDirectory.Console.gameType;
 import com.leikr.core.Leikr;
 import groovy.lang.GroovyClassLoader;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
+import org.codehaus.groovy.control.CompilationFailedException;
 
 /**
  *
@@ -30,24 +40,63 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     public static Leikr game;
     String fileName;
 
-    final GroovyClassLoader classLoader;
-    Class gameLoader;
+    GroovyClassLoader groovyClassLoader;
+    Class groovyGameLoader;
     LeikrEngine leikrGame;
-    
+
     public static Texture spriteSheet;
+
+    ScriptEngineManager scriptManager;
+    ScriptEngine scriptEngine;
 
     public LeikrGameScreen(Leikr game) throws IOException {
         LeikrGameScreen.game = game;
+        scriptManager = new ScriptEngineManager();
+
         fileName = Console.fileName;
-        String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/"+fileName+"/";//sets game path
-        classLoader = new GroovyClassLoader();
-        gameLoader = classLoader.parseClass(new File(filePath + fileName + ".groovy"));//loads the game code
-        
+        String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/";//sets game path
         spriteSheet = new Texture(filePath + fileName + ".png");
-        System.out.println(filePath + fileName+".png");
-        
+        if (gameType.equals("groovy")) {
+            loadGroovyGame(filePath);
+
+        }
+        if (gameType.equals("java")) {
+            loadJavaGame(filePath);
+        }
+
+    }
+
+    public void loadJavaGame(String filePath) {
+
+        File f = new File(filePath);// Create file of Java game.
         try {
-            leikrGame = (LeikrEngine) gameLoader.newInstance();
+            // Create URL for loading the external files.
+            URL[] cp = {f.toURI().toURL()};
+            URLClassLoader urlCl = new URLClassLoader(cp);
+            
+            //Compile the Java source code.
+            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+            String toCompile = java.io.File.separator + filePath +fileName +".java";
+            compiler.run(null, null, null, toCompile);
+            
+            //New instance
+            leikrGame = (LeikrEngine) urlCl.loadClass(fileName).newInstance();
+        } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(LeikrGameScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void loadGroovyGame(String filePath) {
+        groovyClassLoader = new GroovyClassLoader();
+        try {
+            groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + fileName + ".groovy"));//loads the game code
+        } catch (CompilationFailedException | IOException ex) {
+            Logger.getLogger(LeikrGameScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            leikrGame = (LeikrEngine) groovyGameLoader.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(LeikrGameScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -63,9 +112,9 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     @Override
     public void render(float delta) {
         leikrGame.preRender();
-        
+
         leikrGame.renderCamera();
-        
+
         leikrGame.render();
     }
 
