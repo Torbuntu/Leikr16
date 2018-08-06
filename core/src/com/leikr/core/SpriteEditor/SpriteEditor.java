@@ -16,8 +16,10 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import static com.leikr.core.ConsoleDirectory.Console.fileName;
@@ -64,11 +66,8 @@ class SpriteEditor implements InputProcessor {
         }
         pixmap = new Pixmap(new FileHandle(filePath));
         texture = new Texture(pixmap);
-
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
-        camera.position.set(260 / 2f, 160 / 2f, 0);
-
         Gdx.input.setInputProcessor(this);
     }
 
@@ -89,6 +88,8 @@ class SpriteEditor implements InputProcessor {
         renderer.setColor(Color.RED);
         renderer.rect(1, 10, texture.getWidth() + 2, texture.getHeight() + 2);
         renderer.end();
+        
+        
         batch.begin();
 
         if (texture != null) {
@@ -100,7 +101,8 @@ class SpriteEditor implements InputProcessor {
     }
 
     public void updateViewport(int width, int height) {
-        viewport.update(width, height);
+        viewport.update(width, height, true);
+        camera.update();
     }
 
     public void disposeSpriteEditor() {
@@ -130,16 +132,15 @@ class SpriteEditor implements InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector3 coords = camera.unproject(new Vector3(screenX, screenY, 0));
-
+        
         System.out.println("X: " + coords.x);
         System.out.println("Y: " + coords.y);
-        System.out.println("Button: " + button);
 
         if (button == 0) {
-            int graphicsY = (int) (camera.viewportHeight - coords.y) - 22;
+            int graphicsY = (int) (camera.viewportHeight - coords.y);
             pixmap.setColor(drawColor);
             pixmap.drawPixel((int) coords.x, graphicsY);
-            texture.draw(pixmap, 0, 0);
+            texture.draw(pixmap, 0, 0);            
         } else if (button == 1) {
             switch ((int) coords.x) {
                 case 1:
@@ -180,6 +181,30 @@ class SpriteEditor implements InputProcessor {
                 case 30:
                     System.out.println("Dark blue");
                     drawColor.set(paintBrush.leikrPalette.palette.get(2));
+                    break;
+                case 31:
+                case 32:
+                case 33:
+                case 34:
+                case 35:
+                case 36:
+                case 37:
+                case 38:
+                case 39:
+                case 40:
+                    drawColor.set(paintBrush.leikrPalette.palette.get(3));
+                    break;
+                case 41:
+                case 42:
+                case 43:
+                case 44:
+                case 45:
+                case 46:
+                case 47:
+                case 48:
+                case 49:
+                case 50:
+                    drawColor.set(paintBrush.leikrPalette.palette.get(4));
                     break;
 
             }
