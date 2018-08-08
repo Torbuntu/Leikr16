@@ -50,11 +50,15 @@ class SpriteEditor implements InputProcessor {
     String filePath;
     Color drawColor;
 
+    Vector2 coords;
+
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
         batch = game.batch;
         sriteEditorScreen = speScreen;
         drawColor = Color.BLACK;
+
+        coords = new Vector2();
 
         renderer = new ShapeRenderer();
         paintBrush = new PaintBrush(renderer, game);
@@ -88,8 +92,7 @@ class SpriteEditor implements InputProcessor {
         renderer.setColor(Color.RED);
         renderer.rect(1, 10, texture.getWidth() + 2, texture.getHeight() + 2);
         renderer.end();
-        
-        
+
         batch.begin();
 
         if (texture != null) {
@@ -129,87 +132,80 @@ class SpriteEditor implements InputProcessor {
         return false;
     }
 
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Vector3 coords = camera.unproject(new Vector3(screenX, screenY, 0));
-        
-        System.out.println("X: " + coords.x);
-        System.out.println("Y: " + coords.y);
+    public void drawPixelsOnTouch(int screenX, int screenY, int button) {
+        viewport.unproject(coords.set(screenX, screenY));
 
         if (button == 0) {
-            int graphicsY = (int) (camera.viewportHeight - coords.y);
+            int graphicsY = (int) (camera.viewportHeight - (coords.y));
             pixmap.setColor(drawColor);
-            pixmap.drawPixel((int) coords.x, graphicsY);
-            texture.draw(pixmap, 0, 0);            
+            pixmap.drawPixel((int) coords.x - 2, graphicsY - 22);
+            texture.draw(pixmap, 0, 0);
         } else if (button == 1) {
-            switch ((int) coords.x) {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                case 10:
-                    System.out.println("transparent");
-                    drawColor.set(paintBrush.leikrPalette.palette.get(0));
-                    break;
-                case 11:
-                case 12:
-                case 13:
-                case 14:
-                case 15:
-                case 16:
-                case 17:
-                case 18:
-                case 19:
-                case 20:
-                    System.out.println("light blue");
-                    drawColor.set(paintBrush.leikrPalette.palette.get(1));
-                    break;
-                case 21:
-                case 22:
-                case 23:
-                case 24:
-                case 25:
-                case 26:
-                case 27:
-                case 28:
-                case 29:
-                case 30:
-                    System.out.println("Dark blue");
-                    drawColor.set(paintBrush.leikrPalette.palette.get(2));
-                    break;
-                case 31:
-                case 32:
-                case 33:
-                case 34:
-                case 35:
-                case 36:
-                case 37:
-                case 38:
-                case 39:
-                case 40:
-                    drawColor.set(paintBrush.leikrPalette.palette.get(3));
-                    break;
-                case 41:
-                case 42:
-                case 43:
-                case 44:
-                case 45:
-                case 46:
-                case 47:
-                case 48:
-                case 49:
-                case 50:
-                    drawColor.set(paintBrush.leikrPalette.palette.get(4));
-                    break;
-
+            if (coords.x >= 1 && coords.x <= 10) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(0));
+            }
+            if (coords.x >= 11 && coords.x <= 20) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(1));
+            }
+            if (coords.x >= 21 && coords.x <= 30) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(2));
+            }
+            if (coords.x >= 31 && coords.x <= 40) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(3));
+            }
+            if (coords.x >= 41 && coords.x <= 50) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(4));
+            }
+            if (coords.x >= 51 && coords.x <= 60) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(5));
+            }
+            if (coords.x >= 61 && coords.x <= 70) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(6));
+            }
+            if (coords.x >= 71 && coords.x <= 80) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(7));
+            }
+            if (coords.x >= 81 && coords.x <= 90) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(8));
+            }
+            if (coords.x >= 91 && coords.x <= 100) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(9));
+            }
+            if (coords.x >= 101 && coords.x <= 110) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(10));
+            }
+            if (coords.x >= 111 && coords.x <= 120) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(11));
+            }
+            if (coords.x >= 121 && coords.x <= 130) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(12));
+            }
+            if (coords.x >= 131 && coords.x <= 140) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(13));
+            }
+            if (coords.x >= 141 && coords.x <= 150) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(14));
+            }
+            if (coords.x >= 151 && coords.x <= 160) {
+                drawColor.set(paintBrush.leikrPalette.palette.get(15));
             }
             //Color color = new Color(ScreenUtils.getFrameBufferPixmap(0, 0, (int) camera.viewportWidth, (int) camera.viewportHeight).getPixel((int) coords.x, graphicsY));
         }
+    }
+
+    public void drawPixelsOnTouch(int screenX, int screenY) {
+        viewport.unproject(coords.set(screenX, screenY));
+
+        int graphicsY = (int) (camera.viewportHeight - (coords.y));
+        pixmap.setColor(drawColor);
+        pixmap.drawPixel((int) coords.x - 2, graphicsY - 22);
+        texture.draw(pixmap, 0, 0);
+
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        drawPixelsOnTouch(screenX, screenY, button);
         return false;
 
     }
@@ -221,7 +217,7 @@ class SpriteEditor implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-
+        drawPixelsOnTouch(screenX, screenY);
         return false;
     }
 

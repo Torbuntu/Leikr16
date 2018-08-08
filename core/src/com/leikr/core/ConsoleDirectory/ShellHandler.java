@@ -68,6 +68,8 @@ public class ShellHandler {
     public void handleInput(ArrayList<String> commandBuffer, ArrayList<String> historyBuffer) throws IOException {
         //parse the command buffer into a String.
         String inputString = String.join(",", commandBuffer).replaceAll(",", "");
+        
+        
         String[] inputList = inputString.split(" ");
 
         historyBuffer.add("~$" + inputString);

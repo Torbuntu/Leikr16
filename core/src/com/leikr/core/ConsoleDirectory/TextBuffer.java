@@ -15,10 +15,12 @@ public class TextBuffer {
 
     ArrayList<String> command;
     ArrayList<String> history;
+    ArrayList<String> sessionHistory;
 
     public TextBuffer() {
         command = new ArrayList<>();
         history = new ArrayList<>();
+        sessionHistory = new ArrayList<>();
     }
     
     public String getCommandString(){
