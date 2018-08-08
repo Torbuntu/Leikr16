@@ -40,12 +40,15 @@ public class SystemLoader {
 
     private void initFileSystem() {
         String RootFileSystem = Gdx.files.getExternalStoragePath();
-        new File(RootFileSystem + "LeikrVirtualDrive/").mkdir();
-        new File(RootFileSystem + "LeikrVirtualDrive/" + "ChipSpace").mkdir();
-        new File(RootFileSystem + "LeikrVirtualDrive/" + "OS").mkdir();
+
         try {
+            new File(RootFileSystem + "LeikrVirtualDrive/").mkdir();
+            new File(RootFileSystem + "LeikrVirtualDrive/" + "ChipSpace").mkdir();
+            new File(RootFileSystem + "LeikrVirtualDrive/ChipSpace/" + "LeikrGame/").mkdir();
+            new File(RootFileSystem + "LeikrVirtualDrive/" + "OS").mkdir();
+            
             new File(RootFileSystem + "LeikrVirtualDrive/OS/" + "Methods.groovy").createNewFile();
-            new File(RootFileSystem + "LeikrVirtualDrive/ChipSpace/" + "LeikrGame.groovy").createNewFile();
+            new File(RootFileSystem + "LeikrVirtualDrive/ChipSpace/LeikrGame/" + "LeikrGame.groovy").createNewFile();
 
         } catch (IOException ex) {
             Logger.getLogger(SystemLoader.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,7 +65,7 @@ public class SystemLoader {
                     + "   \n"
                     + "    def void render(){\n"
                     + "        //Your render code here.\n"
-                    + "        drawText(\"Welcome to Leikr!\", 50, 100);\n"
+                    + "        drawText(\"Welcome to Leikr!\", 50, 100, \"WHITE\");\n"
                     + "    }\n"
                     + "}";
             writer.write(gameContent);
