@@ -17,19 +17,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
-import com.leikr.core.Graphics.LeikrPalette;
 import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Leikr;
-import static com.leikr.core.LeikrEngine.game;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -47,10 +40,16 @@ class SpriteEditor implements InputProcessor {
     SpriteBatch batch;
     Pixmap pixmap;
     Texture texture;
+    Texture saveIcon;
+    Texture undoIcon;
+    
     String filePath;
     Color drawColor;
 
     Vector2 coords;
+    
+    int saveIconXPos;
+    int undoIconXPos;
 
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
@@ -70,8 +69,16 @@ class SpriteEditor implements InputProcessor {
         }
         pixmap = new Pixmap(new FileHandle(filePath));
         texture = new Texture(pixmap);
+        saveIcon = new Texture("saveIcon.png");
+        undoIcon = new Texture("undoIcon.png");
+        
+        
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
+        
+        
+        saveIconXPos = (int)viewport.getWorldWidth()-18;
+        undoIconXPos = (int)viewport.getWorldWidth()-8;
         Gdx.input.setInputProcessor(this);
     }
 
@@ -97,6 +104,13 @@ class SpriteEditor implements InputProcessor {
 
         if (texture != null) {
             batch.draw(texture, 2, 10);
+        }
+        
+        if(saveIcon != null){
+            batch.draw(saveIcon, saveIconXPos, 0);
+        }
+        if(undoIcon != null){
+            batch.draw(undoIcon, undoIconXPos, 0);
         }
 
         batch.end();
@@ -134,9 +148,16 @@ class SpriteEditor implements InputProcessor {
 
     public void drawPixelsOnTouch(int screenX, int screenY, int button) {
         viewport.unproject(coords.set(screenX, screenY));
+            int graphicsY = (int) (camera.viewportHeight - (coords.y));
+            
+            if(coords.x >= saveIconXPos && coords.x <= saveIconXPos +8 && coords.y <= 8){
+                System.out.println("Save Pressed");                
+            }
+            if(coords.x >= undoIconXPos && coords.x <= undoIconXPos +8 && coords.y <= 8){
+                System.out.println("Undo pressed");
+            }
 
         if (button == 0) {
-            int graphicsY = (int) (camera.viewportHeight - (coords.y));
             pixmap.setColor(drawColor);
             pixmap.drawPixel((int) coords.x - 2, graphicsY - 22);
             texture.draw(pixmap, 0, 0);
