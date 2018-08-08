@@ -44,8 +44,6 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     Class groovyGameLoader;
     LeikrEngine leikrGame;
 
-    public static Texture spriteSheet;
-
     ScriptEngineManager scriptManager;
     ScriptEngine scriptEngine;
 
@@ -55,7 +53,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
 
         fileName = Console.fileName;
         String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/";//sets game path
-        spriteSheet = new Texture(filePath + fileName + ".png");
+        
         if (gameType.equals("groovy")) {
             loadGroovyGame(filePath);
 

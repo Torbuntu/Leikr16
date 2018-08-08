@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Graphics.PaintBrush;
+import com.leikr.core.Graphics.SpriteHandler;
 import com.leikr.core.Leikr;
 
 /**
@@ -42,17 +44,26 @@ class SpriteEditor implements InputProcessor {
     Texture texture;
     Texture saveIcon;
     Texture undoIcon;
-    
+
     String filePath;
     Color drawColor;
 
     Vector2 coords;
-    
+
     int saveIconXPos;
     int undoIconXPos;
 
+    SpriteHandler spriteHandler;
+
+    int spriteZoom = 0;
+    
+    int mainBoxWidth;
+    int mainBoxHeight;
+
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
+        spriteHandler = new SpriteHandler(game);
+
         batch = game.batch;
         sriteEditorScreen = speScreen;
         drawColor = Color.BLACK;
@@ -69,16 +80,17 @@ class SpriteEditor implements InputProcessor {
         }
         pixmap = new Pixmap(new FileHandle(filePath));
         texture = new Texture(pixmap);
+        mainBoxWidth = texture.getWidth()+2;
+        mainBoxHeight = texture.getHeight()+2;
+        
         saveIcon = new Texture("saveIcon.png");
         undoIcon = new Texture("undoIcon.png");
-        
-        
+
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
-        
-        
-        saveIconXPos = (int)viewport.getWorldWidth()-18;
-        undoIconXPos = (int)viewport.getWorldWidth()-8;
+
+        saveIconXPos = (int) viewport.getWorldWidth() - 18;
+        undoIconXPos = (int) viewport.getWorldWidth() - 8;
         Gdx.input.setInputProcessor(this);
     }
 
@@ -97,7 +109,7 @@ class SpriteEditor implements InputProcessor {
 
         renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setColor(Color.RED);
-        renderer.rect(1, 10, texture.getWidth() + 2, texture.getHeight() + 2);
+        renderer.rect(1, 9, mainBoxWidth, mainBoxHeight);
         renderer.end();
 
         batch.begin();
@@ -105,12 +117,16 @@ class SpriteEditor implements InputProcessor {
         if (texture != null) {
             batch.draw(texture, 2, 10);
         }
-        
-        if(saveIcon != null){
+
+        if (saveIcon != null) {
             batch.draw(saveIcon, saveIconXPos, 0);
         }
-        if(undoIcon != null){
+        if (undoIcon != null) {
             batch.draw(undoIcon, undoIconXPos, 0);
+        }
+
+        if (spriteHandler.sprites.get(0) != null) {
+            batch.draw(spriteHandler.sprites.get(spriteZoom), viewport.getWorldWidth() - 64, viewport.getWorldHeight() - 64, 64, 64);
         }
 
         batch.end();
@@ -127,6 +143,16 @@ class SpriteEditor implements InputProcessor {
         game.batch.dispose();
     }
 
+    public void savePixmapImage() {
+        PixmapIO.writePNG(new FileHandle(filePath), pixmap);
+        spriteHandler = new SpriteHandler(game);
+    }
+
+    public void undoRecentEdits() {
+        pixmap = new Pixmap(new FileHandle(filePath));
+        texture = new Texture(pixmap);
+    }
+
     @Override
     public boolean keyDown(int keycode) {
         return false;
@@ -138,6 +164,25 @@ class SpriteEditor implements InputProcessor {
             game.setScreen(new ConsoleScreen(game));
             return false;
         }
+        if (keycode == Input.Keys.RIGHT && spriteZoom < spriteHandler.sprites.size()) {
+            spriteZoom++;
+        }
+        if (keycode == Input.Keys.LEFT && spriteZoom > 0) {
+            spriteZoom--;
+        }
+        if (keycode == Input.Keys.UP) {
+            if(spriteZoom >= 16){
+                spriteZoom -= 16;
+            }
+        }
+        if (keycode == Input.Keys.DOWN) {
+            if (spriteZoom == 0) {
+                spriteZoom = 16;
+            }
+            if(spriteZoom < 230 ){
+                spriteZoom += 16;
+            }
+        }
         return false;
     }
 
@@ -148,14 +193,18 @@ class SpriteEditor implements InputProcessor {
 
     public void drawPixelsOnTouch(int screenX, int screenY, int button) {
         viewport.unproject(coords.set(screenX, screenY));
-            int graphicsY = (int) (camera.viewportHeight - (coords.y));
-            
-            if(coords.x >= saveIconXPos && coords.x <= saveIconXPos +8 && coords.y <= 8){
-                System.out.println("Save Pressed");                
-            }
-            if(coords.x >= undoIconXPos && coords.x <= undoIconXPos +8 && coords.y <= 8){
-                System.out.println("Undo pressed");
-            }
+        int graphicsY = (int) (camera.viewportHeight - (coords.y));
+
+        if (coords.x >= saveIconXPos && coords.x <= saveIconXPos + 8 && coords.y <= 8) {
+            System.out.println("Save Pressed");
+            savePixmapImage();
+        }
+        if (coords.x >= undoIconXPos && coords.x <= undoIconXPos + 8 && coords.y <= 8) {
+            System.out.println("Undo pressed");
+            undoRecentEdits();
+        }
+        
+        
 
         if (button == 0) {
             pixmap.setColor(drawColor);
