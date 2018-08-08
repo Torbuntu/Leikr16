@@ -10,16 +10,13 @@ import groovy.lang.GroovyObject;
 import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
-import com.leikr.core.Bios;
+import com.leikr.core.GroovySystemMethods;
 import groovy.lang.Binding;
 import groovy.util.GroovyScriptEngine;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.codehaus.groovy.control.CompilationFailedException;
+
 
 /**
  *
@@ -28,82 +25,25 @@ import org.codehaus.groovy.control.CompilationFailedException;
 public class SystemLoader {
 
     final GroovyClassLoader classLoader;
-    Class systemMethodsClass;
-    GroovyObject biosObject;
+    GroovyObject systemMethodsClass;
 
     GroovyScriptEngine groovyScriptEngine;
     Binding binding;
     String[] rootDirectory = new String[]{Gdx.files.getLocalStoragePath()};
 
     // The class of Bios. Eventually replace the systemMethodsClass and biosObject
-    Bios bios = new Bios();
-
-    private void initFileSystem() {
-        String RootFileSystem = Gdx.files.getExternalStoragePath();
-
-        try {
-            new File(RootFileSystem + "LeikrVirtualDrive/").mkdir();
-            new File(RootFileSystem + "LeikrVirtualDrive/" + "ChipSpace").mkdir();
-            new File(RootFileSystem + "LeikrVirtualDrive/ChipSpace/" + "LeikrGame/").mkdir();
-            new File(RootFileSystem + "LeikrVirtualDrive/" + "OS").mkdir();
-            
-            new File(RootFileSystem + "LeikrVirtualDrive/OS/" + "Methods.groovy").createNewFile();
-            new File(RootFileSystem + "LeikrVirtualDrive/ChipSpace/LeikrGame/" + "LeikrGame.groovy").createNewFile();
-
-        } catch (IOException ex) {
-            Logger.getLogger(SystemLoader.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(RootFileSystem + "LeikrVirtualDrive/ChipSpace/LeikrGame/LeikrGame.groovy"))) {
-            String gameContent = "import com.leikr.core.LeikrEngine; // Required for extending LeikrEngine\n"
-                    + "\n"
-                    + "class LeikrGame extends LeikrEngine{\n"
-                    + "\n"
-                    + "    def void create(){\n"
-                    + "        super.create();// Very important for initializing core engine variables.\n"
-                    + "    }\n"
-                    + "   \n"
-                    + "    def void render(){\n"
-                    + "        //Your render code here.\n"
-                    + "        drawText(\"Welcome to Leikr!\", 50, 100, \"WHITE\");\n"
-                    + "    }\n"
-                    + "}";
-            writer.write(gameContent);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(RootFileSystem + "LeikrVirtualDrive/OS/Methods.groovy"))) {
-            String methodsContent = "class Bios {\n"
-                    + "    String BiosVersion = \"V0.0.1\";\n"
-                    + "    String SystemName = \"Leikr 16\";    \n"
-                    + "    \n"
-                    + "    String printSystemInfo(){\n"
-                    + "        \"System Name: $SystemName, Bios Version: $BiosVersion \";\n"
-                    + "    }\n"
-                    + "    \n"
-                    + "    String testMethods(){\n"
-                    + "        \"Test methods functional.\";\n"
-                    + "    } \n"
-                    + "}";
-            writer.write(methodsContent);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
+    GroovySystemMethods groovySystemMethods = new GroovySystemMethods();
 
     public SystemLoader() throws IOException, InstantiationException, IllegalAccessException {
         classLoader = new GroovyClassLoader();
         if (!Gdx.files.external("LeikrVirtualDrive/").exists() || !Gdx.files.external("LeikrVirtualDrive/ChipSpace/").exists()) {
-            initFileSystem();
+            groovySystemMethods.initFileSystem();
         }
-        systemMethodsClass = classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Methods.groovy"));
-        biosObject = (GroovyObject) systemMethodsClass.newInstance();
-
+        systemMethodsClass = (GroovyObject)classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Methods.groovy")).newInstance();
     }
 
     public String getBiosVersion() {
-        return bios.getBiosVersion();
+        return groovySystemMethods.getBiosVersion();
     }
 
     public Object runRegisteredMethod(String[] methodName) {
@@ -111,17 +51,17 @@ public class SystemLoader {
 
         switch (methodName[0]) {
             case "mkdir":
-                result = bios.mkdir(methodName[1]);
+                result = groovySystemMethods.mkdir(methodName[1]);
                 break;
             case "rm":
                 if (methodName[1].equals("-rf")) {
-                    result = bios.rmdir(methodName[2]);
+                    result = groovySystemMethods.rmdir(methodName[2]);
                 } else {
-                    result = bios.rm(methodName[1]);
+                    result = groovySystemMethods.rm(methodName[1]);
                 }
                 break;
             case "ls":
-                result = bios.ls();
+                result = groovySystemMethods.ls();
                 break;
             case "exec":
                 try {
@@ -137,11 +77,11 @@ public class SystemLoader {
                 try {
                     if (methodName.length == 1) {
 
-                        result = biosObject.invokeMethod(methodName[0], null);
+                        result = systemMethodsClass.invokeMethod(methodName[0], null);
 
                     } else {
                         String[] args = Arrays.copyOfRange(methodName, 0, methodName.length);
-                        result = biosObject.invokeMethod(methodName[0], args);
+                        result = systemMethodsClass.invokeMethod(methodName[0], args);
                     }
                 } catch (Exception e) {
                     result = e.getMessage();

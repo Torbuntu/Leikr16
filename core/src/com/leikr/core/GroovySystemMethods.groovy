@@ -11,7 +11,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 
-class Bios {
+class GroovySystemMethods {
     String BiosVersion = "V0.0.1";
     String SystemName = "Leikr 16";
     String RootFileSystem = Gdx.files.getExternalStoragePath();
@@ -32,7 +32,7 @@ class Bios {
             new File(RootFileSystem+"LeikrVirtualDrive/"+"ChipSpace").mkdir();
             new File(RootFileSystem+"LeikrVirtualDrive/"+"OS").mkdir();
             new File(RootFileSystem+"LeikrVirtualDrive/OS/"+"Methods.groovy").createNewFile();
-            new File(RootFileSystem+"LeikrVirtualDrive/ChipSpace/"+"LeikrGame.groovy").createNewFile();
+            //new File(RootFileSystem+"LeikrVirtualDrive/ChipSpace/"+"LeikrGame.groovy").createNewFile();
             result += "Directories initialized";
         }
         new File(RootFileSystem+"LeikrVirtualDrive/"+name).mkdir();
@@ -64,6 +64,24 @@ class Bios {
 
         }
         return lsResult;
+    }
+    
+    String initFileSystem(){
+        new File(RootFileSystem+"LeikrVirtualDrive/").mkdir();
+        new File(RootFileSystem+"LeikrVirtualDrive/"+"ChipSpace").mkdir();
+        new File(RootFileSystem+"LeikrVirtualDrive/ChipSpace/" + "LeikrGame/").mkdir();
+        new File(RootFileSystem+"LeikrVirtualDrive/"+"OS").mkdir();
+        new File(RootFileSystem+"LeikrVirtualDrive/OS/"+"Methods.groovy").createNewFile();
+        
+        new AntBuilder().copy( todir: RootFileSystem+"LeikrVirtualDrive/ChipSpace/LeikrGame") {
+            fileset( dir: Gdx.files.internal("LeikrGame"));
+        }
+        
+        new AntBuilder().copy( todir: RootFileSystem+"LeikrVirtualDrive/OS") {
+            fileset( dir: Gdx.files.internal("OS"));
+        }
+        
+        return "File system init.";
     }
     
     

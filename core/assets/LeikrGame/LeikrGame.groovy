@@ -5,8 +5,6 @@ class LeikrGame extends LeikrEngine{
 
     int ballX;
     int ballY;
-    def ballWidth;
-    def ballHeight;
 
     def ballSpeedY;
     def ballSpeedX;
@@ -28,16 +26,16 @@ class LeikrGame extends LeikrEngine{
     }
    
     def void moveBall(){
-        if(ballY <= 0){
+        if(ballY <= 15){
             ballSpeedY = 1;
         }
-        if(ballY >= getScreenHeight()-32){
+        if(ballY >= getScreenHeight()-15){
             ballSpeedY = -1;
         }
-        if(ballX <= 0){
+        if(ballX <= 15){
             ballSpeedX = 1;
         }
-        if(ballX >= getScreenWidth()-32){
+        if(ballX >= getScreenWidth()-15){
             ballSpeedX = -1;
         }
         ballY = ballY + ballSpeedY;
@@ -50,8 +48,6 @@ class LeikrGame extends LeikrEngine{
         moveBall();
         drawCircle(ballX, ballY, 15, 4, "FILLED");
         drawLine(10, 10, 130, 80, 6);
-        //drawSprite(0, ballX, ballY, 32, 32);//testing sprite
-        //drawSprite(255, 100, 100);
         drawPalette(5, 50, 10, 10);
         drawColor(0, 10, 10);
         drawColor(5, 20, 20);
