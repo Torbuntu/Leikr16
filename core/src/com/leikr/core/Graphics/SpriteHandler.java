@@ -39,6 +39,12 @@ public class SpriteHandler {
         sprites = new HashMap<>();
         mapAllSprites();
     }
+    
+    void setSpriteRegion(Texture newRegion){
+        regions = TextureRegion.split(newRegion, 8, 8);
+        sprites = new HashMap<>();
+        mapAllSprites();
+    }
 
     //adds all of the split textures from regions to the sprites map for easier calling.
     void mapAllSprites() {
@@ -50,7 +56,11 @@ public class SpriteHandler {
             }
         }
     }
-
+    
+    public TextureRegion getSpriteByRegion(int x, int y){
+        return regions[y][x];
+    }
+    
     public void drawSprite(int id, float x, float y) {
         game.batch.begin();
         game.batch.draw(sprites.get(id), x, y);

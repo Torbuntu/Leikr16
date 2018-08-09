@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -29,6 +30,7 @@ import com.leikr.core.Leikr;
 /**
  *
  * @author tor
+ * TODO: Rework this whole file once it is 'feature complete '
  */
 class SpriteEditor implements InputProcessor {
 
@@ -41,7 +43,11 @@ class SpriteEditor implements InputProcessor {
 
     SpriteBatch batch;
     Pixmap pixmap;
+    Pixmap zoomPixmap;
+    
+    
     Texture texture;
+    Texture zoomTexture;
     Texture saveIcon;
     Texture undoIcon;
 
@@ -54,15 +60,17 @@ class SpriteEditor implements InputProcessor {
     int undoIconXPos;
 
     SpriteHandler spriteHandler;
+    TextureRegion selectedSprite;
 
     int spriteZoom = 0;
-    
+
     int mainBoxWidth;
     int mainBoxHeight;
 
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
         spriteHandler = new SpriteHandler(game);
+        selectedSprite = new TextureRegion(spriteHandler.getSpriteByRegion(0, 0));        
 
         batch = game.batch;
         sriteEditorScreen = speScreen;
@@ -80,9 +88,10 @@ class SpriteEditor implements InputProcessor {
         }
         pixmap = new Pixmap(new FileHandle(filePath));
         texture = new Texture(pixmap);
-        mainBoxWidth = texture.getWidth()+2;
-        mainBoxHeight = texture.getHeight()+2;
-        
+
+        mainBoxWidth = texture.getWidth() + 2;
+        mainBoxHeight = texture.getHeight() + 2;
+
         saveIcon = new Texture("saveIcon.png");
         undoIcon = new Texture("undoIcon.png");
 
@@ -95,10 +104,11 @@ class SpriteEditor implements InputProcessor {
     }
 
     public void renderSpriteEditor(float delta) {
-        Gdx.gl.glClearColor(.1f, .1f, .1f, 1);
+        Gdx.gl.glClearColor(.3f, .3f, .3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camera.combined);
         renderer.setProjectionMatrix(camera.combined);
+
         int count = 0;
         int color = 0;
         for (float item : paintBrush.leikrPalette.palette) {
@@ -110,10 +120,12 @@ class SpriteEditor implements InputProcessor {
         renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setColor(Color.RED);
         renderer.rect(1, 9, mainBoxWidth, mainBoxHeight);
+        renderer.rect(137, viewport.getWorldHeight() - 87, 66, 66);
         renderer.end();
 
         batch.begin();
 
+        //main sprite sheet
         if (texture != null) {
             batch.draw(texture, 2, 10);
         }
@@ -125,8 +137,8 @@ class SpriteEditor implements InputProcessor {
             batch.draw(undoIcon, undoIconXPos, 0);
         }
 
-        if (spriteHandler.sprites.get(0) != null) {
-            batch.draw(spriteHandler.sprites.get(spriteZoom), viewport.getWorldWidth() - 64, viewport.getWorldHeight() - 64, 64, 64);
+        if (selectedSprite != null) {
+            batch.draw(selectedSprite, 138, viewport.getWorldHeight() - 86, 64, 64);
         }
 
         batch.end();
@@ -170,16 +182,17 @@ class SpriteEditor implements InputProcessor {
         if (keycode == Input.Keys.LEFT && spriteZoom > 0) {
             spriteZoom--;
         }
+
         if (keycode == Input.Keys.UP) {
-            if(spriteZoom >= 16){
+            if (spriteZoom >= 16) {
                 spriteZoom -= 16;
+            } else {
+                spriteZoom = 0;
             }
         }
         if (keycode == Input.Keys.DOWN) {
-            if (spriteZoom == 0) {
-                spriteZoom = 16;
-            }
-            if(spriteZoom < 230 ){
+
+            if (spriteZoom < 230) {
                 spriteZoom += 16;
             }
         }
@@ -194,6 +207,17 @@ class SpriteEditor implements InputProcessor {
     public void drawPixelsOnTouch(int screenX, int screenY, int button) {
         viewport.unproject(coords.set(screenX, screenY));
         int graphicsY = (int) (camera.viewportHeight - (coords.y));
+        System.out.println((coords.x - 2) + " : " + (graphicsY - 22));
+        System.out.println((int) (coords.x - 2) / 8 + " : " + (graphicsY - 22) / 8);
+
+        if (button == 2) {
+            int testX = (int) (coords.x - 2) / 8;
+            int testY = (graphicsY - 22) / 8;
+            if (testX < 16 && testY < 16) {
+                selectedSprite = spriteHandler.getSpriteByRegion(testX, testY);
+
+            }
+        }
 
         if (coords.x >= saveIconXPos && coords.x <= saveIconXPos + 8 && coords.y <= 8) {
             System.out.println("Save Pressed");
@@ -203,8 +227,6 @@ class SpriteEditor implements InputProcessor {
             System.out.println("Undo pressed");
             undoRecentEdits();
         }
-        
-        
 
         if (button == 0) {
             pixmap.setColor(drawColor);
