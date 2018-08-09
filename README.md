@@ -1,16 +1,17 @@
 # Leikr16
-A Java(libgdx) based Fantasy Computer(Console) that uses groovy scripted game files.
+A Java(libgdx) based Fantasy Computer(Console).
 
 # Current features
 - Terminal Emulator. Not very many commands yet.
 - Groovysh repl by prefixing commands with gv.
 - Small groovy games can be loaded and played by typing `load GameNameHere` then `run` games loaded from the ChipSpace directory.
-- Exit a game with ESC
+- Exit to Terminal with ESC
 - 256 8x8 sprites loaded from GameName.png in the same folder as the GameName.groovy file.
+- Sprite Editor. (functional, but needs improvement)
 
 # Planned Features
-- 16 color palette (WIP)
-- Sprite Editor(WIP)
+- System Config file to set defaults to the system before system boot. Such as default terminal background and font color, or to boot into a graphical environment.
+- Customizable Graphical interface instead of terminal (after setting up a System Config that points to a graphical environment on boot. API for this to be created )
 - 'large' sprites by combining 2 or 4 sprite ID's (WIP)
 - Tiled Maps (256x256 map file)
 - Music
