@@ -29,8 +29,7 @@ import com.leikr.core.Leikr;
 
 /**
  *
- * @author tor
- * TODO: Rework this whole file once it is 'feature complete '
+ * @author tor TODO: Rework this whole file once it is 'feature complete '
  */
 class SpriteEditor implements InputProcessor {
 
@@ -40,14 +39,15 @@ class SpriteEditor implements InputProcessor {
     Camera camera;
     ShapeRenderer renderer;
     PaintBrush paintBrush;
+    Texture font;
 
     SpriteBatch batch;
     Pixmap pixmap;
     Pixmap zoomPixmap;
-    
-    
+
     Texture texture;
     Texture zoomTexture;
+
     Texture saveIcon;
     Texture undoIcon;
 
@@ -62,32 +62,51 @@ class SpriteEditor implements InputProcessor {
     SpriteHandler spriteHandler;
     TextureRegion selectedSprite;
 
-    int spriteZoom = 0;
+    int spriteId = 0;
+    int spriteIdX = 0;
+    int spriteIdY = 0;
 
     int mainBoxWidth;
     int mainBoxHeight;
 
+    int actualX;
+    int actualY;
+
+    int zoomX;
+    int zoomY;
+    int count = 0;
+    int color = 0;
+
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
-        spriteHandler = new SpriteHandler(game);
-        selectedSprite = new TextureRegion(spriteHandler.getSpriteByRegion(0, 0));        
-
         batch = game.batch;
         sriteEditorScreen = speScreen;
         drawColor = Color.BLACK;
-
         coords = new Vector2();
+        font = new Texture("LeikrFontA.png");
 
         renderer = new ShapeRenderer();
         paintBrush = new PaintBrush(renderer, game);
+
+        spriteHandler = new SpriteHandler(game);
+        selectedSprite = new TextureRegion(spriteHandler.getSpriteByRegion(0, 0));
 
         if (fileName == null) {
             filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/LeikrGame/LeikrGame.png";//sets game path
         } else {
             filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/" + fileName + ".png";//sets game path
         }
+
         pixmap = new Pixmap(new FileHandle(filePath));
         texture = new Texture(pixmap);
+
+        zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+        zoomTexture = new Texture(zoomPixmap);
+
+        actualX = 0;
+        actualY = 0;
+        zoomX = 0;
+        zoomY = 0;
 
         mainBoxWidth = texture.getWidth() + 2;
         mainBoxHeight = texture.getHeight() + 2;
@@ -109,26 +128,31 @@ class SpriteEditor implements InputProcessor {
         batch.setProjectionMatrix(camera.combined);
         renderer.setProjectionMatrix(camera.combined);
 
-        int count = 0;
-        int color = 0;
+        count = 0;
+        color = 0;
         for (float item : paintBrush.leikrPalette.palette) {
-            paintBrush.drawRect(count, 0, 8, 8, color, "filled");
+            paintBrush.drawRect(count, (int) viewport.getWorldHeight() - 8, 8, 8, color, "filled");
             count += 10;
             color++;
         }
 
         renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setColor(Color.RED);
-        renderer.rect(1, 9, mainBoxWidth, mainBoxHeight);
-        renderer.rect(137, viewport.getWorldHeight() - 87, 66, 66);
+        renderer.rect(7, 7, mainBoxWidth, mainBoxHeight);
+        renderer.rect(143, 7, 66, 66);
         renderer.end();
 
         batch.begin();
 
         //main sprite sheet
         if (texture != null) {
-            batch.draw(texture, 2, 10);
+            batch.draw(texture, 8, 8);
         }
+        if (zoomTexture != null) {
+            batch.draw(zoomTexture, 144, 8, 64, 64);
+        }
+
+        drawText();
 
         if (saveIcon != null) {
             batch.draw(saveIcon, saveIconXPos, 0);
@@ -137,88 +161,43 @@ class SpriteEditor implements InputProcessor {
             batch.draw(undoIcon, undoIconXPos, 0);
         }
 
-        if (selectedSprite != null) {
-            batch.draw(selectedSprite, 138, viewport.getWorldHeight() - 86, 64, 64);
-        }
-
         batch.end();
 
     }
 
-    public void updateViewport(int width, int height) {
-        viewport.update(width, height, true);
-        camera.update();
-    }
-
-    public void disposeSpriteEditor() {
-        renderer.dispose();
-        game.batch.dispose();
-    }
-
-    public void savePixmapImage() {
-        PixmapIO.writePNG(new FileHandle(filePath), pixmap);
-        spriteHandler = new SpriteHandler(game);
-    }
-
-    public void undoRecentEdits() {
-        pixmap = new Pixmap(new FileHandle(filePath));
-        texture = new Texture(pixmap);
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        if (keycode == Input.Keys.ESCAPE) {
-            game.setScreen(new ConsoleScreen(game));
-            return false;
+    public void drawText() {
+        int fontX;
+        int fontY;
+        int x = 140;
+        int y = 80;
+        // Set the variable test for evaluating the x and y position of the ASCII set.
+        String text = "Sprite ID: " + spriteId;
+        for (char C : text.toCharArray()) {
+            fontX = ((int) C % 16) * 8;
+            fontY = ((int) C / 16) * 8;
+            batch.draw(font, x, y, fontX, fontY, 8, 8);
+            x = x + 8;
         }
-        if (keycode == Input.Keys.RIGHT && spriteZoom < spriteHandler.sprites.size()) {
-            spriteZoom++;
-        }
-        if (keycode == Input.Keys.LEFT && spriteZoom > 0) {
-            spriteZoom--;
-        }
-
-        if (keycode == Input.Keys.UP) {
-            if (spriteZoom >= 16) {
-                spriteZoom -= 16;
-            } else {
-                spriteZoom = 0;
-            }
-        }
-        if (keycode == Input.Keys.DOWN) {
-
-            if (spriteZoom < 230) {
-                spriteZoom += 16;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
     }
 
     public void drawPixelsOnTouch(int screenX, int screenY, int button) {
         viewport.unproject(coords.set(screenX, screenY));
         int graphicsY = (int) (camera.viewportHeight - (coords.y));
-        System.out.println((coords.x - 2) + " : " + (graphicsY - 22));
-        System.out.println((int) (coords.x - 2) / 8 + " : " + (graphicsY - 22) / 8);
+
+        actualX = (int) (coords.x - 8);
+        actualY = (int) (graphicsY - 24);
+//        System.out.println(actualX + " : " + actualY);
+//        System.out.println(actualX / 8 + " : " + actualY / 8);
+
+        zoomX = (actualX / 8) - 17;
+        zoomY = (actualY / 8) - 8;
+//        System.out.println((zoomX) + " : " + (zoomY));
 
         if (button == 2) {
-            int testX = (int) (coords.x - 2) / 8;
-            int testY = (graphicsY - 22) / 8;
-            if (testX < 16 && testY < 16) {
-                selectedSprite = spriteHandler.getSpriteByRegion(testX, testY);
-
-            }
+            spriteIdX = (int) (coords.x - 8) / 8;
+            spriteIdY = (graphicsY - 24) / 8;
+            spriteId = ((spriteIdY * 16) + (spriteIdX));
         }
-
         if (coords.x >= saveIconXPos && coords.x <= saveIconXPos + 8 && coords.y <= 8) {
             System.out.println("Save Pressed");
             savePixmapImage();
@@ -229,8 +208,13 @@ class SpriteEditor implements InputProcessor {
         }
 
         if (button == 0) {
+
+            zoomPixmap.setColor(drawColor);
+            zoomPixmap.drawPixel(zoomX, zoomY);
+            zoomTexture.draw(zoomPixmap, 0, 0);
+
             pixmap.setColor(drawColor);
-            pixmap.drawPixel((int) coords.x - 2, graphicsY - 22);
+            pixmap.drawPixel((int) coords.x - 8, graphicsY - 24);
             texture.draw(pixmap, 0, 0);
         } else if (button == 1) {
             if (coords.x >= 1 && coords.x <= 10) {
@@ -281,18 +265,108 @@ class SpriteEditor implements InputProcessor {
             if (coords.x >= 151 && coords.x <= 160) {
                 drawColor.set(paintBrush.leikrPalette.palette.get(15));
             }
-            //Color color = new Color(ScreenUtils.getFrameBufferPixmap(0, 0, (int) camera.viewportWidth, (int) camera.viewportHeight).getPixel((int) coords.x, graphicsY));
         }
     }
 
     public void drawPixelsOnTouch(int screenX, int screenY) {
         viewport.unproject(coords.set(screenX, screenY));
-
         int graphicsY = (int) (camera.viewportHeight - (coords.y));
+        actualX = (int) (coords.x - 8);
+        actualY = (int) (graphicsY - 24);
+
+        zoomX = (actualX / 8) - 17;
+        zoomY = (actualY / 8) - 8;
+
+        zoomPixmap.setColor(drawColor);
+        zoomPixmap.drawPixel(zoomX, zoomY);
+        zoomTexture.draw(zoomPixmap, 0, 0);
+
         pixmap.setColor(drawColor);
-        pixmap.drawPixel((int) coords.x - 2, graphicsY - 22);
+        pixmap.drawPixel((int) coords.x - 8, graphicsY - 24);
         texture.draw(pixmap, 0, 0);
 
+    }
+
+    public void updateViewport(int width, int height) {
+        viewport.update(width, height, true);
+        camera.update();
+    }
+
+    public void disposeSpriteEditor() {
+        renderer.dispose();
+        game.batch.dispose();
+    }
+
+    public void savePixmapImage() {
+        PixmapIO.writePNG(new FileHandle(filePath), pixmap);
+        PixmapIO.writePNG(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/TEST.png"), zoomPixmap);
+        spriteHandler = new SpriteHandler(game);
+    }
+
+    public void undoRecentEdits() {
+        pixmap = new Pixmap(new FileHandle(filePath));
+        zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+        texture = new Texture(pixmap);
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        if (keycode == Input.Keys.ESCAPE) {
+            game.setScreen(new ConsoleScreen(game));
+            return false;
+        }
+        if (keycode == Input.Keys.RIGHT && spriteId < spriteHandler.sprites.size() - 1) {
+            spriteId++;
+            if (spriteIdX < 15) {
+                spriteIdX++;
+
+            }
+        }
+        if (keycode == Input.Keys.LEFT && spriteId > 0) {
+            spriteId--;
+            spriteIdX--;
+        }
+
+        if (keycode == Input.Keys.UP) {
+            if (spriteId >= 16) {
+                spriteId -= 16;
+                spriteIdY--;
+            } else {
+                spriteId = 0;
+                if (spriteIdY > 0) {
+                    spriteIdY--;
+
+                }
+            }
+        }
+        if (keycode == Input.Keys.DOWN) {
+
+            if (spriteId < 230) {
+                spriteId += 16;
+
+            }
+            if (spriteIdY < 15) {
+                spriteIdY++;
+            }
+        }
+                
+        if(spriteId == 0){
+            spriteIdX = 0;
+            spriteIdY= 0;
+        }
+
+        System.out.println("X: " + spriteIdX + " Y: " + spriteIdY + " ID:" + spriteId);
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
     }
 
     @Override
