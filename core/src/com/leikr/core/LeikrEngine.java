@@ -43,6 +43,8 @@ public class LeikrEngine implements InputProcessor {
 
     TiledMap tiledMap;
     TiledMapRenderer tiledMapRenderer;
+    boolean useMap;
+    int mapType;//1. free map, 2. area map
 
     public boolean rightKeyPressed = false;
     public boolean leftKeyPressed = false;
@@ -52,8 +54,8 @@ public class LeikrEngine implements InputProcessor {
     public boolean xKeyPressed = false;
     public boolean spaceKeyPressed = false;
 
-    public int screenWidth = 260;
-    public int screenHeight = 160;
+    public int screenWidth = (int) Leikr.WIDTH;
+    public int screenHeight = (int) Leikr.HEIGHT;
 
     public String backgroundColor = "BLACK";
 
@@ -74,9 +76,22 @@ public class LeikrEngine implements InputProcessor {
         camera = viewport.getCamera();
         font = new Texture("LeikrFontA.png");
 
+        System.out.println(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/" + fileName + ".tmx");
+    }
+
+    public void loadMap(int mapType) {
+        this.mapType = mapType;
+        useMap = true;
         tiledMap = new TmxMapLoader().load(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/" + fileName + ".tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
-        System.out.println(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/" + fileName + ".tmx");
+    }
+
+    public int getCameraX() {
+        return (int) camera.position.x - 128;
+    }
+
+    public int getCameraY() {
+        return (int) camera.position.y - 100;
     }
 
     public void preRender() {
@@ -106,7 +121,7 @@ public class LeikrEngine implements InputProcessor {
         //camera.update();
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
-        if (tiledMapRenderer != null) {
+        if (tiledMapRenderer != null && useMap) {
             tiledMapRenderer.setView((OrthographicCamera) camera);
             tiledMapRenderer.render();
         }
@@ -257,22 +272,19 @@ public class LeikrEngine implements InputProcessor {
         switch (keycode) {
             case Keys.RIGHT:
                 rightKeyPressed = true;
-                camera.position.x += 10;
-
+                camera.position.x += 256;
                 break;
             case Keys.LEFT:
                 leftKeyPressed = true;
-                camera.position.x -= 10;
-
+                camera.position.x -= 256;
                 break;
             case Keys.UP:
                 upKeyPressed = true;
-                camera.position.y += 10;
-
+                camera.position.y += 200;
                 break;
             case Keys.DOWN:
                 downKeyPressed = true;
-                camera.position.y -= 10;
+                camera.position.y -= 200;
                 break;
             case Keys.Z:
                 zKeyPressed = true;
@@ -284,6 +296,7 @@ public class LeikrEngine implements InputProcessor {
                 spaceKeyPressed = true;
                 break;
         }
+        System.err.println((camera.position.x - 128) + " : " + (camera.position.y - 100));
         return false;
     }
 

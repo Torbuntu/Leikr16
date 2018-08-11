@@ -38,7 +38,6 @@ public class Console implements InputProcessor {
         batch = game.batch;
         font = new Texture("LeikrFontA.png");
 
-        //camera = new OrthographicCamera(260, 160);
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
         Gdx.input.setInputProcessor(this);
