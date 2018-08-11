@@ -55,6 +55,7 @@ class SpriteEditor implements InputProcessor {
     Color drawColor;
 
     Vector2 coords;
+    int graphicsY;
 
     int saveIconXPos;
     int undoIconXPos;
@@ -83,6 +84,7 @@ class SpriteEditor implements InputProcessor {
         sriteEditorScreen = speScreen;
         drawColor = Color.BLACK;
         coords = new Vector2();
+        graphicsY = 0;
         font = new Texture("LeikrFontA.png");
 
         renderer = new ShapeRenderer();
@@ -180,23 +182,43 @@ class SpriteEditor implements InputProcessor {
         }
     }
 
-    public void drawPixelsOnTouch(int screenX, int screenY, int button) {
-        viewport.unproject(coords.set(screenX, screenY));
-        int graphicsY = (int) (camera.viewportHeight - (coords.y));
+    public void getSelectedPixmap() {
+
+    }
+
+    public void drawSelectedPixmapToMain() {
+        zoomPixmap.setColor(drawColor);
+        zoomPixmap.drawPixel(zoomX, zoomY);
+        zoomTexture.draw(zoomPixmap, 0, 0);
+
+        pixmap.drawPixmap(zoomPixmap, spriteIdX * 8, spriteIdY * 8, 0, 0, 8, 8);
+
+        pixmap.setColor(drawColor);
+        pixmap.drawPixel(actualX, actualY);
+        texture.draw(pixmap, 0, 0);
+    }
+
+    public void setDrawingCoords() {
+        graphicsY = (int) (camera.viewportHeight - (coords.y));
 
         actualX = (int) (coords.x - 8);
         actualY = (int) (graphicsY - 24);
-//        System.out.println(actualX + " : " + actualY);
-//        System.out.println(actualX / 8 + " : " + actualY / 8);
 
         zoomX = (actualX / 8) - 17;
         zoomY = (actualY / 8) - 8;
-//        System.out.println((zoomX) + " : " + (zoomY));
+    }
+
+    public void drawPixelsOnTouch(int screenX, int screenY, int button) {
+        setDrawingCoords();
 
         if (button == 2) {
             spriteIdX = (int) (coords.x - 8) / 8;
             spriteIdY = (graphicsY - 24) / 8;
             spriteId = ((spriteIdY * 16) + (spriteIdX));
+
+            zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+            zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, 8, 8, 0, 0, 8, 8);
+            zoomTexture.draw(zoomPixmap, 0, 0);
         }
         if (coords.x >= saveIconXPos && coords.x <= saveIconXPos + 8 && coords.y <= 8) {
             System.out.println("Save Pressed");
@@ -208,14 +230,7 @@ class SpriteEditor implements InputProcessor {
         }
 
         if (button == 0) {
-
-            zoomPixmap.setColor(drawColor);
-            zoomPixmap.drawPixel(zoomX, zoomY);
-            zoomTexture.draw(zoomPixmap, 0, 0);
-
-            pixmap.setColor(drawColor);
-            pixmap.drawPixel((int) coords.x - 8, graphicsY - 24);
-            texture.draw(pixmap, 0, 0);
+            drawSelectedPixmapToMain();
         } else if (button == 1) {
             if (coords.x >= 1 && coords.x <= 10) {
                 drawColor.set(paintBrush.leikrPalette.palette.get(0));
@@ -269,22 +284,8 @@ class SpriteEditor implements InputProcessor {
     }
 
     public void drawPixelsOnTouch(int screenX, int screenY) {
-        viewport.unproject(coords.set(screenX, screenY));
-        int graphicsY = (int) (camera.viewportHeight - (coords.y));
-        actualX = (int) (coords.x - 8);
-        actualY = (int) (graphicsY - 24);
-
-        zoomX = (actualX / 8) - 17;
-        zoomY = (actualY / 8) - 8;
-
-        zoomPixmap.setColor(drawColor);
-        zoomPixmap.drawPixel(zoomX, zoomY);
-        zoomTexture.draw(zoomPixmap, 0, 0);
-
-        pixmap.setColor(drawColor);
-        pixmap.drawPixel((int) coords.x - 8, graphicsY - 24);
-        texture.draw(pixmap, 0, 0);
-
+        setDrawingCoords();
+        drawSelectedPixmapToMain();
     }
 
     public void updateViewport(int width, int height) {
@@ -354,10 +355,10 @@ class SpriteEditor implements InputProcessor {
                 spriteIdY++;
             }
         }
-                
-        if(spriteId == 0){
+
+        if (spriteId == 0) {
             spriteIdX = 0;
-            spriteIdY= 0;
+            spriteIdY = 0;
         }
 
         System.out.println("X: " + spriteIdX + " Y: " + spriteIdY + " ID:" + spriteId);
@@ -371,6 +372,8 @@ class SpriteEditor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        viewport.unproject(coords.set(screenX, screenY));
+
         drawPixelsOnTouch(screenX, screenY, button);
         return false;
 
@@ -383,6 +386,8 @@ class SpriteEditor implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        viewport.unproject(coords.set(screenX, screenY));
+
         drawPixelsOnTouch(screenX, screenY);
         return false;
     }
