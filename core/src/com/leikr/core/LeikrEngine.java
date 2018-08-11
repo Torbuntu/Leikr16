@@ -12,16 +12,20 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Graphics.SpriteHandler;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -31,10 +35,14 @@ import java.util.Random;
 public class LeikrEngine implements InputProcessor {
 
     public static Leikr game;
+    SpriteBatch batch;
     ShapeRenderer shapeRenderer;
     Camera camera;
     Viewport viewport;
     Texture font;
+
+    TiledMap tiledMap;
+    TiledMapRenderer tiledMapRenderer;
 
     public boolean rightKeyPressed = false;
     public boolean leftKeyPressed = false;
@@ -55,6 +63,7 @@ public class LeikrEngine implements InputProcessor {
 
     public void create() {
         game = LeikrGameScreen.game;
+        batch = game.batch;
         shapeRenderer = new ShapeRenderer();
 
         spriteHandler = new SpriteHandler(game);
@@ -64,24 +73,10 @@ public class LeikrEngine implements InputProcessor {
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
         font = new Texture("LeikrFontA.png");
-    }
-    
-    public void drawColor(int id, int x, int y){
-        paintBrush.drawColor(id, x, y);
-    }
 
-    public void setBackgroundColor(String color) {
-        backgroundColor = color.toUpperCase();
-    }
-
-    public void drawPalette(int x, int y, int w, int h) {
-        shapeRenderer.begin(ShapeType.Filled);
-        for (int c : leikrPalette.palette) {
-            shapeRenderer.setColor(new Color(c));
-            shapeRenderer.rect(x, y, w, h);
-            x += w;
-        }
-        shapeRenderer.end();
+        tiledMap = new TmxMapLoader().load(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/" + fileName + ".tmx");
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
+        System.out.println(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/" + fileName + ".tmx");
     }
 
     public void preRender() {
@@ -107,13 +102,18 @@ public class LeikrEngine implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
-    public void render() {
-    }
-
     public void renderCamera() {
         //camera.update();
-        game.batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
+        if (tiledMapRenderer != null) {
+            tiledMapRenderer.setView((OrthographicCamera) camera);
+            tiledMapRenderer.render();
+        }
+        camera.update();
+    }
+
+    public void render() {
     }
 
     public void dispose() {
@@ -142,34 +142,34 @@ public class LeikrEngine implements InputProcessor {
         int fontX;
         int fontY;
         // Set the variable test for evaluating the x and y position of the ASCII set.
-        game.batch.begin();
+        batch.begin();
         switch (color) {
             case "RED":
-                game.batch.setColor(Color.RED);
+                batch.setColor(Color.RED);
                 break;
             case "GREEN":
-                game.batch.setColor(Color.GREEN);
+                batch.setColor(Color.GREEN);
                 break;
             case "BLUE":
-                game.batch.setColor(Color.BLUE);
+                batch.setColor(Color.BLUE);
                 break;
             case "WHITE":
-                game.batch.setColor(Color.WHITE);
+                batch.setColor(Color.WHITE);
                 break;
             case "BLACK":
-                game.batch.setColor(Color.BLACK);
+                batch.setColor(Color.BLACK);
                 break;
             default:
-                game.batch.setColor(Color.WHITE);
+                batch.setColor(Color.WHITE);
                 break;
         }
         for (char C : text.toCharArray()) {
             fontX = ((int) C % 16) * 8;
             fontY = ((int) C / 16) * 8;
-            game.batch.draw(font, x, y, fontX, fontY, 8, 8);
+            batch.draw(font, x, y, fontX, fontY, 8, 8);
             x = x + 8;
         }
-        game.batch.end();
+        batch.end();
     }
 
     void drawSprite(int id, float x, float y) {
@@ -197,12 +197,31 @@ public class LeikrEngine implements InputProcessor {
     public void drawCircle(int x, int y, int radius, int color, String type) {
         paintBrush.drawCircle(x, y, radius, color, type);
     }
-    
-    public void drawArc(int x, int y, int radius, int start, int degrees, int color, String type){
+
+    public void drawArc(int x, int y, int radius, int start, int degrees, int color, String type) {
         paintBrush.drawArc(x, y, radius, start, degrees, color, type);
     }
-    public void drawLine(int x, int y, int x2, int y2, int color){
+
+    public void drawLine(int x, int y, int x2, int y2, int color) {
         paintBrush.drawLine(x, y, x2, y2, color);
+    }
+
+    public void drawColor(int id, int x, int y) {
+        paintBrush.drawColor(id, x, y);
+    }
+
+    public void setBackgroundColor(String color) {
+        backgroundColor = color.toUpperCase();
+    }
+
+    public void drawPalette(int x, int y, int w, int h) {
+        shapeRenderer.begin(ShapeType.Filled);
+        for (int c : leikrPalette.palette) {
+            shapeRenderer.setColor(new Color(c));
+            shapeRenderer.rect(x, y, w, h);
+            x += w;
+        }
+        shapeRenderer.end();
     }
 
     public boolean rightKeyPressed() {
@@ -238,19 +257,22 @@ public class LeikrEngine implements InputProcessor {
         switch (keycode) {
             case Keys.RIGHT:
                 rightKeyPressed = true;
+                camera.position.x += 10;
 
                 break;
             case Keys.LEFT:
                 leftKeyPressed = true;
+                camera.position.x -= 10;
 
                 break;
             case Keys.UP:
                 upKeyPressed = true;
+                camera.position.y += 10;
 
                 break;
             case Keys.DOWN:
                 downKeyPressed = true;
-
+                camera.position.y -= 10;
                 break;
             case Keys.Z:
                 zKeyPressed = true;

@@ -60,9 +60,6 @@ class SpriteEditor implements InputProcessor {
     int saveIconXPos;
     int undoIconXPos;
 
-    SpriteHandler spriteHandler;
-    TextureRegion selectedSprite;
-
     int spriteId = 0;
     int spriteIdX = 0;
     int spriteIdY = 0;
@@ -89,9 +86,6 @@ class SpriteEditor implements InputProcessor {
 
         renderer = new ShapeRenderer();
         paintBrush = new PaintBrush(renderer, game);
-
-        spriteHandler = new SpriteHandler(game);
-        selectedSprite = new TextureRegion(spriteHandler.getSpriteByRegion(0, 0));
 
         if (fileName == null) {
             filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/LeikrGame/LeikrGame.png";//sets game path
@@ -182,8 +176,25 @@ class SpriteEditor implements InputProcessor {
         }
     }
 
-    public void getSelectedPixmap() {
+    public void updateViewport(int width, int height) {
+        viewport.update(width, height, true);
+        camera.update();
+    }
 
+    public void disposeSpriteEditor() {
+        renderer.dispose();
+        game.batch.dispose();
+    }
+
+    public void savePixmapImage() {
+        PixmapIO.writePNG(new FileHandle(filePath), pixmap);
+        PixmapIO.writePNG(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/TEST.png"), zoomPixmap);
+    }
+
+    public void undoRecentEdits() {
+        pixmap = new Pixmap(new FileHandle(filePath));
+        zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+        texture = new Texture(pixmap);
     }
 
     public void drawSelectedPixmapToMain() {
@@ -283,45 +294,13 @@ class SpriteEditor implements InputProcessor {
         }
     }
 
-    public void drawPixelsOnTouch(int screenX, int screenY) {
-        setDrawingCoords();
-        drawSelectedPixmapToMain();
-    }
-
-    public void updateViewport(int width, int height) {
-        viewport.update(width, height, true);
-        camera.update();
-    }
-
-    public void disposeSpriteEditor() {
-        renderer.dispose();
-        game.batch.dispose();
-    }
-
-    public void savePixmapImage() {
-        PixmapIO.writePNG(new FileHandle(filePath), pixmap);
-        PixmapIO.writePNG(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/TEST.png"), zoomPixmap);
-        spriteHandler = new SpriteHandler(game);
-    }
-
-    public void undoRecentEdits() {
-        pixmap = new Pixmap(new FileHandle(filePath));
-        zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
-        texture = new Texture(pixmap);
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
     @Override
     public boolean keyUp(int keycode) {
         if (keycode == Input.Keys.ESCAPE) {
             game.setScreen(new ConsoleScreen(game));
             return false;
         }
-        if (keycode == Input.Keys.RIGHT && spriteId < spriteHandler.sprites.size() - 1) {
+        if (keycode == Input.Keys.RIGHT && spriteId < 15) {
             spriteId++;
             if (spriteIdX < 15) {
                 spriteIdX++;
@@ -366,17 +345,23 @@ class SpriteEditor implements InputProcessor {
     }
 
     @Override
-    public boolean keyTyped(char character) {
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        viewport.unproject(coords.set(screenX, screenY));
+        drawPixelsOnTouch(screenX, screenY, button);
         return false;
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
         viewport.unproject(coords.set(screenX, screenY));
-
-        drawPixelsOnTouch(screenX, screenY, button);
+        setDrawingCoords();
+        drawSelectedPixmapToMain();
         return false;
+    }
 
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
     }
 
     @Override
@@ -385,10 +370,7 @@ class SpriteEditor implements InputProcessor {
     }
 
     @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        viewport.unproject(coords.set(screenX, screenY));
-
-        drawPixelsOnTouch(screenX, screenY);
+    public boolean keyDown(int keycode) {
         return false;
     }
 
