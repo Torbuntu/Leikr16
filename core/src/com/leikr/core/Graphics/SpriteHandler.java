@@ -6,6 +6,7 @@
 package com.leikr.core.Graphics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.leikr.core.ConsoleDirectory.Console;
@@ -14,6 +15,7 @@ import com.leikr.core.LeikrEngine;
 import com.leikr.core.LeikrGameScreen;
 import java.util.HashMap;
 import java.util.Map;
+//import javafx.scene.paint.Color;
 
 /**
  *
@@ -63,12 +65,14 @@ public class SpriteHandler {
     
     public void drawSprite(int id, float x, float y) {
         game.batch.begin();
+        game.batch.setColor(Color.WHITE);
         game.batch.draw(sprites.get(id), x, y);
         game.batch.end();
     }
 
     public void drawSprite(int id, float x, float y, int scaleX, int scaleY) {
         game.batch.begin();
+        game.batch.setColor(Color.WHITE);
         game.batch.draw(sprites.get(id), x, y, scaleX, scaleY);
         game.batch.end();
     }

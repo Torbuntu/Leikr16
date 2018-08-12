@@ -159,10 +159,22 @@ public class LeikrEngine implements InputProcessor {
         return screenHeight;
     }
 
-    public int getColId(int x, int y) {
-        System.out.println("X: " + x + " Y: "+ y);
-        if (x >= 0 && y >= 0 && x <= tiledMap.getProperties().get("width", Integer.class) - 1 && y <= tiledMap.getProperties().get("height", Integer.class) - 1) {
-            return tiledMapLayer.getCell(x, y).getTile().getId();
+    public int getMapWidth() {
+        return tiledMap.getProperties().get("width", Integer.class);
+    }
+
+    public int getMapHeight() {
+        return tiledMap.getProperties().get("height", Integer.class);
+    }
+
+    public int getCellTileId(int x, int y) {
+//        System.out.println("X: " + x + " Y: " + y);
+        try {
+            if (x >= 0 && y >= 0 && x <= tiledMap.getProperties().get("width", Integer.class) - 1 && y <= tiledMap.getProperties().get("height", Integer.class) - 1) {
+                return tiledMapLayer.getCell(x, y).getTile().getId();
+            }
+        } catch (Exception e) {
+            return -1;
         }
         return -1;
     }

@@ -212,18 +212,17 @@ class SpriteEditor implements InputProcessor {
         graphicsY = (int) (camera.viewportHeight - (coords.y));
 
         actualX = (int) (coords.x - 8);
-        actualY = (int) (graphicsY - 24);
+        actualY = (int) (graphicsY - 64);
 
         zoomX = (actualX / 8) - 17;
         zoomY = (actualY / 8) - 8;
     }
 
-    public void drawPixelsOnTouch(int screenX, int screenY, int button) {
-        setDrawingCoords();
+    public void drawPixelsOnTouch(int button) {
 
         if (button == 2) {
-            spriteIdX = (int) (coords.x - 8) / 8;
-            spriteIdY = (graphicsY - 24) / 8;
+            spriteIdX = (int) (actualX) / 8;
+            spriteIdY = (actualY) / 8;
             spriteId = ((spriteIdY * 16) + (spriteIdX));
 
             zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
@@ -294,6 +293,22 @@ class SpriteEditor implements InputProcessor {
     }
 
     @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        viewport.unproject(coords.set(screenX, screenY));
+        setDrawingCoords();
+        drawPixelsOnTouch(button);
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        viewport.unproject(coords.set(screenX, screenY));
+        setDrawingCoords();
+        drawSelectedPixmapToMain();
+        return false;
+    }
+
+    @Override
     public boolean keyUp(int keycode) {
         if (keycode == Input.Keys.ESCAPE) {
             game.setScreen(new ConsoleScreen(game));
@@ -340,21 +355,6 @@ class SpriteEditor implements InputProcessor {
         }
 
         System.out.println("X: " + spriteIdX + " Y: " + spriteIdY + " ID:" + spriteId);
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        viewport.unproject(coords.set(screenX, screenY));
-        drawPixelsOnTouch(screenX, screenY, button);
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        viewport.unproject(coords.set(screenX, screenY));
-        setDrawingCoords();
-        drawSelectedPixmapToMain();
         return false;
     }
 
