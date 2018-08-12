@@ -17,8 +17,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -296,7 +298,13 @@ public class LeikrEngine implements InputProcessor {
                 spaceKeyPressed = true;
                 break;
         }
-        System.err.println((camera.position.x - 128) + " : " + (camera.position.y - 100));
+        System.out.println((camera.position.x - 128) + " : " + (camera.position.y - 100));
+
+        if (tiledMapRenderer != null) {
+            MapObjects layer = (MapObjects) tiledMap.getLayers().get("Tile Layer 1").getObjects();
+
+            System.out.println(layer.get(5).getName());
+        }
         return false;
     }
 
