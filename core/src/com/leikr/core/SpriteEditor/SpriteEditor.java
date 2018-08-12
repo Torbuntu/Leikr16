@@ -188,7 +188,6 @@ class SpriteEditor implements InputProcessor {
 
     public void savePixmapImage() {
         PixmapIO.writePNG(new FileHandle(filePath), pixmap);
-        PixmapIO.writePNG(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/TEST.png"), zoomPixmap);
     }
 
     public void undoRecentEdits() {

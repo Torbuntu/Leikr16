@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObjects;
@@ -45,6 +46,8 @@ public class LeikrEngine implements InputProcessor {
 
     TiledMap tiledMap;
     TiledMapRenderer tiledMapRenderer;
+    TiledMapTileLayer tiledMapLayer;
+
     boolean useMap;
     int mapType;//1. free map, 2. area map
 
@@ -85,7 +88,10 @@ public class LeikrEngine implements InputProcessor {
         this.mapType = mapType;
         useMap = true;
         tiledMap = new TmxMapLoader().load(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/" + fileName + ".tmx");
+        tiledMapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
+
+//        tiledMapLayer.getCell(1, 1).getTile()
     }
 
     public int getCameraX() {
@@ -126,6 +132,8 @@ public class LeikrEngine implements InputProcessor {
         if (tiledMapRenderer != null && useMap) {
             tiledMapRenderer.setView((OrthographicCamera) camera);
             tiledMapRenderer.render();
+//            TextureRegion mpl = tiledMap.getTileSets().getTileSet("tileset").getTile(0).getTextureRegion();
+
         }
         camera.update();
     }
@@ -149,6 +157,14 @@ public class LeikrEngine implements InputProcessor {
 
     public int getScreenHeight() {
         return screenHeight;
+    }
+
+    public int getColId(int x, int y) {
+        System.out.println("X: " + x + " Y: "+ y);
+        if (x >= 0 && y >= 0 && x <= tiledMap.getProperties().get("width", Integer.class) - 1 && y <= tiledMap.getProperties().get("height", Integer.class) - 1) {
+            return tiledMapLayer.getCell(x, y).getTile().getId();
+        }
+        return -1;
     }
 
     public int getRandom(int range) {
@@ -191,7 +207,6 @@ public class LeikrEngine implements InputProcessor {
 
     void drawSprite(int id, float x, float y) {
         spriteHandler.drawSprite(id, x, y);
-
     }
 
     void drawSprite(int id, float x, float y, int scaleX, int scaleY) {
@@ -274,19 +289,15 @@ public class LeikrEngine implements InputProcessor {
         switch (keycode) {
             case Keys.RIGHT:
                 rightKeyPressed = true;
-                camera.position.x += 256;
                 break;
             case Keys.LEFT:
                 leftKeyPressed = true;
-                camera.position.x -= 256;
                 break;
             case Keys.UP:
                 upKeyPressed = true;
-                camera.position.y += 200;
                 break;
             case Keys.DOWN:
                 downKeyPressed = true;
-                camera.position.y -= 200;
                 break;
             case Keys.Z:
                 zKeyPressed = true;
@@ -298,12 +309,12 @@ public class LeikrEngine implements InputProcessor {
                 spaceKeyPressed = true;
                 break;
         }
-        System.out.println((camera.position.x - 128) + " : " + (camera.position.y - 100));
 
         if (tiledMapRenderer != null) {
-            MapObjects layer = (MapObjects) tiledMap.getLayers().get("Tile Layer 1").getObjects();
+//            tiledMapLayer.getCell(0, 0).getTile().setTextureRegion(tiledMap.getTileSets().getTileSet("tileset").getTile(1).getTextureRegion());
+//            System.out.println(tiledMapLayer.getCell(0, 0).getTile().getId());
+//            System.out.println("width: " + (tiledMap.getProperties().get("width", Integer.class) - 1) + " height: " + (tiledMap.getProperties().get("height", Integer.class) - 1));
 
-            System.out.println(layer.get(5).getName());
         }
         return false;
     }
