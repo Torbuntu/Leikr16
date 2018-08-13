@@ -212,7 +212,7 @@ class SpriteEditor implements InputProcessor {
         graphicsY = (int) (camera.viewportHeight - (coords.y));
 
         actualX = (int) (coords.x - 8);
-        actualY = (int) (graphicsY - 64);
+        actualY = (int) (graphicsY - 104);
 
         zoomX = (actualX / 8) - 17;
         zoomY = (actualY / 8) - 8;
