@@ -4,9 +4,9 @@ A Java Fantasy Computer.
 - Supports games written in Java and Groovy (using the Leikr Engine)
 
 # Specs
-- Resolution 256x200
+- Resolution 256x240
 - 256 8x8 Sprites
-- 640x100 Tiled Map (each tile is 8x8). (4 screens tall and 20 wide)
+- 640x120 Tiled Map (each tile is 8x8). (4 screens tall and 20 wide)
 
 # Current features
 - Terminal Emulator. Not many commands yet.
