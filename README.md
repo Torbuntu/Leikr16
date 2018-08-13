@@ -39,4 +39,4 @@ A Java Fantasy Computer.
 ![Alt text](BounceDemo.png?raw=true "Bounce demo")
 
 # Work in progress sprite editor.
-![Alt text](spriteEditor.png?raw=true "spriteEditor")
+![Alt text](SpriteEditor.png?raw=true "SpriteEditor")
