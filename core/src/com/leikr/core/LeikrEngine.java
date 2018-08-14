@@ -9,6 +9,11 @@ import com.leikr.core.Graphics.LeikrPalette;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerListener;
+import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.controllers.ControllerManager;
+import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -24,6 +29,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import static com.leikr.core.ConsoleDirectory.Console.fileName;
@@ -35,7 +41,7 @@ import java.util.Random;
  *
  * @author tor
  */
-public class LeikrEngine implements InputProcessor {
+public class LeikrEngine implements InputProcessor, ControllerListener {
 
     public static Leikr game;
     SpriteBatch batch;
@@ -51,6 +57,7 @@ public class LeikrEngine implements InputProcessor {
     boolean useMap;
     int mapType;//1. free map, 2. area map
 
+    //keyboard buttons
     public boolean rightKeyPressed = false;
     public boolean leftKeyPressed = false;
     public boolean upKeyPressed = false;
@@ -58,6 +65,20 @@ public class LeikrEngine implements InputProcessor {
     public boolean zKeyPressed = false;
     public boolean xKeyPressed = false;
     public boolean spaceKeyPressed = false;
+
+    //controller buttons
+    boolean buttonAisPressed = false;
+    boolean buttonBisPressed = false;
+    boolean buttonXisPressed = false;
+    boolean buttonYisPressed = false;
+    boolean bumperLeftPressed = false;
+    boolean bumperRightPressed = false;
+
+    //d-pad buttons
+    boolean leftButtonPressed = false;
+    boolean rightButtonPressed = false;
+    boolean upButtonPressed = false;
+    boolean downButtonPressed = false;
 
     public int screenWidth = (int) Leikr.WIDTH;
     public int screenHeight = (int) Leikr.HEIGHT;
@@ -80,8 +101,8 @@ public class LeikrEngine implements InputProcessor {
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
         font = new Texture("LeikrFontA.png");
+        Controllers.addListener(this);
 
-        System.out.println(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/" + fileName + ".tmx");
     }
 
     public void loadMap(int mapType) {
@@ -178,7 +199,7 @@ public class LeikrEngine implements InputProcessor {
         }
         return -1;
     }
-
+    
     public int getRandom(int range) {
         return new Random().nextInt(range);
     }
@@ -225,15 +246,6 @@ public class LeikrEngine implements InputProcessor {
         spriteHandler.drawSprite(id, x, y, scaleX, scaleY);
     }
 
-    /**
-     *
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     * @param color
-     * @param type
-     */
     public void drawRect(int x, int y, int width, int height, int color, String type) {
         paintBrush.drawRect(x, y, width, height, color, type);
     }
@@ -295,39 +307,70 @@ public class LeikrEngine implements InputProcessor {
     public boolean spaceKeyPressed() {
         return spaceKeyPressed;
     }
+    
+    //controller buttons
+    public boolean btnAisPressed(){
+        return buttonAisPressed;
+    }
+    public boolean btnBisPressed(){
+        return buttonBisPressed;
+    }
+    public boolean btnXisPressed(){
+        return buttonXisPressed;
+    }
+    public boolean btnYisPressed(){
+        return buttonYisPressed;
+    }
+    public boolean bumperLeftPressed(){
+        return bumperLeftPressed;
+    }
+    public boolean bumperRightPressed(){
+        return bumperRightPressed;
+    }
+
+    //d-pad buttons
+    public boolean leftBtnPressed(){
+        return leftButtonPressed;
+    }
+    
+    public boolean rightBtnPressed(){
+        return rightButtonPressed;
+    }
+    public boolean upBtnPressed(){
+        return upButtonPressed;
+    }
+    public boolean downBtnPressed(){
+        return downButtonPressed;
+    }
+    
+    
 
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Keys.RIGHT:
                 rightKeyPressed = true;
-                break;
+                return true;
             case Keys.LEFT:
                 leftKeyPressed = true;
-                break;
+                return true;
             case Keys.UP:
                 upKeyPressed = true;
-                break;
+                return true;
             case Keys.DOWN:
                 downKeyPressed = true;
-                break;
+                return true;
             case Keys.Z:
                 zKeyPressed = true;
-                break;
+                return true;
             case Keys.X:
                 xKeyPressed = true;
-                break;
+                return true;
             case Keys.SPACE:
                 spaceKeyPressed = true;
-                break;
+                return true;
         }
 
-        if (tiledMapRenderer != null) {
-//            tiledMapLayer.getCell(0, 0).getTile().setTextureRegion(tiledMap.getTileSets().getTileSet("tileset").getTile(1).getTextureRegion());
-//            System.out.println(tiledMapLayer.getCell(0, 0).getTile().getId());
-//            System.out.println("width: " + (tiledMap.getProperties().get("width", Integer.class) - 1) + " height: " + (tiledMap.getProperties().get("height", Integer.class) - 1));
-
-        }
         return false;
     }
 
@@ -336,32 +379,113 @@ public class LeikrEngine implements InputProcessor {
         if (keycode == Keys.ESCAPE) {
             game.setScreen(new ConsoleScreen(game));
             this.dispose();
-            return false;
+            return true;
         }
         switch (keycode) {
             case Keys.RIGHT:
                 rightKeyPressed = false;
-                break;
+                return true;
             case Keys.LEFT:
                 leftKeyPressed = false;
-                break;
+                return true;
             case Keys.UP:
                 upKeyPressed = false;
-                break;
+                return true;
             case Keys.DOWN:
                 downKeyPressed = false;
-                break;
+                return true;
             case Keys.Z:
                 zKeyPressed = false;
-                break;
+                return true;
             case Keys.X:
                 xKeyPressed = false;
-                break;
+                return true;
             case Keys.SPACE:
                 spaceKeyPressed = false;
-                break;
+                return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean buttonDown(Controller controller, int buttonCode) {
+        System.out.println(controller.getName() + " : " + buttonCode);
+        switch (buttonCode) {
+            case 0:
+                buttonXisPressed = true;
+                return true;
+            case 1:
+                buttonAisPressed = true;
+                return true;
+            case 2:
+                buttonBisPressed = true;
+                return true;
+            case 3:
+                buttonYisPressed = true;
+                return true;
+            case 4:
+                bumperLeftPressed = true;
+                return true;
+            case 5:
+                bumperRightPressed = true;
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean buttonUp(Controller controller, int buttonCode) {
+        System.out.println(controller.getName() + " : " + buttonCode);
+        switch (buttonCode) {
+            case 0:
+                buttonXisPressed = false;
+                return true;
+            case 1:
+                buttonAisPressed = false;
+                return true;
+            case 2:
+                buttonBisPressed = false;
+                return true;
+            case 3:
+                buttonYisPressed = false;
+                return true;
+            case 4:
+                bumperLeftPressed = false;
+                return true;
+            case 5:
+                bumperRightPressed = false;
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean axisMoved(Controller controller, int axisCode, float value) {
+        //axis 0 = x axis -1 = left 1 = right
+        //axis 1 = y axis -1 = up 1 = down
+        System.out.println("Axis moved: " + axisCode + " : " + (int) value);
+
+        if ((int) value == 0) {
+            leftButtonPressed = false;
+            rightButtonPressed = false;
+            upButtonPressed = false;
+            downButtonPressed = false;            
+        }
+        if(axisCode == 1){
+            if(value == 1){
+                downButtonPressed = true;
+            }else if(value == -1){
+                upButtonPressed = true;
+            }
+            return true;
+        }else{
+            if(value == 1){
+                rightButtonPressed = true;
+            }else if(value == -1){
+                leftButtonPressed = true;
+            }
+            return true;
+        }       
     }
 
     @Override
@@ -392,6 +516,36 @@ public class LeikrEngine implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
+        return false;
+    }
+
+    @Override
+    public void connected(Controller controller) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void disconnected(Controller controller) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean povMoved(Controller controller, int povCode, PovDirection value) {
+        return false;
+    }
+
+    @Override
+    public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {
+        return false;
+    }
+
+    @Override
+    public boolean ySliderMoved(Controller controller, int sliderCode, boolean value) {
+        return false;
+    }
+
+    @Override
+    public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
         return false;
     }
 

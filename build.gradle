@@ -55,7 +55,7 @@ project(":desktop") {
         compile 'org.codehaus.groovy:groovy-groovysh:3.0.0-alpha-3'
 
         compile 'org.eclipse.jgit:org.eclipse.jgit:5.0.2.201807311906-r'
-        
+        compile "com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion"
 
     }
 }
@@ -79,8 +79,7 @@ project(":core") {
         compile 'org.codehaus.groovy:groovy-groovysh:3.0.0-alpha-3'
         
         compile 'org.eclipse.jgit:org.eclipse.jgit:5.0.2.201807311906-r'
-
-
+        
     }
 }
 

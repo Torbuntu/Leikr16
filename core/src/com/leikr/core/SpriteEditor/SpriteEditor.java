@@ -11,6 +11,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
@@ -40,6 +41,7 @@ class SpriteEditor implements InputProcessor {
     ShapeRenderer renderer;
     PaintBrush paintBrush;
     Texture font;
+    Texture cursor;
 
     SpriteBatch batch;
     Pixmap pixmap;
@@ -55,6 +57,7 @@ class SpriteEditor implements InputProcessor {
     Color drawColor;
 
     Vector2 coords;
+    Vector2 cursorCoords;
     int graphicsY;
 
     int saveIconXPos;
@@ -81,8 +84,10 @@ class SpriteEditor implements InputProcessor {
         sriteEditorScreen = speScreen;
         drawColor = Color.BLACK;
         coords = new Vector2();
+        cursorCoords = new Vector2();
         graphicsY = 0;
         font = new Texture("LeikrFontA.png");
+        cursor = new Texture(new FileHandle(Gdx.files.getExternalStoragePath()+"LeikrVirtualDrive/OS/Cursor.png"));
 
         renderer = new ShapeRenderer();
         paintBrush = new PaintBrush(renderer, game);
@@ -115,6 +120,9 @@ class SpriteEditor implements InputProcessor {
 
         saveIconXPos = (int) viewport.getWorldWidth() - 18;
         undoIconXPos = (int) viewport.getWorldWidth() - 8;
+        Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath()+"LeikrVirtualDrive/OS/HideCursor.png"));
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+        pm.dispose();
         Gdx.input.setInputProcessor(this);
     }
 
@@ -156,7 +164,14 @@ class SpriteEditor implements InputProcessor {
         if (undoIcon != null) {
             batch.draw(undoIcon, undoIconXPos, 0);
         }
+        
+        
+        viewport.unproject(cursorCoords.set(Gdx.input.getX(), Gdx.input.getY()));
+//        int tmpY = (int) (camera.viewportHeight - (cursorCoords.y));
 
+        int cursorX = (int) (cursorCoords.x);
+        int cursorY = (int) (cursorCoords.y-8);
+        batch.draw(cursor, cursorX, cursorY);
         batch.end();
 
     }
@@ -312,6 +327,7 @@ class SpriteEditor implements InputProcessor {
     public boolean keyUp(int keycode) {
         if (keycode == Input.Keys.ESCAPE) {
             game.setScreen(new ConsoleScreen(game));
+            Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
             return false;
         }
         if (keycode == Input.Keys.RIGHT && spriteId < 15) {
