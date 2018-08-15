@@ -77,6 +77,9 @@ class SpriteEditor implements InputProcessor {
     int zoomY;
     int count = 0;
     int color = 0;
+    
+    int cursorX = 0;
+    int cursorY = 0;
 
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
@@ -169,8 +172,8 @@ class SpriteEditor implements InputProcessor {
         viewport.unproject(cursorCoords.set(Gdx.input.getX(), Gdx.input.getY()));
 //        int tmpY = (int) (camera.viewportHeight - (cursorCoords.y));
 
-        int cursorX = (int) (cursorCoords.x);
-        int cursorY = (int) (cursorCoords.y-8);
+        cursorX = (int) (cursorCoords.x);
+        cursorY = (int) (cursorCoords.y-8);
         batch.draw(cursor, cursorX, cursorY);
         batch.end();
 

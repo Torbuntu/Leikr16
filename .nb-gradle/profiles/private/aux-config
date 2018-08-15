@@ -7,7 +7,11 @@
             
       <group>
                 
-        <file>file:/home/tor/NetBeansProjects/Leikr16/desktop/src/com/leikr/desktop/DesktopLauncher.java</file>
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/Graphics/LeikrPalette.java</file>
+                
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/LeikrEngine.java</file>
+                
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/SpriteEditor/SpriteEditor.java</file>
               
       </group>
           
@@ -15,7 +19,12 @@
     <editor-bookmarks lastBookmarkId="0" xmlns="http://www.netbeans.org/ns/editor-bookmarks/2"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
       <group>
-        <file>file:/home/tor/NetBeansProjects/Leikr16/build.gradle</file>
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/SpriteEditor/SpriteEditorScreen.java</file>
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/Graphics/LeikrPalette.java</file>
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/TitleScreen/TitleScreen.java</file>
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/Leikr.java</file>
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/LeikrEngine.java</file>
+        <file>file:/home/tor/NetBeansProjects/Leikr16/core/src/com/leikr/core/SpriteEditor/SpriteEditor.java</file>
       </group>
     </open-files>
   </auxiliary>
