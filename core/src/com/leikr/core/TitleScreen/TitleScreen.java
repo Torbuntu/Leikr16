@@ -36,6 +36,8 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     SpriteBatch batch;
     Camera camera;
     Viewport viewport;
+    
+    float blink;
 
     int halfX;
     int halfY;
@@ -55,12 +57,13 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
         halfX = (int) (Leikr.WIDTH / 2);
         halfY = (int) (Leikr.HEIGHT / 2);
+        
+        blink = 0;
         Gdx.input.setInputProcessor(this);
     }
 
     void BeginLeikr() {
         game.setScreen(new ConsoleScreen(game));
-        Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
         this.dispose();
     }
 
@@ -139,8 +142,18 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         batch.begin();
         batch.setColor(Color.WHITE);
         batch.draw(titleLogo, halfX - 32, halfY - 32, 64, 64);
+        if (blink > 0.4) {
+            batch.draw(font, 232, 8, 0, 0, 8, 8);
+            blink += delta;
+            if (blink > 1) {
+                blink = 0;
+            }
+        } else {
+            blink += delta;
+        }
         batch.end();
-        drawText("Press button to start.", 10, 8);
+        drawText("Press button to start...", (halfX/2)-20, 8);
+        
 
     }
 

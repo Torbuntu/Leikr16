@@ -29,7 +29,6 @@ public class SystemLoader {
 
     GroovyScriptEngine groovyScriptEngine;
     Binding binding;
-    String[] rootDirectory = new String[]{Gdx.files.getLocalStoragePath()};
 
     // The class of Bios. Eventually replace the systemMethodsClass and biosObject
     GroovySystemMethods groovySystemMethods = new GroovySystemMethods();

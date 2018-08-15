@@ -5,6 +5,7 @@ import com.leikr.core.ConsoleDirectory.Console;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,6 +34,7 @@ public class Leikr extends Game {
 //        this.setScreen(new ConsoleScreen(this));
 //        this.setScreen(new IntroScreen(this));
         this.setScreen(new TitleScreen(this));
+//        Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
 
     }
 

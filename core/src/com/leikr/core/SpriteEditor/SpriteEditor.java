@@ -7,6 +7,7 @@ package com.leikr.core.SpriteEditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
@@ -17,7 +18,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -25,8 +25,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Graphics.PaintBrush;
-import com.leikr.core.Graphics.SpriteHandler;
 import com.leikr.core.Leikr;
+import com.leikr.core.UserInterface.GuiObjectHandler;
 
 /**
  *
@@ -77,9 +77,12 @@ class SpriteEditor implements InputProcessor {
     int zoomY;
     int count = 0;
     int color = 0;
-    
+
     int cursorX = 0;
     int cursorY = 0;
+
+    GuiObjectHandler guiHandler;
+    boolean exitDialog = false;
 
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
@@ -90,7 +93,7 @@ class SpriteEditor implements InputProcessor {
         cursorCoords = new Vector2();
         graphicsY = 0;
         font = new Texture("LeikrFontA.png");
-        cursor = new Texture(new FileHandle(Gdx.files.getExternalStoragePath()+"LeikrVirtualDrive/OS/Cursor.png"));
+        cursor = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Cursor.png"));
 
         renderer = new ShapeRenderer();
         paintBrush = new PaintBrush(renderer, game);
@@ -120,10 +123,11 @@ class SpriteEditor implements InputProcessor {
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
+        guiHandler = new GuiObjectHandler(batch, viewport);
 
         saveIconXPos = (int) viewport.getWorldWidth() - 18;
         undoIconXPos = (int) viewport.getWorldWidth() - 8;
-        Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath()+"LeikrVirtualDrive/OS/HideCursor.png"));
+        Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/HideCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
         Gdx.input.setInputProcessor(this);
@@ -167,16 +171,29 @@ class SpriteEditor implements InputProcessor {
         if (undoIcon != null) {
             batch.draw(undoIcon, undoIconXPos, 0);
         }
-        
-        
+
+        batch.end();
+
+        if (exitDialog) {
+            int x = (int) (viewport.getWorldWidth() / 2) - 100;
+            int y = (int) viewport.getWorldHeight() / 2;
+            guiHandler.drawRectWindow(x, y, 220, 50, 2, "Exit Sprite Editor?", x + 8, y + 42, 0, 2, 3);//Main windows
+
+            x = x + 5;
+            guiHandler.drawRectWindow(x, y + 8, 40, 24, 9, "(Y)es", x + 1, y + 16, 2, 1, 1);
+
+            guiHandler.drawRectWindow(x + 56, y + 8, 40, 24, 15, "(N)o", x + 57, y + 16, 2, 1, 1);
+
+        }
+
+        batch.begin();
         viewport.unproject(cursorCoords.set(Gdx.input.getX(), Gdx.input.getY()));
 //        int tmpY = (int) (camera.viewportHeight - (cursorCoords.y));
 
         cursorX = (int) (cursorCoords.x);
-        cursorY = (int) (cursorCoords.y-8);
+        cursorY = (int) (cursorCoords.y - 8);
         batch.draw(cursor, cursorX, cursorY);
         batch.end();
-
     }
 
     public void drawText() {
@@ -329,9 +346,26 @@ class SpriteEditor implements InputProcessor {
     @Override
     public boolean keyUp(int keycode) {
         if (keycode == Input.Keys.ESCAPE) {
-            game.setScreen(new ConsoleScreen(game));
-            Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            if (exitDialog) {
+                savePixmapImage(); 
+                game.setScreen(new ConsoleScreen(game));
+                Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
+
+            exitDialog = true;
             return false;
+        }
+        if (exitDialog) {
+            switch (keycode) {
+                case Keys.N:
+                    exitDialog = false;
+                    return true;
+                case Keys.Y:
+                    savePixmapImage(); 
+                    game.setScreen(new ConsoleScreen(game));
+                    Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+                    return true;
+            }
         }
         if (keycode == Input.Keys.RIGHT && spriteId < 15) {
             spriteId++;
