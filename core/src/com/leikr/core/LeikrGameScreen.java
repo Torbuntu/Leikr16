@@ -18,13 +18,16 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.shape.Path;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import org.codehaus.groovy.control.CompilationFailedException;
+import org.python.util.PythonInterpreter;
 
 /**
  *
@@ -48,13 +51,21 @@ public class LeikrGameScreen implements Screen, InputProcessor {
 
         fileName = Console.fileName;
         String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/";//sets game path
-        
+
         if (gameType.equals("groovy")) {
             loadGroovyGame(filePath);
 
         }
         if (gameType.equals("java")) {
             loadJavaGame(filePath);
+        }
+
+        if (gameType.equals("kotlin")) {
+            loadKotlinGame(filePath);
+        }
+
+        if (gameType.equals("jython")) {
+            loadJythonGame(filePath);
         }
 
     }
@@ -66,12 +77,63 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             // Create URL for loading the external files.
             URL[] cp = {f.toURI().toURL()};
             URLClassLoader urlCl = new URLClassLoader(cp);
-            
+
             //Compile the Java source code.
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            String toCompile = java.io.File.separator + filePath +fileName +".java";
+            String toCompile = java.io.File.separator + filePath + fileName + ".java";
             compiler.run(null, null, null, toCompile);
-            
+
+            //New instance
+            leikrGame = (LeikrEngine) urlCl.loadClass(fileName).newInstance();
+        } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(LeikrGameScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void loadJythonGame(String filePath) {
+        leikrGame = (LeikrEngine) getJythonObject("com.leikr.core.LeikrEngine", filePath + fileName + ".py");
+    }
+
+    public static Object getJythonObject(String interfaceName, String pathToJythonModule) {
+
+        Object javaInt = null;
+        PythonInterpreter interpreter = new PythonInterpreter();
+
+        interpreter.execfile(pathToJythonModule);
+
+        String tempName = pathToJythonModule.substring(pathToJythonModule.lastIndexOf("/") + 1);
+        
+        tempName = tempName.substring(0, tempName.indexOf("."));
+        
+        System.out.println(tempName);
+        String instanceName = tempName.toLowerCase();
+        String javaClassName = tempName.substring(0, 1).toUpperCase() + tempName.substring(1);
+        String objectDef = "=" + javaClassName + "()";
+        interpreter.exec(instanceName + objectDef);
+        try {
+            Class JavaInterface = Class.forName(interfaceName);
+            javaInt = interpreter.get(instanceName).__tojava__(JavaInterface);
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();  // Add logging here
+        }
+
+        return javaInt;
+    }
+
+    public void loadKotlinGame(String filePath) {
+
+        File f = new File(filePath);// Create file of Java game.
+        try {
+            // Create URL for loading the external files.
+            URL[] cp = {f.toURI().toURL()};
+            URLClassLoader urlCl = new URLClassLoader(cp);
+
+            //Compile the Java source code.
+            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+            String toCompile = java.io.File.separator + filePath + fileName + ".kt";
+            compiler.run(null, null, null, toCompile);
+
             //New instance
             leikrGame = (LeikrEngine) urlCl.loadClass(fileName).newInstance();
         } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {

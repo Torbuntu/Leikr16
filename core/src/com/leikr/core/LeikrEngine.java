@@ -238,11 +238,11 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         batch.end();
     }
 
-    void drawSprite(int id, float x, float y) {
+    public void drawSprite(int id, float x, float y) {
         spriteHandler.drawSprite(id, x, y);
     }
 
-    void drawSprite(int id, float x, float y, int scaleX, int scaleY) {
+    public void drawSprite(int id, float x, float y, int scaleX, int scaleY) {
         spriteHandler.drawSprite(id, x, y, scaleX, scaleY);
     }
 
