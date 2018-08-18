@@ -1,7 +1,7 @@
 # Leikr16
 A Java Fantasy Computer.
 - Written in Java libgdx and Groovy.
-- Supports games written in Java and Groovy (using the Leikr Engine)
+- Supports games written in Java, Groovy, and Jython (using the Leikr Engine)
 
 # Specs
 - Resolution 256x240
@@ -11,7 +11,7 @@ A Java Fantasy Computer.
 # Current features
 - Terminal Emulator. Not many commands yet.
 - Groovysh repl by prefixing commands with `gv`.
-- Small groovy games can be loaded and played by typing `load GameNameHere` then `run` games loaded from the ChipSpace directory.
+- Small games can be loaded and played by typing `load GameNameHere` then `run` games loaded from the ChipSpace directory.
 - Exit to Terminal with ESC
 - Sprite Editor. (functional, but needs improvement)
 
@@ -21,11 +21,12 @@ A Java Fantasy Computer.
 - Map Editor
 - Music
 - SFX
-- Online repository of game packages. example: `lkpm install Game.lkr`
+- Online repository of game packages. example: `lpm install Game`[WIP]
 - More advanced terminal/console
 - Code Editor
 - SFX Editor
 - Music Editor
+- Kotlin, Lua, and Scala support for game coding 
 
 ![Alt text](console.png?raw=true "Console")
 
