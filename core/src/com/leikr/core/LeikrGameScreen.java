@@ -18,10 +18,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.shape.Path;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.tools.JavaCompiler;
@@ -52,22 +50,38 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         fileName = Console.fileName;
         String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/";//sets game path
 
-        if (gameType.equals("groovy")) {
-            loadGroovyGame(filePath);
-
+        switch (gameType.toLowerCase()) {
+            case "groovy":
+            case "gv":
+                loadGroovyGame(filePath);
+                break;
+            case "java":
+            case "jv":
+                loadJavaGame(filePath);
+                break;
+            case "jython":
+            case "python":
+            case "jy":
+            case "py":
+                loadJythonGame(filePath);
+                break;
+            default:
+                try{
+                    loadGroovyGame(filePath);
+                }catch(Exception e){
+                    
+                }
+                break;
         }
-        if (gameType.equals("java")) {
-            loadJavaGame(filePath);
-        }
 
-        if (gameType.equals("kotlin")) {
-            loadKotlinGame(filePath);
-        }
+    }
+   
+    public void loadScalaGame(String filePath) {
+//        Global g = new Global(new Settings());
 
-        if (gameType.equals("jython")) {
-            loadJythonGame(filePath);
-        }
-
+//        Global.Run run = new g.Run();
+        // assumes you have a Java list of file names
+//        run.compile(JavaConversions.asScalaBuffer(fileNames).toList);
     }
 
     public void loadJavaGame(String filePath) {
@@ -103,9 +117,9 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         interpreter.execfile(pathToJythonModule);
 
         String tempName = pathToJythonModule.substring(pathToJythonModule.lastIndexOf("/") + 1);
-        
+
         tempName = tempName.substring(0, tempName.indexOf("."));
-        
+
         System.out.println(tempName);
         String instanceName = tempName.toLowerCase();
         String javaClassName = tempName.substring(0, 1).toUpperCase() + tempName.substring(1);
@@ -119,27 +133,6 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         }
 
         return javaInt;
-    }
-
-    public void loadKotlinGame(String filePath) {
-
-        File f = new File(filePath);// Create file of Java game.
-        try {
-            // Create URL for loading the external files.
-            URL[] cp = {f.toURI().toURL()};
-            URLClassLoader urlCl = new URLClassLoader(cp);
-
-            //Compile the Java source code.
-            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            String toCompile = java.io.File.separator + filePath + fileName + ".kt";
-            compiler.run(null, null, null, toCompile);
-
-            //New instance
-            leikrGame = (LeikrEngine) urlCl.loadClass(fileName).newInstance();
-        } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(LeikrGameScreen.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
 
     public void loadGroovyGame(String filePath) {
@@ -239,5 +232,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     public boolean scrolled(int amount) {
         return false;
     }
+
+    
 
 }

@@ -13,15 +13,15 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
-import com.leikr.core.ConsoleDirectory.FontHandler;
 import com.leikr.core.Leikr;
 
 /**
@@ -31,12 +31,16 @@ import com.leikr.core.Leikr;
 public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
     Leikr game;
-    Texture titleLogo;
     Texture font;
     SpriteBatch batch;
     Camera camera;
     Viewport viewport;
-    
+
+    Texture animTexture;
+    TextureRegion[] animationFrames;
+    Animation animation;
+    float elapsedTime;
+
     float blink;
 
     int halfX;
@@ -45,7 +49,19 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     public TitleScreen(Leikr game) {
         this.game = game;
         batch = game.batch;
-        titleLogo = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/TitleLogo.png"));
+
+        animTexture = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/TitleAnimation/TitleAnimation.png"));
+        TextureRegion[][] tmpFrames = TextureRegion.split(animTexture, 64, 24);
+
+        animationFrames = new TextureRegion[27];
+        int index = 0;
+        for (int j = 0; j < 27; j++) {
+            animationFrames[index] = tmpFrames[j][0];
+            index++;
+        }
+
+        animation = new Animation(1f / 27f, animationFrames);
+        animation.setPlayMode(Animation.PlayMode.NORMAL);
 
         font = new Texture("LeikrFontA.png");
         Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/HideCursor.png"));
@@ -57,8 +73,9 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
         halfX = (int) (Leikr.WIDTH / 2);
         halfY = (int) (Leikr.HEIGHT / 2);
-        
+
         blink = 0;
+
         Gdx.input.setInputProcessor(this);
     }
 
@@ -136,24 +153,32 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
     @Override
     public void render(float delta) {
+        elapsedTime += Gdx.graphics.getDeltaTime();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.setColor(Color.WHITE);
-        batch.draw(titleLogo, halfX - 32, halfY - 32, 64, 64);
-        if (blink > 0.4) {
-            batch.draw(font, 232, 8, 0, 0, 8, 8);
-            blink += delta;
-            if (blink > 1) {
-                blink = 0;
-            }
-        } else {
-            blink += delta;
-        }
+
+        batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, false), halfX - 64, halfY - 32, 64 * 2, 24 * 2);
+
         batch.end();
-        drawText("Press button to start...", (halfX/2)-20, 8);
-        
+
+        if (animation.isAnimationFinished(elapsedTime)) {
+            batch.begin();
+            if (blink > 0.4) {
+                batch.draw(font, 232, 8, 0, 0, 8, 8);
+                blink += delta;
+                if (blink > 1) {
+                    blink = 0;
+                }
+            } else {
+                blink += delta;
+            }
+            batch.end();
+            drawText("Press button to start...", (halfX / 2) - 20, 8);
+
+        }
 
     }
 

@@ -47,7 +47,7 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
-        //compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
         
@@ -82,6 +82,10 @@ project(":core") {
         compile 'org.python:jython-standalone:2.7.1'
         compile 'org.python:jython:2.7.1b3'
         compile 'org.python:jython-installer:2.7.1'
+        
+        compile 'org.scala-lang:scala-library-all:2.12.6'
+        
+        compile 'org.luaj:luaj-jse:3.0.1'
     }
 }
 
