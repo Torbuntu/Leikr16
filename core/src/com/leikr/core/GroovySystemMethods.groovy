@@ -11,7 +11,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 
-class GroovySystemMethods {
+public class GroovySystemMethods {
     String BiosVersion = "V0.0.1";
     String SystemName = "Leikr 16";
     String RootFileSystem = Gdx.files.getExternalStoragePath();

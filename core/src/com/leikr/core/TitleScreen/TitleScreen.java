@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Leikr;
+import com.leikr.core.GroovySystemMethods;
 
 /**
  *
@@ -46,9 +47,15 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     int halfX;
     int halfY;
 
+    GroovySystemMethods groovySystemMethods = new GroovySystemMethods();
+
     public TitleScreen(Leikr game) {
         this.game = game;
         batch = game.batch;
+
+        if (!Gdx.files.external("LeikrVirtualDrive/").exists() || !Gdx.files.external("LeikrVirtualDrive/ChipSpace/").exists()) {
+            groovySystemMethods.initFileSystem();
+        }
 
         animTexture = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/TitleAnimation/TitleAnimation.png"));
         TextureRegion[][] tmpFrames = TextureRegion.split(animTexture, 64, 24);
