@@ -1,7 +1,7 @@
 
 import com.leikr.core.LeikrEngine; // Required for extending LeikrEngine
 
-class Pong extends LeikrEngine{
+class LeikrGame extends LeikrEngine{
     
     int pOneScore = 0;
     int pTwoScore = 0;    
@@ -16,8 +16,8 @@ class Pong extends LeikrEngine{
     int playerTwoY = getScreenHeight()/2;
     int playerTwoHeight = 35;
 
-    int ballX = getScreenWidth() / 2 - 5;
-    int ballY = getScreenHeight() / 2 - 5;
+    int ballX = getScreenWidth() / 2;
+    int ballY = getScreenHeight() / 2;
     int ballSpeedX = 0;
     int ballSpeedY = 0;
     
@@ -61,17 +61,17 @@ class Pong extends LeikrEngine{
     }
 
     def checkYbounds(){
-        if((ballY+5) <= 5){
+        if(ballY <= 7){
             ballSpeedY = ballSpeedY * -1;
         }
-        if((ballY+5) >= getScreenHeight()-5){
+        if(ballY >= getScreenHeight()-7){
             ballSpeedY = ballSpeedY * -1;
         }
     }
 
     def checkBallCollisionPlayerOne(){
-        if(ballSpeedX < 0 && (ballX+5) <= 11){
-            if((ballY+5) >= playerOneY && (ballY+5) <= playerOneY + 35 ){
+        if(ballSpeedX < 0 && ballX <= 11){
+            if(ballY >= playerOneY && ballY <= playerOneY + 35 ){
                 ballSpeedX = ballSpeedX * -1;
                 pOneScore++;
             }else{
@@ -86,8 +86,8 @@ class Pong extends LeikrEngine{
     }
     
     def checkBallCollisionPlayerTwo(){
-        if(ballSpeedX > 0 && (ballX+5) >= getScreenWidth() - 11){
-            if((ballY+5) >= playerTwoY && (ballY+5) <= playerTwoY + 35){
+        if(ballSpeedX > 0 && ballX >= getScreenWidth() - 11){
+            if(ballY >= playerTwoY && ballY <= playerTwoY + 35){
 
                 ballSpeedX = ballSpeedX * -1;
                 pTwoScore++;
@@ -130,11 +130,11 @@ class Pong extends LeikrEngine{
     
 
     def void render(){
-    
-        drawRect(0, 0, 2, getScreenHeight(), 1, "Filled");
-        drawRect(getScreenWidth()-2, 0, 2, getScreenHeight(), 1, "Filled");
-        drawRect(0, 0, getScreenWidth(), 2, 1, "Filled");
-        drawRect(0, getScreenHeight()-2, getScreenWidth(), 2, 1, "Filled");
+        
+        drawRect(0, 0, 2, getScreenHeight(), "WHITE", "Filled");
+        drawRect(getScreenWidth()-2, 0, 2, getScreenHeight(), "WHITE", "Filled");
+        drawRect(0, 0, getScreenWidth(), 2, "WHITE", "Filled");
+        drawRect(0, getScreenHeight()-2, getScreenWidth(), 2, "WHITE", "Filled");
         playerOneMove();
         playerTwoMove();
         if(playing){
@@ -142,15 +142,15 @@ class Pong extends LeikrEngine{
         }
         if(gameOver){
             if(notStart){
-                drawText("Press space to play.", 30, 92, "WHITE");
+                drawText("Press space to play.", 30, 92);
                 
             }else{
-                drawText("Press space to play again.", 30, 92, "WHITE");
-                drawText(winner+" Wins!", 50, 100, "WHITE");
+                drawText("Press space to play again.", 30, 92);
+                drawText(winner+" Wins!", 50, 100);
 
             }
         }else{
-            drawRect(centerLineX-1, 0, 2, getScreenHeight(), 1, "Filled");
+            drawRect(centerLineX-1, 0, 2, getScreenHeight(), "WHITE", "Filled");
         }
         if(spaceKeyPressed()){
             if(notStart){
@@ -159,21 +159,18 @@ class Pong extends LeikrEngine{
             }
             pOneScore = 0;
             pTwoScore = 0;
-            ballX = getScreenWidth() / 2 - 5;
-            ballY = getScreenHeight() / 2 - 5;
+            ballX = getScreenWidth() / 2;
+            ballY = getScreenHeight() / 2;
             gameOver = false;
             playing = true;
             ballMove();
         }
-        drawText("P1 Score: "+pOneScore, textPosX, textPosY, "WHITE");
-        drawText("P2 Score: "+pTwoScore, textPosX+120, textPosY, "WHITE");
-        
-        //drawCircle(ballX, ballY, 5, "BLUE", style);
-        
-        
-        drawRect(playerOneX, playerOneY, 5, playerOneHeight, 1, style);
-        drawRect(playerTwoX, playerTwoY, 5, playerTwoHeight, 1, style);
-        drawSprite(0, ballX, ballY);//testing sprite
+        drawText("P1 Score: "+pOneScore, textPosX, textPosY);
+        drawText("P2 Score: "+pTwoScore, textPosX+120, textPosY);
+        drawCircle(ballX, ballY, 5, "BLUE", style);
+
+        drawRect(playerOneX, playerOneY, 5, playerOneHeight, "WHITE", style);
+        drawRect(playerTwoX, playerTwoY, 5, playerTwoHeight, "WHITE", style);
         
     }
     
