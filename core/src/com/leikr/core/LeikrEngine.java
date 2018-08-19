@@ -80,7 +80,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public int screenWidth = (int) Leikr.WIDTH;
     public int screenHeight = (int) Leikr.HEIGHT;
 
-    public String backgroundColor = "BLACK";
+    public int backgroundColor = 2;
 
     LeikrPalette leikrPalette;
     SpriteHandler spriteHandler;
@@ -121,25 +121,8 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     }
 
     public void preRender() {
-        switch (backgroundColor) {
-            case "RED":
-                Gdx.gl.glClearColor(1, 0, 0, 1);
-                break;
-            case "BLUE":
-                Gdx.gl.glClearColor(0, 0, 1, 1);
-                break;
-            case "GREEN":
-                Gdx.gl.glClearColor(0, 1, 0, 1);
-                break;
-            case "YELLOW":
-                Gdx.gl.glClearColor(1, 1, 0, 1);
-                break;
-            default:
-                Gdx.gl.glClearColor(0, 0, 0, 1);
-                break;
-
-        }
-
+        Color color = new Color(leikrPalette.palette.get(backgroundColor));
+        Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
@@ -196,36 +179,19 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         }
         return -1;
     }
-    
+
     public int getRandom(int range) {
         return new Random().nextInt(range);
     }
 
-    public void drawText(String text, int x, int y, String color) {
+    public void drawText(String text, int x, int y, int color) {
         int fontX;
         int fontY;
         // Set the variable test for evaluating the x and y position of the ASCII set.
         batch.begin();
-        switch (color) {
-            case "RED":
-                batch.setColor(Color.RED);
-                break;
-            case "GREEN":
-                batch.setColor(Color.GREEN);
-                break;
-            case "BLUE":
-                batch.setColor(Color.BLUE);
-                break;
-            case "WHITE":
-                batch.setColor(Color.WHITE);
-                break;
-            case "BLACK":
-                batch.setColor(Color.BLACK);
-                break;
-            default:
-                batch.setColor(Color.WHITE);
-                break;
-        }
+        int id = leikrPalette.palette.get(color);
+        batch.setColor(new Color(id));
+
         for (char C : text.toCharArray()) {
             fontX = ((int) C % 16) * 8;
             fontY = ((int) C / 16) * 8;
@@ -263,8 +229,8 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         paintBrush.drawColor(id, x, y);
     }
 
-    public void setBackgroundColor(String color) {
-        backgroundColor = color.toUpperCase();
+    public void setBackgroundColor(int color) {
+        backgroundColor = color;
     }
 
     public void drawPalette(int x, int y, int w, int h) {
@@ -304,43 +270,48 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public boolean spaceKeyPressed() {
         return spaceKeyPressed;
     }
-    
+
     //controller buttons
-    public boolean btnAisPressed(){
+    public boolean btnAisPressed() {
         return buttonAisPressed;
     }
-    public boolean btnBisPressed(){
+
+    public boolean btnBisPressed() {
         return buttonBisPressed;
     }
-    public boolean btnXisPressed(){
+
+    public boolean btnXisPressed() {
         return buttonXisPressed;
     }
-    public boolean btnYisPressed(){
+
+    public boolean btnYisPressed() {
         return buttonYisPressed;
     }
-    public boolean bumperLeftPressed(){
+
+    public boolean bumperLeftPressed() {
         return bumperLeftPressed;
     }
-    public boolean bumperRightPressed(){
+
+    public boolean bumperRightPressed() {
         return bumperRightPressed;
     }
 
     //d-pad buttons
-    public boolean leftBtnPressed(){
+    public boolean leftBtnPressed() {
         return leftButtonPressed;
     }
-    
-    public boolean rightBtnPressed(){
+
+    public boolean rightBtnPressed() {
         return rightButtonPressed;
     }
-    public boolean upBtnPressed(){
+
+    public boolean upBtnPressed() {
         return upButtonPressed;
     }
-    public boolean downBtnPressed(){
+
+    public boolean downBtnPressed() {
         return downButtonPressed;
     }
-    
-    
 
     @Override
     public boolean keyDown(int keycode) {
@@ -466,23 +437,23 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
             leftButtonPressed = false;
             rightButtonPressed = false;
             upButtonPressed = false;
-            downButtonPressed = false;            
+            downButtonPressed = false;
         }
-        if(axisCode == 1){
-            if(value == 1){
+        if (axisCode == 1) {
+            if (value == 1) {
                 downButtonPressed = true;
-            }else if(value == -1){
+            } else if (value == -1) {
                 upButtonPressed = true;
             }
             return true;
-        }else{
-            if(value == 1){
+        } else {
+            if (value == 1) {
                 rightButtonPressed = true;
-            }else if(value == -1){
+            } else if (value == -1) {
                 leftButtonPressed = true;
             }
             return true;
-        }       
+        }
     }
 
     @Override

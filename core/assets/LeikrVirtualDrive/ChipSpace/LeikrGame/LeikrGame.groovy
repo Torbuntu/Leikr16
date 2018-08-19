@@ -56,14 +56,14 @@ class LeikrGame extends LeikrEngine{
    				Player.y--;
    			}
    		}
-   		drawText(Integer.toString(Player.x), 100, 150, "GREEN" );
-   		drawText(Integer.toString(tileIdRight), 100, 200, "GREEN" );
+   		drawText(Integer.toString(Player.x), 100, 150, 9 );
+   		drawText(Integer.toString(tileIdRight), 100, 200, 9 );
    	}
    
     def void render(){
 		id = getCellTileId(x,y);
 		
-		drawText(Integer.toString(id), 100, 100, "GREEN" );
+		drawText(Integer.toString(id), 100, 100, 9 );
 		
 		movePlayer();
 		drawSprite(Player.spriteId, Player.x, Player.y);

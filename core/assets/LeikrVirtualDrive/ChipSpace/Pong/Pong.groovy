@@ -142,11 +142,11 @@ class Pong extends LeikrEngine{
         }
         if(gameOver){
             if(notStart){
-                drawText("Press space to play.", 30, 92, "WHITE");
+                drawText("Press space to play.", 30, 92, 0);
                 
             }else{
-                drawText("Press space to play again.", 30, 92, "WHITE");
-                drawText(winner+" Wins!", 50, 100, "WHITE");
+                drawText("Press space to play again.", 30, 92, 0);
+                drawText(winner+" Wins!", 50, 100, 0);
 
             }
         }else{
@@ -165,8 +165,8 @@ class Pong extends LeikrEngine{
             playing = true;
             ballMove();
         }
-        drawText("P1 Score: "+pOneScore, textPosX, textPosY, "WHITE");
-        drawText("P2 Score: "+pTwoScore, textPosX+120, textPosY, "WHITE");
+        drawText("P1 Score: "+pOneScore, textPosX, textPosY, 0);
+        drawText("P2 Score: "+pTwoScore, textPosX+120, textPosY, 0);
         
         //drawCircle(ballX, ballY, 5, "BLUE", style);
         
