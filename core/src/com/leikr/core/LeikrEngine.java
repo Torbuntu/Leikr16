@@ -117,7 +117,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     }
 
     public int getCameraY() {
-        return (int) camera.position.y - 100;
+        return (int) camera.position.y - 120;
     }
 
     public void preRender() {
@@ -227,6 +227,10 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 
     public void drawColor(int id, int x, int y) {
         paintBrush.drawColor(id, x, y);
+    }
+    
+    public void drawColor(int id, int x, int y, int width, int height) {
+        paintBrush.drawColor(id, x, y, width, height);
     }
 
     public void setBackgroundColor(int color) {

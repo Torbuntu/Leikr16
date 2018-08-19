@@ -56,6 +56,14 @@ public class PaintBrush {
         shapeRenderer.rect(x, y, 5, 5);
         shapeRenderer.end();
     }
+    
+    public void drawColor(int id, int x, int y, int width, int height) {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        int color = leikrPalette.palette.get(id);
+        shapeRenderer.setColor(new Color(color));
+        shapeRenderer.rect(x, y, width, height);
+        shapeRenderer.end();
+    }
 
     public void drawRect(int x, int y, int width, int height, int color, String type) {
         shapeRenderer.begin(getType(type));
