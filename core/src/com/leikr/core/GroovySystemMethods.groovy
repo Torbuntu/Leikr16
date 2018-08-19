@@ -10,16 +10,27 @@ import groovy.io.FileType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
-
+//TODO: configure a path handler and `cd` method
 public class GroovySystemMethods {
     String BiosVersion = "V0.0.1";
     String SystemName = "Leikr 16";
-    String RootFileSystem = Gdx.files.getExternalStoragePath();
+    String RootFileSystem = Gdx.files.getExternalStoragePath()+"LeikrVirtualDrive";
     
+    String locPath = "";
     
     String printSystemInfo(){
         "System Name: $SystemName, Bios Version: $BiosVersion ";
     }
+    
+    
+    
+    
+    String cd(String directory){
+        locPath += "/"+directory;
+        return locPath;
+    }
+    
+    
     
     String mkdir(def name){
         String result = "";
@@ -28,59 +39,93 @@ public class GroovySystemMethods {
         }
         if(!Gdx.files.external("LeikrVirtualDrive/").exists()){
             result += "No root file system detected. Initializing...   ";
-            new File(RootFileSystem+"LeikrVirtualDrive/").mkdir();
-            new File(RootFileSystem+"LeikrVirtualDrive/"+"ChipSpace").mkdir();
-            new File(RootFileSystem+"LeikrVirtualDrive/"+"OS").mkdir();
-            new File(RootFileSystem+"LeikrVirtualDrive/OS/"+"Methods.groovy").createNewFile();
-            //new File(RootFileSystem+"LeikrVirtualDrive/ChipSpace/"+"LeikrGame.groovy").createNewFile();
+            initFileSystem();
             result += "Directories initialized";
         }
-        new File(RootFileSystem+"LeikrVirtualDrive/"+name).mkdir();
+        if(locPath.length() > 0){
+            new File(RootFileSystem+"LeikrVirtualDrive/"+name).mkdir();
+
+        }else{
+            new File(RootFileSystem+"LeikrVirtualDrive/"+locPath+"/"+name).mkdir();
+
+        }
         return result += "New directory `$name` successfully created.";
     }    
     
     String rm(def name){
-        if(Gdx.files.external("LeikrVirtualDrive/"+name).delete()){
-            return "File `$name` successfully removed.";
+        if(locPath.length() > 0){
+            if(Gdx.files.external("LeikrVirtualDrive/"+locPath+"/"+name).delete()){
+                return "File `$name` successfully removed.";
+            }else{
+                return "There was a problem removing `$name`...";
+            }
         }else{
-            return "There was a problem removing `$name`...";
+            if(Gdx.files.external("LeikrVirtualDrive/"+name).delete()){
+                return "File `$name` successfully removed.";
+            }else{
+                return "There was a problem removing `$name`...";
+            }
         }
+        
     }
     
     String rmdir(def name){
-        if(Gdx.files.external("LeikrVirtualDrive/"+name).deleteDirectory()){
-            return "Directory `$name` successfully removed.";
+        if(locPath.length() > 0){
+            if(Gdx.files.external("LeikrVirtualDrive/"+locPath+"/"+name).deleteDirectory()){
+                return "Directory `$name` successfully removed.";
+            }else{
+                return "There was a problem removing `$name`...";
+            }
         }else{
-            return "There was a problem removing `$name`...";
+            if(Gdx.files.external("LeikrVirtualDrive/"+name).deleteDirectory()){
+                return "Directory `$name` successfully removed.";
+            }else{
+                return "There was a problem removing `$name`...";
+            }
         }
+        
     }
     
     // Update this to use the current directory after CD is implemented
     String ls(){
-        String lsResult = ". ..";
-        FileHandle[] contents = Gdx.files.external("LeikrVirtualDrive/").list();
+        String lsResult = "";
+        FileHandle[] contents = Gdx.files.external("LeikrVirtualDrive/"+locPath).list();
         for(FileHandle item : contents){
-            lsResult += item.toString().replace("LeikrVirtualDrive/", "") + " ";
-
+            lsResult += item.toString().replace("LeikrVirtualDrive/"+locPath, "") + " ";
         }
         return lsResult;
     }
     
+    String lsPath(String path){
+        String lsResult = "";
+        if(locPath.length()>0){
+            FileHandle[] contents = Gdx.files.external("LeikrVirtualDrive/"+locPath+"/"+path).list();
+            for(FileHandle item : contents){
+                lsResult += item.toString().replace("LeikrVirtualDrive/"+locPath+"/"+path, "") + " ";
+            }
+        }else{
+            FileHandle[] contents = Gdx.files.external("LeikrVirtualDrive/"+path).list();
+            for(FileHandle item : contents){
+                lsResult += item.toString().replace("LeikrVirtualDrive/"+path, "") + " ";
+            }
+        }
+        
+        return lsResult;
+    }
+    
+    String mnt(String from){
+        new AntBuilder().copy( todir: RootFileSystem+"/ChipSpace/"+from) {
+            fileset( dir: Gdx.files.external("LeikrVirtualDrive/Download/"+from));
+        }
+        return "mounted "+from+" to ChipSpace from Downloads";
+    }
+   
+    
     String initFileSystem(){
-        new File(RootFileSystem+"LeikrVirtualDrive/").mkdir();
-        new File(RootFileSystem+"LeikrVirtualDrive/"+"ChipSpace").mkdir();
-        new File(RootFileSystem+"LeikrVirtualDrive/ChipSpace/" + "LeikrGame/").mkdir();
-        new File(RootFileSystem+"LeikrVirtualDrive/"+"OS").mkdir();
-        new File(RootFileSystem+"LeikrVirtualDrive/OS/"+"Methods.groovy").createNewFile();
-        
-        new AntBuilder().copy( todir: RootFileSystem+"LeikrVirtualDrive/ChipSpace/LeikrGame") {
-            fileset( dir: Gdx.files.internal("LeikrGame"));
+
+        new AntBuilder().copy( todir: RootFileSystem) {
+            fileset( dir: Gdx.files.internal("LeikrVirtualDrive"));
         }
-        
-        new AntBuilder().copy( todir: RootFileSystem+"LeikrVirtualDrive/OS") {
-            fileset( dir: Gdx.files.internal("OS"));
-        }
-        
         return "File system init.";
     }
     

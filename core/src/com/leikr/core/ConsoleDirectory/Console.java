@@ -3,6 +3,7 @@ package com.leikr.core.ConsoleDirectory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -31,12 +32,13 @@ public class Console implements InputProcessor {
 
     FontHandler fontHandler;
     ShellHandler shellHandler;
-
+    
+    
     public Console(final Leikr game, ConsoleScreen consoleScreen) {
         this.game = game;
         this.consoleScreen = consoleScreen;
         batch = game.batch;
-        font = new Texture("LeikrFontA.png");
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/LeikrFontA.png"));
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();

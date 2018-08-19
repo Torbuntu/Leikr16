@@ -48,7 +48,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         scriptManager = new ScriptEngineManager();
 
         fileName = Console.fileName;
-        String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/";//sets game path
+        String filePath = Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/";//sets game path
 
         switch (gameType.toLowerCase()) {
             case "groovy":

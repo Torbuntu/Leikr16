@@ -57,7 +57,7 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
             groovySystemMethods.initFileSystem();
         }
 
-        animTexture = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/TitleAnimation/TitleAnimation.png"));
+        animTexture = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/TitleAnimation/TitleAnimation.png"));
         TextureRegion[][] tmpFrames = TextureRegion.split(animTexture, 64, 24);
 
         animationFrames = new TextureRegion[27];
@@ -71,7 +71,7 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         animation.setPlayMode(Animation.PlayMode.NORMAL);
 
         font = new Texture("LeikrFontA.png");
-        Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/HideCursor.png"));
+        Pixmap pm = new Pixmap(new FileHandle(Leikr.ROOT_PATH + "OS/HideCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
 

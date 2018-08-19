@@ -17,7 +17,6 @@ import java.io.File;
 import java.util.Arrays;
 import org.codehaus.groovy.control.CompilationFailedException;
 
-
 /**
  *
  * @author tor
@@ -38,7 +37,7 @@ public class SystemLoader {
         if (!Gdx.files.external("LeikrVirtualDrive/").exists() || !Gdx.files.external("LeikrVirtualDrive/ChipSpace/").exists()) {
             groovySystemMethods.initFileSystem();
         }
-        systemMethodsClass = (GroovyObject)classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Methods.groovy")).newInstance();
+        systemMethodsClass = (GroovyObject) classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Methods.groovy")).newInstance();
     }
 
     public String getBiosVersion() {
@@ -49,8 +48,28 @@ public class SystemLoader {
         Object result;
 
         switch (methodName[0]) {
+            case "cd":
+                if (methodName.length < 2) {
+                    result = "~";
+                    groovySystemMethods.setLocPath("");
+                } else {
+                    result = groovySystemMethods.cd(methodName[1]);
+
+                }
+                break;
+            case "pwd":
+                if (groovySystemMethods.getLocPath().length() < 1) {
+                    result = "~";
+                } else {
+                    result = groovySystemMethods.getLocPath();
+                }
+                break;
+
             case "mkdir":
                 result = groovySystemMethods.mkdir(methodName[1]);
+                break;
+            case "mnt":
+                result = groovySystemMethods.mnt(methodName[1]);
                 break;
             case "rm":
                 if (methodName[1].equals("-rf")) {
@@ -60,7 +79,12 @@ public class SystemLoader {
                 }
                 break;
             case "ls":
-                result = groovySystemMethods.ls();
+                if (methodName.length > 1) {
+                    result = groovySystemMethods.lsPath(methodName[1]);
+                } else {
+                    result = groovySystemMethods.ls();
+
+                }
                 break;
             case "exec":
                 try {

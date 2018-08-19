@@ -12,7 +12,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.controllers.ControllerManager;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -20,10 +19,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -108,7 +105,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public void loadMap(int mapType) {
         this.mapType = mapType;
         useMap = true;
-        tiledMap = new TmxMapLoader().load(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/" + fileName + ".tmx");
+        tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/" + fileName + ".tmx");
         tiledMapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
 
