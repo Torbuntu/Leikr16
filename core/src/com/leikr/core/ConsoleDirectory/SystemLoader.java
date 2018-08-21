@@ -22,7 +22,7 @@ import org.codehaus.groovy.control.CompilationFailedException;
  * @author tor
  */
 public class SystemLoader {
-
+    
     final GroovyClassLoader classLoader;
     GroovyObject systemMethodsClass;
 

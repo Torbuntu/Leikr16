@@ -9,7 +9,7 @@ import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import static com.leikr.core.ConsoleDirectory.Console.gameType;
 import com.leikr.core.Leikr;
 import com.leikr.core.LeikrGameScreen;
-import com.leikr.core.RepoDirectory.RepoHandler;
+//import com.leikr.core.RepoDirectory.RepoHandler;
 import com.leikr.core.SpriteEditor.SpriteEditorScreen;
 import groovy.lang.GroovyShell;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class ShellHandler {
     ConsoleScreen consoleScreen;
     FontHandler fontHandler;
     SystemLoader systemLoader;
-    RepoHandler repoHandler;
+//    RepoHandler repoHandler;
 
     GroovyShell groovyShell;
 
@@ -45,7 +45,7 @@ public class ShellHandler {
         this.consoleScreen = consoleScreen;
         this.fontHandler = fontHandler;
         groovyShell = new GroovyShell();
-        repoHandler = new RepoHandler();
+//        repoHandler = new RepoHandler();
 
         try {
             systemLoader = new SystemLoader();
@@ -140,20 +140,20 @@ public class ShellHandler {
                 game.setScreen(new SpriteEditorScreen(game));
                 consoleScreen.dispose();
                 break;
-            case "setUserRepo":
-                repoHandler.setUserRepo(inputList[1]);
-                result = "User repository set to " + inputList[1];
-                historyBuffer.add(result);
-                break;
-            case "lpm":
-                result = "lpm command " + inputList[1] + " not found.";
-                switch (inputList[1]) {
-                    case "install":
-                        result = (inputList.length > 3) ? repoHandler.lpmInstall(inputList[2], inputList[3]) : repoHandler.lpmInstall(inputList[2]);
-                        break;
-                }
-                historyBuffer.add(result);
-                break;
+//            case "setUserRepo":
+//                repoHandler.setUserRepo(inputList[1]);
+//                result = "User repository set to " + inputList[1];
+//                historyBuffer.add(result);
+//                break;
+//            case "lpm":
+//                result = "lpm command " + inputList[1] + " not found.";
+//                switch (inputList[1]) {
+//                    case "install":
+//                        result = (inputList.length > 3) ? repoHandler.lpmInstall(inputList[2], inputList[3]) : repoHandler.lpmInstall(inputList[2]);
+//                        break;
+//                }
+//                historyBuffer.add(result);
+//                break;
             default: //Default, command not recognized.
 
                 try {

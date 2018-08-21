@@ -41,6 +41,8 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     TextureRegion[] animationFrames;
     Animation animation;
     float elapsedTime;
+    
+    TextureRegion[][] tmpFrames;
 
     float blink;
 
@@ -58,7 +60,7 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         }
 
         animTexture = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/TitleAnimation/TitleAnimation.png"));
-        TextureRegion[][] tmpFrames = TextureRegion.split(animTexture, 64, 24);
+        tmpFrames = TextureRegion.split(animTexture, 64, 24);
 
         animationFrames = new TextureRegion[27];
         int index = 0;
@@ -66,8 +68,8 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
             animationFrames[index] = tmpFrames[j][0];
             index++;
         }
-
-        animation = new Animation(1f / 27f, animationFrames);
+        float tmp = 1f / 27f;
+        animation = new Animation(tmp, (Object[])animationFrames);
         animation.setPlayMode(Animation.PlayMode.NORMAL);
 
         font = new Texture("LeikrFontA.png");

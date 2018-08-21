@@ -6,9 +6,9 @@ buildscript {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         jcenter()
+        
     }
     dependencies {        
-
     }
 }
 
@@ -32,13 +32,12 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        jcenter()
     }
 }
 
 project(":desktop") {
     apply plugin: "java"
-    apply plugin: 'groovy'
-
 
     dependencies {
         compile project(":core")
@@ -47,14 +46,10 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        //        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
-        
-        compile 'org.codehaus.groovy:groovy-all:3.0.0-alpha-3'
-        compile 'org.codehaus.groovy:groovy-groovysh:3.0.0-alpha-3'
 
-        compile 'org.eclipse.jgit:org.eclipse.jgit:5.0.2.201807311906-r'
         compile "com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion"
 
     }
@@ -75,17 +70,14 @@ project(":core") {
         compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
 
         compile 'org.codehaus.groovy:groovy-all:3.0.0-alpha-3'
-        compile 'org.codehaus.groovy:groovy-groovysh:3.0.0-alpha-3'
         
         compile 'org.eclipse.jgit:org.eclipse.jgit:5.0.2.201807311906-r'
         
         compile 'org.python:jython-standalone:2.7.1'
-        compile 'org.python:jython:2.7.1b3'
-        compile 'org.python:jython-installer:2.7.1'
         
-        compile 'org.scala-lang:scala-library-all:2.12.6'
+        //        compile 'org.scala-lang:scala-library-all:2.12.6'
         
-        compile 'org.luaj:luaj-jse:3.0.1'
+        //        compile 'org.luaj:luaj-jse:3.0.1'
     }
 }
 
