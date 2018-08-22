@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Leikr;
 import com.leikr.core.GroovySystemMethods;
+import static com.leikr.core.LeikrEngine.game;
 
 /**
  *
@@ -72,7 +73,7 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         animation = new Animation(tmp, (Object[])animationFrames);
         animation.setPlayMode(Animation.PlayMode.NORMAL);
 
-        font = new Texture("LeikrFontA.png");
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/"+game.customSettings.fontName));
         Pixmap pm = new Pixmap(new FileHandle(Leikr.ROOT_PATH + "OS/HideCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();

@@ -26,6 +26,7 @@ import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Leikr;
+import static com.leikr.core.LeikrEngine.game;
 import com.leikr.core.UserInterface.GuiObjectHandler;
 
 /**
@@ -92,7 +93,7 @@ class SpriteEditor implements InputProcessor {
         coords = new Vector2();
         cursorCoords = new Vector2();
         graphicsY = 0;
-        font = new Texture("LeikrFontA.png");
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/"+game.customSettings.fontName));
         cursor = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Cursor.png"));
 
         renderer = new ShapeRenderer();

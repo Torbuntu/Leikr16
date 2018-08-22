@@ -8,6 +8,11 @@ sourceSets {
     main {
         java { srcDirs = [] }
         groovy { srcDirs += ['src/' ] }
+        
+    }
+    test{
+        java { srcDirs = [] }
+        groovy { srcDirs += ['tests/' ] }
     }
 }
 

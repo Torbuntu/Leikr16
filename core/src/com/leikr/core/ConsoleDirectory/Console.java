@@ -21,7 +21,6 @@ public class Console implements InputProcessor {
 
     //global variables for the console.
     SpriteBatch batch;
-    Texture font;
     Camera camera;
     Viewport viewport;
     public static String fileName = "LeikrGame";
@@ -38,13 +37,12 @@ public class Console implements InputProcessor {
         this.game = game;
         this.consoleScreen = consoleScreen;
         batch = game.batch;
-        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/LeikrFontA.png"));
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
         Gdx.input.setInputProcessor(this);
 
-        fontHandler = new FontHandler(game.batch, viewport);//handles command and history buffer for displaying font to screen.
+        fontHandler = new FontHandler(game, viewport);//handles command and history buffer for displaying font to screen.
         shellHandler = new ShellHandler(game, consoleScreen, fontHandler);
     }
 
@@ -63,7 +61,6 @@ public class Console implements InputProcessor {
 
     //Disposes batch and font
     public void disposeConsole() {
-        font.dispose();
         fontHandler.disposeFont();
     }
 

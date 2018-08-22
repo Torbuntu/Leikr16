@@ -13,6 +13,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -97,7 +98,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
-        font = new Texture("LeikrFontA.png");
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/"+game.customSettings.fontName));
         Controllers.addListener(this);
 
     }

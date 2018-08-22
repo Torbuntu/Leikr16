@@ -5,9 +5,11 @@
  */
 package com.leikr.core.ConsoleDirectory;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.leikr.core.Leikr;
 import java.util.ArrayList;
 
 /**
@@ -21,16 +23,17 @@ public class FontHandler {
     Texture font;
     Viewport viewport;
     float blink;
+    Leikr game;
 
     float line;
     float carriage;
 
-    public FontHandler(SpriteBatch batch, Viewport viewport) {
-        this.batch = batch;
+    public FontHandler(Leikr game, Viewport viewport) {
+        this.batch = game.batch;
         this.viewport = viewport;
         textBuffer = new TextBuffer();
 
-        font = new Texture("LeikrFontA.png");
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/"+game.customSettings.fontName));
         blink = 0;
     }
 

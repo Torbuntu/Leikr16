@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.leikr.core.ConsoleDirectory.CustomSettings;
 import com.leikr.core.TitleScreen.TitleScreen;
 
 public class Leikr extends Game {
@@ -15,6 +16,8 @@ public class Leikr extends Game {
 
     public static String ROOT_PATH;
     
+    public CustomSettings customSettings;
+    
     @Override
     public void create() {
         //Init new console
@@ -22,6 +25,8 @@ public class Leikr extends Game {
         font = new BitmapFont();
         
         ROOT_PATH = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/";
+        
+        customSettings = new CustomSettings();
 
 //        this.setScreen(new ConsoleScreen(this));
 //        this.setScreen(new IntroScreen(this));

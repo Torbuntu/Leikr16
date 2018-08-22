@@ -9,11 +9,17 @@ import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import static com.leikr.core.ConsoleDirectory.Console.gameType;
 import com.leikr.core.Leikr;
 import com.leikr.core.LeikrGameScreen;
-//import com.leikr.core.RepoDirectory.RepoHandler;
+import com.leikr.core.RepoDirectory.RepoHandler;
 import com.leikr.core.SpriteEditor.SpriteEditorScreen;
+import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.groovy.control.CompilationFailedException;
@@ -28,24 +34,28 @@ public class ShellHandler {
     ConsoleScreen consoleScreen;
     FontHandler fontHandler;
     SystemLoader systemLoader;
-//    RepoHandler repoHandler;
+    RepoHandler repoHandler;
 
     GroovyShell groovyShell;
 
-    float fontRed = 1;
-    float fontGreen = 1;
-    float fontBlue = 1;
+    GroovyClassLoader groovyClassLoader;
+    Class groovyGameLoader;
+    CustomSettings customSettings;
 
-    float bgRed = 0;
-    float bgGreen = 0;
-    float bgBlue = 0;
+    float fontRed;
+    float fontGreen;
+    float fontBlue;
+
+    float bgRed;
+    float bgGreen;
+    float bgBlue;
 
     public ShellHandler(Leikr game, ConsoleScreen consoleScreen, FontHandler fontHandler) {
         this.game = game;
         this.consoleScreen = consoleScreen;
         this.fontHandler = fontHandler;
         groovyShell = new GroovyShell();
-//        repoHandler = new RepoHandler();
+        repoHandler = new RepoHandler();
 
         try {
             systemLoader = new SystemLoader();
@@ -53,7 +63,28 @@ public class ShellHandler {
             Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        try {
+            fontRed = game.customSettings.fontRed;
+            fontGreen = game.customSettings.fontGreen;
+            fontBlue = game.customSettings.fontBlue;
+            
+            bgRed = game.customSettings.bgRed;
+            bgGreen = game.customSettings.bgGreen;
+            bgBlue = game.customSettings.bgBlue;
+        } catch (Exception e) {
+            fontRed = 1;
+            fontGreen = 1;
+            fontBlue = 1;
+
+            bgRed = 0;
+            bgGreen = 0;
+            bgBlue = 0;
+            System.out.println("No custom settings file in OS: " + e.getMessage());
+        }
+
     }
+
+    
 
     private void setFontColor(String red, String green, String blue) {
         fontRed = Float.valueOf(red);
@@ -140,20 +171,20 @@ public class ShellHandler {
                 game.setScreen(new SpriteEditorScreen(game));
                 consoleScreen.dispose();
                 break;
-//            case "setUserRepo":
-//                repoHandler.setUserRepo(inputList[1]);
-//                result = "User repository set to " + inputList[1];
-//                historyBuffer.add(result);
-//                break;
-//            case "lpm":
-//                result = "lpm command " + inputList[1] + " not found.";
-//                switch (inputList[1]) {
-//                    case "install":
-//                        result = (inputList.length > 3) ? repoHandler.lpmInstall(inputList[2], inputList[3]) : repoHandler.lpmInstall(inputList[2]);
-//                        break;
-//                }
-//                historyBuffer.add(result);
-//                break;
+            case "setUserRepo":
+                repoHandler.setUserRepo(inputList[1]);
+                result = "User repository set to " + inputList[1];
+                historyBuffer.add(result);
+                break;
+            case "lpm":
+                result = "lpm command " + inputList[1] + " not found.";
+                switch (inputList[1]) {
+                    case "install":
+                        result = (inputList.length > 3) ? repoHandler.lpmInstall(inputList[2], inputList[3]) : repoHandler.lpmInstall(inputList[2]);
+                        break;
+                }
+                historyBuffer.add(result);
+                break;
             default: //Default, command not recognized.
 
                 try {

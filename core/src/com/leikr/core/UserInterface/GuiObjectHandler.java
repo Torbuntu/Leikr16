@@ -5,6 +5,7 @@
  */
 package com.leikr.core.UserInterface;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +13,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.Graphics.LeikrPalette;
+import com.leikr.core.Leikr;
+import static com.leikr.core.LeikrEngine.game;
 
 /**
  *
@@ -28,7 +31,7 @@ public class GuiObjectHandler {
     public GuiObjectHandler(SpriteBatch batch, Viewport viewport) {
         this.batch = batch;
         this.viewport = viewport;
-        font = new Texture("LeikrFontA.png");
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/"+game.customSettings.fontName));
         shapes = new ShapeRenderer();
         pallete = new LeikrPalette();
     }

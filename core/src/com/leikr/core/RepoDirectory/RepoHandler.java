@@ -7,8 +7,6 @@ package com.leikr.core.RepoDirectory;
 
 import com.badlogic.gdx.Gdx;
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
