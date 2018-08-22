@@ -55,7 +55,7 @@ project(":desktop") {
     }
 }
 
-project(":core") {
+project(":core") {    
     apply plugin: "java"
     apply plugin: 'groovy'
    
@@ -69,11 +69,18 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
 
-        compile 'org.codehaus.groovy:groovy-all:3.0.0-alpha-3'
+        
+        compile ('org.codehaus.groovy:groovy-all:3.0.0-alpha-3'){
+            exclude module: 'groovy-jaxb';
+            exclude module: 'groovy-xml';
+        }
         
         compile 'org.eclipse.jgit:org.eclipse.jgit:5.0.2.201807311906-r'
         
         compile 'org.python:jython-standalone:2.7.1'
+        
+
+
         
         //        compile 'org.scala-lang:scala-library-all:2.12.6'
         

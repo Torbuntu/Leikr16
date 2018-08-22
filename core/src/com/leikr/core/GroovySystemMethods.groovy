@@ -7,6 +7,9 @@
 package com.leikr.core;
 
 import groovy.io.FileType;
+import java.io.File;
+import java.lang.String;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
