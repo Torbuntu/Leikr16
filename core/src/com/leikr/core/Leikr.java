@@ -12,7 +12,7 @@ public class Leikr extends Game {
     public SpriteBatch batch;
     public BitmapFont font;
 
-    public static final float WIDTH = 256, HEIGHT = 240;    
+    public static final float WIDTH = 320, HEIGHT = 240;    
 
     public static String ROOT_PATH;
     
