@@ -4,7 +4,7 @@ A Java Fantasy Computer.
 - Supports games written in Java, Groovy, and Jython (using the Leikr Engine)
 
 # Specs
-- Resolution 256x240
+- Resolution 320x240
 - 256 8x8 Sprites
 - 640x120 Tiled Map (each tile is 8x8). (4 screens tall and 20 wide)
 
