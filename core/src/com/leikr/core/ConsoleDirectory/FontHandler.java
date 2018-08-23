@@ -27,6 +27,9 @@ public class FontHandler {
 
     float line;
     float carriage;
+    
+    int glyphWidth;
+    int glyphHeight;
 
     public FontHandler(Leikr game, Viewport viewport) {
         this.batch = game.batch;
@@ -35,6 +38,9 @@ public class FontHandler {
 
         font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/"+game.customSettings.fontName));
         blink = 0;
+        
+        glyphWidth = (int)game.customSettings.glyphWidth;
+        glyphHeight = (int)game.customSettings.glyphHeight;
     }
 
     private void drawFont(String characters) {
@@ -47,14 +53,14 @@ public class FontHandler {
 //                line -=8f;
 //            }
             for (char C : characters.toCharArray()) {
-                if (carriage >= viewport.getWorldWidth() - 8f) {
+                if (carriage >= viewport.getWorldWidth() - glyphWidth) {
                     carriage = 0;
-                    line -= 8f;
+                    line -= glyphHeight;
                 }
-                int X = ((int) C % 16) * 8;
-                int Y = ((int) C / 16) * 8;
-                batch.draw(font, carriage, line, X, Y, 8, 8);
-                carriage += 8f;
+                int X =  (((int) C % 16) * glyphWidth);
+                int Y =  (((int) C / 16) * glyphHeight);
+                batch.draw(font, carriage, line, X, Y, glyphWidth, glyphHeight);
+                carriage += glyphWidth;
             }
 //        }
     }
@@ -65,14 +71,14 @@ public class FontHandler {
         for (String item : textBuffer.history) {
             carriage = 0;
             drawFont(item);
-            line -= 8f;
+            line -= glyphHeight;
         }
     }
 
     //Displays the command buffer after running the history and new path. Checks the height and removes history to keep on screen. Displays blank box for cursor.
     public void displayBufferedString(float delta) {
         carriage = 0;
-        line = viewport.getWorldHeight() - 8f;
+        line = viewport.getWorldHeight() - glyphHeight;
 
         String result = textBuffer.getCommandString();
 
@@ -83,12 +89,12 @@ public class FontHandler {
 
         drawFont("~$" + result);//pre-pend the path chars
 
-        if (line <= -8f && textBuffer.history.size() > 0) {
+        if (line <= -glyphHeight && textBuffer.history.size() > 0) {
             System.out.println(textBuffer.history.remove(0));
         }
 
         if (blink > 0.4) {
-            batch.draw(font, carriage, line, 0, 0, 8, 8);
+            batch.draw(font, carriage, line, 0, 0, glyphWidth, glyphHeight);
             blink += delta;
             if (blink > 1) {
                 blink = 0;

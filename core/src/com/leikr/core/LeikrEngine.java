@@ -87,6 +87,9 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     SpriteHandler spriteHandler;
     PaintBrush paintBrush;
 
+    int fontWidth;
+    int fontHeight;
+    
     public void create() {
         game = LeikrGameScreen.game;
         batch = game.batch;
@@ -99,8 +102,16 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
         font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/"+game.customSettings.fontName));
+        fontWidth = 8;
+        fontHeight = 8;
         Controllers.addListener(this);
 
+    }
+    
+    public void setFont(String fontName, int width, int height){
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH+"ChipSpace/"+fileName+"/"+fontName+".png"));
+        fontWidth = width;
+        fontHeight = height;
     }
 
     public void loadMap(int mapType) {
@@ -194,9 +205,9 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         batch.setColor(new Color(id));
 
         for (char C : text.toCharArray()) {
-            fontX = ((int) C % 16) * 8;
-            fontY = ((int) C / 16) * 8;
-            batch.draw(font, x, y, fontX, fontY, 8, 8);
+            fontX = ((int) C % 16) * fontWidth;
+            fontY = ((int) C / 16) * fontHeight;
+            batch.draw(font, x, y, fontX, fontY, fontWidth, fontHeight);
             x = x + 8;
         }
         batch.end();

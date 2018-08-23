@@ -31,6 +31,9 @@ public class CustomSettings {
     
     public String fontName;
     
+    public float glyphWidth;
+    public float glyphHeight;
+    
     
     public CustomSettings(){
         loadCustomSettings();
@@ -43,33 +46,20 @@ public class CustomSettings {
         try {
             InputStream stream = new FileInputStream(new File(Leikr.ROOT_PATH + "OS/settings.properties"));
             prop.load(stream);
-            System.out.println(prop.getProperty("fontRed"));
-
-            if (prop.getProperty("fontRed") != null) {
-                fontRed = Float.parseFloat(prop.getProperty("fontRed"));
-            } else {
-                fontRed = 1;
-            }
-
-            if (prop.getProperty("fontGreen") != null) {
-                fontGreen = Float.parseFloat(prop.getProperty("fontGreen"));
-            } else {
-                fontGreen = 1;
-            }
-
-            if (prop.getProperty("fontBlue") != null) {
-                fontBlue = Float.parseFloat(prop.getProperty("fontBlue"));
-            } else {
-                fontBlue = 1;
-            }
             
-            if(prop.getProperty("font") != null){
-                fontName = prop.getProperty("font");
-                System.out.println(fontName);
-            }else{
-                fontName = "LeikrFontA.png";
-            }
+            fontRed = (prop.getProperty("fontRed") != null) ? Float.parseFloat(prop.getProperty("fontRed")) : 1;
+            fontGreen = (prop.getProperty("fontGreen") != null) ? Float.parseFloat(prop.getProperty("fontGreen")) : 1;
+            fontBlue = (prop.getProperty("fontBlue") != null) ? Float.parseFloat(prop.getProperty("fontBlue")) : 1;
+            
+            bgRed = (prop.getProperty("bgRed") != null) ? Float.parseFloat(prop.getProperty("bgRed")) : 0;
+            bgGreen = (prop.getProperty("bgGreen") != null) ? Float.parseFloat(prop.getProperty("bgGreen")) : 0;
+            bgBlue = (prop.getProperty("bgBlue") != null) ? Float.parseFloat(prop.getProperty("bgBlue")) : 0;
 
+            fontName = (prop.getProperty("font") != null) ? prop.getProperty("font") : "LeikrFontA.png";
+            
+            glyphWidth = (prop.getProperty("glyphWidth") != null) ? Float.parseFloat(prop.getProperty("glyphWidth")) : 8;
+            glyphHeight = (prop.getProperty("glyphHeight") != null) ? Float.parseFloat(prop.getProperty("glyphHeight")) : 8;
+            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ShellHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

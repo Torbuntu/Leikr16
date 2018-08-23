@@ -34,6 +34,9 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
     Leikr game;
     Texture font;
+    int glyphWidth;
+    int glyphHeight;
+    
     SpriteBatch batch;
     Camera camera;
     Viewport viewport;
@@ -83,6 +86,9 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
         halfX = (int) (Leikr.WIDTH / 2);
         halfY = (int) (Leikr.HEIGHT / 2);
+        
+        glyphWidth = (int) game.customSettings.glyphWidth;
+        glyphHeight = (int) game.customSettings.glyphHeight;
 
         blink = 0;
 
@@ -100,10 +106,10 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         // Set the variable test for evaluating the x and y position of the ASCII set.
         batch.begin();
         for (char C : text.toCharArray()) {
-            fontX = ((int) C % 16) * 8;
-            fontY = ((int) C / 16) * 8;
-            batch.draw(font, x, y, fontX, fontY, 8, 8);
-            x = x + 8;
+            fontX = ((int) C % 16) * glyphWidth;
+            fontY = ((int) C / 16) * glyphHeight;
+            batch.draw(font, x, y, fontX, fontY, glyphWidth, glyphHeight);
+            x = x + glyphWidth;
         }
         batch.end();
     }
@@ -177,7 +183,7 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         if (animation.isAnimationFinished(elapsedTime)) {
             batch.begin();
             if (blink > 0.4) {
-                batch.draw(font, 232, 8, 0, 0, 8, 8);
+                batch.draw(font, 232, 8, 0, 0, glyphWidth, glyphHeight);
                 blink += delta;
                 if (blink > 1) {
                     blink = 0;

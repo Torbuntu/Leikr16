@@ -93,7 +93,7 @@ class SpriteEditor implements InputProcessor {
         coords = new Vector2();
         cursorCoords = new Vector2();
         graphicsY = 0;
-        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/"+game.customSettings.fontName));
+        font = new Texture("LeikrFontA.png");
         cursor = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Cursor.png"));
 
         renderer = new ShapeRenderer();
@@ -124,7 +124,7 @@ class SpriteEditor implements InputProcessor {
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
-        guiHandler = new GuiObjectHandler(batch, viewport);
+        guiHandler = new GuiObjectHandler(game, viewport);
 
         saveIconXPos = (int) viewport.getWorldWidth() - 18;
         undoIconXPos = (int) viewport.getWorldWidth() - 8;
@@ -155,6 +155,7 @@ class SpriteEditor implements InputProcessor {
         renderer.end();
 
         batch.begin();
+        batch.setColor(Color.WHITE);
 
         //main sprite sheet
         if (texture != null) {

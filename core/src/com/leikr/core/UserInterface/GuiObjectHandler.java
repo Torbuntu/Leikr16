@@ -28,10 +28,10 @@ public class GuiObjectHandler {
     Viewport viewport;
     LeikrPalette pallete;
 
-    public GuiObjectHandler(SpriteBatch batch, Viewport viewport) {
-        this.batch = batch;
+    public GuiObjectHandler(Leikr game, Viewport viewport) {
+        this.batch = game.batch;
         this.viewport = viewport;
-        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/"+game.customSettings.fontName));
+        font = new Texture("LeikrFontA.png");
         shapes = new ShapeRenderer();
         pallete = new LeikrPalette();
     }
