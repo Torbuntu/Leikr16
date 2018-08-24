@@ -26,3 +26,12 @@ A Java Fantasy Computer.
 - SFX and editor
 - Kotlin, Lua, and Scala support for game coding 
 
+![alt text](boot.png)
+![alt text](help.png)
+![alt text](terminal.png)
+![alt text](runPy.png)
+![alt text](spriteEditor.png)
+![alt text](closerSpriteEditor.png)
+![alt text](exitSpriteEditor.png)
+
+![alt text](pythonStructure.png)
