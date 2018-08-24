@@ -118,7 +118,7 @@ public class GroovySystemMethods {
     
     String mnt(String from){
         new AntBuilder().copy( todir: RootFileSystem+"/ChipSpace/"+from) {
-            fileset( dir: Gdx.files.external("LeikrVirtualDrive/Download/"+from));
+            fileset( dir: RootFileSystem+"/Download/"+from);
         }
         return "mounted "+from+" to ChipSpace from Downloads";
     }

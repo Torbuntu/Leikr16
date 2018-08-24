@@ -26,7 +26,6 @@ import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Leikr;
-import static com.leikr.core.LeikrEngine.game;
 import com.leikr.core.UserInterface.GuiObjectHandler;
 
 /**
@@ -248,7 +247,6 @@ class SpriteEditor implements InputProcessor {
     }
 
     public void drawSelectedPixmapToMain() {
-        System.out.println(actualX);
         if (actualX > 129) {
 
             zoomPixmap.setColor(drawColor);
