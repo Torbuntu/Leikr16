@@ -220,6 +220,10 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public void drawSprite(int id, float x, float y, int scaleX, int scaleY) {
         spriteHandler.drawSprite(id, x, y, scaleX, scaleY);
     }
+    
+    public void drawBigSprite(int idtl, int idtr, int idbl, int idbr, float x, float y) {
+        spriteHandler.drawBigSprite(idtl, idtr, idbl, idbr, x, y);
+    }
 
     public void drawRect(int x, int y, int width, int height, int color, String type) {
         paintBrush.drawRect(x, y, width, height, color, type);

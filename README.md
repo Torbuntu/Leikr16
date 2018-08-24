@@ -6,38 +6,23 @@ A Java Fantasy Computer.
 # Specs
 - Resolution 320x240
 - 256 8x8 Sprites
-- 640x120 Tiled Map (each tile is 8x8). (4 screens tall and 20 wide)
+- 640x120 Tiled Map (each tile is 8x8). (4 screens tall and 16 wide)
 
 # Current features
 - Terminal Emulator. Not many commands yet.
 - Groovysh repl by prefixing commands with `gv`.
-- Small games can be loaded and played by typing `load GameNameHere` then `run` games loaded from the ChipSpace directory.
+- Small games can be loaded and played by typing `load [game name] [optional: game type]` then `run` games loaded from the ChipSpace directory.
 - Exit to Terminal with ESC
 - Sprite Editor. (functional, but needs improvement)
+- Github repo downloads using `setUserRepo [github username]` then `lpm install [repo name]`. Then to load the game use `mnt [game name]` which will load the game from the Download directory into ChipSpace. Then you can `load [game name]` and `run`. (Will add support for other git repos with the `setRepoType [repo type]` command in teh future.
+- settings.properties file for customizing the colors of the background and font in terminal as well as the font itself (font name file and size in width and height).
 
 # Potential/Planned Features
-- System Config file to set defaults to the system before system boot. Such as default terminal background and font color, or to boot into a graphical environment.
 - Customizable Graphical interface instead of terminal (after setting up a System Config that points to a graphical environment on boot. API for this to be created )
-- Map Editor
-- Music
-- SFX
-- Online repository of game packages. example: `lpm install Game`[WIP]
-- More advanced terminal/console
+- More advanced terminal/console commands (update games, upload games to repo, etc...)
 - Code Editor
-- SFX Editor
-- Music Editor
+- Map Editor
+- Music and editor
+- SFX and editor
 - Kotlin, Lua, and Scala support for game coding 
 
-![Alt text](console.png?raw=true "Console")
-
-![Alt text](loadgame.png?raw=true "loadGame")
-
-- The method `load` now only takes the name of the game package. not .groovy extension.
-
-![Alt text](pong.png?raw=true "Pong")
-
-# Demo file showing a Sprite being drawn to the screen. The Sprite is 8x8 pixels but it is stretched to 32x32. In the demo it bounces around the screen like a sort of primitive screen saver.
-![Alt text](BounceDemo.png?raw=true "Bounce demo")
-
-# Work in progress sprite editor.
-![Alt text](SpriteEditor.png?raw=true "SpriteEditor")

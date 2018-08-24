@@ -9,6 +9,7 @@ import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import static com.leikr.core.ConsoleDirectory.Console.gameType;
 import com.leikr.core.Leikr;
 import com.leikr.core.LeikrGameScreen;
+import com.leikr.core.MapEditor.MapEditorScreen;
 import com.leikr.core.RepoDirectory.RepoHandler;
 import com.leikr.core.SpriteEditor.SpriteEditorScreen;
 import groovy.lang.GroovyClassLoader;
@@ -67,7 +68,7 @@ public class ShellHandler {
             fontRed = game.customSettings.fontRed;
             fontGreen = game.customSettings.fontGreen;
             fontBlue = game.customSettings.fontBlue;
-            
+
             bgRed = game.customSettings.bgRed;
             bgGreen = game.customSettings.bgGreen;
             bgBlue = game.customSettings.bgBlue;
@@ -83,8 +84,6 @@ public class ShellHandler {
         }
 
     }
-
-    
 
     private void setFontColor(String red, String green, String blue) {
         fontRed = Float.valueOf(red);
@@ -169,6 +168,10 @@ public class ShellHandler {
                 break;
             case "SpriteEditor":
                 game.setScreen(new SpriteEditorScreen(game));
+                consoleScreen.dispose();
+                break;
+            case "MapEditor":
+                game.setScreen(new MapEditorScreen(game));
                 consoleScreen.dispose();
                 break;
             case "setUserRepo":

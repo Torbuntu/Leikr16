@@ -76,4 +76,16 @@ public class SpriteHandler {
         game.batch.draw(sprites.get(id), x, y, scaleX, scaleY);
         game.batch.end();
     }
+    
+    public void drawBigSprite(int idtl, int idtr, int idbl, int idbr, float x, float y) {
+        game.batch.begin();
+        game.batch.setColor(Color.WHITE);
+        game.batch.draw(sprites.get(idbl), x, y);
+        game.batch.draw(sprites.get(idbr), x+8, y);
+        
+        game.batch.draw(sprites.get(idtl), x, y+8);
+        game.batch.draw(sprites.get(idtr), x+8, y+8);
+        game.batch.end();
+    }
+    
 }

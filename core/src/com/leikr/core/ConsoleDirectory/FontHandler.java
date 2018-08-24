@@ -27,7 +27,7 @@ public class FontHandler {
 
     float line;
     float carriage;
-    
+
     int glyphWidth;
     int glyphHeight;
 
@@ -36,11 +36,12 @@ public class FontHandler {
         this.viewport = viewport;
         textBuffer = new TextBuffer();
 
-        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/"+game.customSettings.fontName));
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/" + game.customSettings.fontName));
+
         blink = 0;
-        
-        glyphWidth = (int)game.customSettings.glyphWidth;
-        glyphHeight = (int)game.customSettings.glyphHeight;
+
+        glyphWidth = (int) game.customSettings.glyphWidth;
+        glyphHeight = (int) game.customSettings.glyphHeight;
     }
 
     private void drawFont(String characters) {
@@ -52,16 +53,16 @@ public class FontHandler {
 //                carriage = 0;
 //                line -=8f;
 //            }
-            for (char C : characters.toCharArray()) {
-                if (carriage >= viewport.getWorldWidth() - glyphWidth) {
-                    carriage = 0;
-                    line -= glyphHeight;
-                }
-                int X =  (((int) C % 16) * glyphWidth);
-                int Y =  (((int) C / 16) * glyphHeight);
-                batch.draw(font, carriage, line, X, Y, glyphWidth, glyphHeight);
-                carriage += glyphWidth;
+        for (char C : characters.toCharArray()) {
+            if (carriage >= viewport.getWorldWidth() - glyphWidth) {
+                carriage = 0;
+                line -= glyphHeight;
             }
+            int X = (((int) C % 16) * glyphWidth);
+            int Y = (((int) C / 16) * glyphHeight);
+            batch.draw(font, carriage, line, X, Y, glyphWidth, glyphHeight);
+            carriage += glyphWidth;
+        }
 //        }
     }
 

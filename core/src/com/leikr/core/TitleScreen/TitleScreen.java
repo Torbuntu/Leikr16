@@ -60,10 +60,6 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         this.game = game;
         batch = game.batch;
 
-        if (!Gdx.files.external("LeikrVirtualDrive/").exists() || !Gdx.files.external("LeikrVirtualDrive/ChipSpace/").exists()) {
-            groovySystemMethods.initFileSystem();
-        }
-
         animTexture = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/TitleAnimation/TitleAnimation.png"));
         tmpFrames = TextureRegion.split(animTexture, 64, 24);
 

@@ -53,6 +53,7 @@ class SpriteEditor implements InputProcessor {
 
     Texture saveIcon;
     Texture undoIcon;
+    Texture eraserIcon;
 
     String filePath;
     Color drawColor;
@@ -63,6 +64,7 @@ class SpriteEditor implements InputProcessor {
 
     int saveIconXPos;
     int undoIconXPos;
+    int eraserIconPos;
 
     int spriteId = 0;
     int spriteIdX = 0;
@@ -106,9 +108,11 @@ class SpriteEditor implements InputProcessor {
         }
 
         pixmap = new Pixmap(new FileHandle(filePath));
+        pixmap.setBlending(Pixmap.Blending.None);
         texture = new Texture(pixmap);
 
         zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+        zoomPixmap.setBlending(Pixmap.Blending.None);
         zoomTexture = new Texture(zoomPixmap);
 
         actualX = 0;
@@ -121,13 +125,16 @@ class SpriteEditor implements InputProcessor {
 
         saveIcon = new Texture("saveIcon.png");
         undoIcon = new Texture("undoIcon.png");
+        eraserIcon = new Texture("eraserIcon.png");
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
         guiHandler = new GuiObjectHandler(game, viewport);
 
+        eraserIconPos = (int) viewport.getWorldWidth() - 28;
         saveIconXPos = (int) viewport.getWorldWidth() - 18;
         undoIconXPos = (int) viewport.getWorldWidth() - 8;
+
         Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/HideCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
@@ -172,6 +179,9 @@ class SpriteEditor implements InputProcessor {
         }
         if (undoIcon != null) {
             batch.draw(undoIcon, undoIconXPos, 0);
+        }
+        if (eraserIcon != null) {
+            batch.draw(eraserIcon, eraserIconPos, 0);
         }
 
         batch.end();
@@ -229,20 +239,38 @@ class SpriteEditor implements InputProcessor {
 
     public void undoRecentEdits() {
         pixmap = new Pixmap(new FileHandle(filePath));
-        zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+        pixmap.setBlending(Pixmap.Blending.None);
         texture = new Texture(pixmap);
+
+        zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+        zoomPixmap.setBlending(Pixmap.Blending.None);
+        zoomTexture = new Texture(zoomPixmap);
     }
 
     public void drawSelectedPixmapToMain() {
-        zoomPixmap.setColor(drawColor);
-        zoomPixmap.drawPixel(zoomX, zoomY);
-        zoomTexture.draw(zoomPixmap, 0, 0);
+        System.out.println(actualX);
+        if (actualX > 129) {
 
-        pixmap.drawPixmap(zoomPixmap, spriteIdX * 8, spriteIdY * 8, 0, 0, 8, 8);
+            zoomPixmap.setColor(drawColor);
+            zoomPixmap.drawPixel(zoomX, zoomY);
+            zoomTexture.draw(zoomPixmap, 0, 0);
 
-        pixmap.setColor(drawColor);
-        pixmap.drawPixel(actualX, actualY);
-        texture.draw(pixmap, 0, 0);
+            pixmap.drawPixmap(zoomPixmap, spriteIdX * 8, spriteIdY * 8, 0, 0, 8, 8);
+
+            texture.draw(pixmap, 0, 0);
+        } else {
+
+            pixmap.setColor(drawColor);
+            pixmap.drawPixel(actualX, actualY);
+            texture.draw(pixmap, 0, 0);
+
+            zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+            zoomPixmap.setBlending(Pixmap.Blending.None);
+
+            zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, 8, 8, 0, 0, 8, 8);
+            zoomTexture.draw(zoomPixmap, 0, 0);
+        }
+
     }
 
     public void setDrawingCoords() {
@@ -257,76 +285,82 @@ class SpriteEditor implements InputProcessor {
 
     public void drawPixelsOnTouch(int button) {
 
-        if (button == 2) {
-            spriteIdX = (int) (actualX) / 8;
-            spriteIdY = (actualY) / 8;
-            spriteId = ((spriteIdY * 16) + (spriteIdX));
+        switch (button) {
+            case 0:
+                if (coords.x >= saveIconXPos && coords.x <= saveIconXPos + 8 && coords.y <= 8) {
+                    System.out.println("Save Pressed");
+                    savePixmapImage();
+                } else if (coords.x >= undoIconXPos && coords.x <= undoIconXPos + 8 && coords.y <= 8) {
+                    System.out.println("Undo pressed");
+                    undoRecentEdits();
+                } else if (coords.x >= eraserIconPos && coords.x <= eraserIconPos + 8 && coords.y <= 8) {
+                    drawColor.set(0, 0, 0, -1);
+                } else {
+                    drawSelectedPixmapToMain();
+                }
+                break;
+            case 1:
+                if (coords.x >= 1 && coords.x <= 10) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(0));
+                }
+                if (coords.x >= 11 && coords.x <= 20) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(1));
+                }
+                if (coords.x >= 21 && coords.x <= 30) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(2));
+                }
+                if (coords.x >= 31 && coords.x <= 40) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(3));
+                }
+                if (coords.x >= 41 && coords.x <= 50) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(4));
+                }
+                if (coords.x >= 51 && coords.x <= 60) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(5));
+                }
+                if (coords.x >= 61 && coords.x <= 70) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(6));
+                }
+                if (coords.x >= 71 && coords.x <= 80) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(7));
+                }
+                if (coords.x >= 81 && coords.x <= 90) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(8));
+                }
+                if (coords.x >= 91 && coords.x <= 100) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(9));
+                }
+                if (coords.x >= 101 && coords.x <= 110) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(10));
+                }
+                if (coords.x >= 111 && coords.x <= 120) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(11));
+                }
+                if (coords.x >= 121 && coords.x <= 130) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(12));
+                }
+                if (coords.x >= 131 && coords.x <= 140) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(13));
+                }
+                if (coords.x >= 141 && coords.x <= 150) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(14));
+                }
+                if (coords.x >= 151 && coords.x <= 160) {
+                    drawColor.set(paintBrush.leikrPalette.palette.get(15));
+                }
+                break;
+            case 2:
+                spriteIdX = (int) (actualX) / 8;
+                spriteIdY = (actualY) / 8;
+                spriteId = ((spriteIdY * 16) + (spriteIdX));
 
-            zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
-            zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, 8, 8, 0, 0, 8, 8);
-            zoomTexture.draw(zoomPixmap, 0, 0);
-        }
-        if (coords.x >= saveIconXPos && coords.x <= saveIconXPos + 8 && coords.y <= 8) {
-            System.out.println("Save Pressed");
-            savePixmapImage();
-        }
-        if (coords.x >= undoIconXPos && coords.x <= undoIconXPos + 8 && coords.y <= 8) {
-            System.out.println("Undo pressed");
-            undoRecentEdits();
+                zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+                zoomPixmap.setBlending(Pixmap.Blending.None);
+                zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, 8, 8, 0, 0, 8, 8);
+                zoomTexture.draw(zoomPixmap, 0, 0);
+                break;
         }
 
-        if (button == 0) {
-            drawSelectedPixmapToMain();
-        } else if (button == 1) {
-            if (coords.x >= 1 && coords.x <= 10) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(0));
-            }
-            if (coords.x >= 11 && coords.x <= 20) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(1));
-            }
-            if (coords.x >= 21 && coords.x <= 30) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(2));
-            }
-            if (coords.x >= 31 && coords.x <= 40) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(3));
-            }
-            if (coords.x >= 41 && coords.x <= 50) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(4));
-            }
-            if (coords.x >= 51 && coords.x <= 60) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(5));
-            }
-            if (coords.x >= 61 && coords.x <= 70) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(6));
-            }
-            if (coords.x >= 71 && coords.x <= 80) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(7));
-            }
-            if (coords.x >= 81 && coords.x <= 90) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(8));
-            }
-            if (coords.x >= 91 && coords.x <= 100) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(9));
-            }
-            if (coords.x >= 101 && coords.x <= 110) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(10));
-            }
-            if (coords.x >= 111 && coords.x <= 120) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(11));
-            }
-            if (coords.x >= 121 && coords.x <= 130) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(12));
-            }
-            if (coords.x >= 131 && coords.x <= 140) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(13));
-            }
-            if (coords.x >= 141 && coords.x <= 150) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(14));
-            }
-            if (coords.x >= 151 && coords.x <= 160) {
-                drawColor.set(paintBrush.leikrPalette.palette.get(15));
-            }
-        }
     }
 
     @Override
@@ -349,7 +383,7 @@ class SpriteEditor implements InputProcessor {
     public boolean keyUp(int keycode) {
         if (keycode == Input.Keys.ESCAPE) {
             if (exitDialog) {
-                savePixmapImage(); 
+                savePixmapImage();
                 game.setScreen(new ConsoleScreen(game));
                 Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
             }
@@ -363,7 +397,7 @@ class SpriteEditor implements InputProcessor {
                     exitDialog = false;
                     return true;
                 case Keys.Y:
-                    savePixmapImage(); 
+                    savePixmapImage();
                     game.setScreen(new ConsoleScreen(game));
                     Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
                     return true;

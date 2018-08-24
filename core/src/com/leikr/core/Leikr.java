@@ -24,6 +24,11 @@ public class Leikr extends Game {
         batch = new SpriteBatch();
         font = new BitmapFont();
         
+        if (!Gdx.files.external("LeikrVirtualDrive/").exists() || !Gdx.files.external("LeikrVirtualDrive/ChipSpace/").exists() || !Gdx.files.external("LeikrVirtualDrive/OS/").exists()) {
+            GroovySystemMethods groovySystemMethods = new GroovySystemMethods();
+            groovySystemMethods.initFileSystem();
+        }
+        
         ROOT_PATH = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/";
         
         customSettings = new CustomSettings();
