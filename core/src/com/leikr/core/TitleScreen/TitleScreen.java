@@ -36,7 +36,7 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     Texture font;
     int glyphWidth;
     int glyphHeight;
-    
+
     SpriteBatch batch;
     Camera camera;
     Viewport viewport;
@@ -45,13 +45,14 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     TextureRegion[] animationFrames;
     Animation animation;
     float elapsedTime;
-    
+
     TextureRegion[][] tmpFrames;
 
     float blink;
-
+    String introText = "Press button to start...";
     int halfX;
     int halfY;
+    int len;
 
     GroovySystemMethods groovySystemMethods = new GroovySystemMethods();
 
@@ -73,10 +74,10 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
             index++;
         }
         float tmp = 1f / 27f;
-        animation = new Animation(tmp, (Object[])animationFrames);
+        animation = new Animation(tmp, (Object[]) animationFrames);
         animation.setPlayMode(Animation.PlayMode.NORMAL);
 
-        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/"+game.customSettings.fontName));
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/" + game.customSettings.fontName));
         Pixmap pm = new Pixmap(new FileHandle(Leikr.ROOT_PATH + "OS/HideCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
@@ -86,9 +87,10 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
         halfX = (int) (Leikr.WIDTH / 2);
         halfY = (int) (Leikr.HEIGHT / 2);
-        
+
         glyphWidth = (int) game.customSettings.glyphWidth;
         glyphHeight = (int) game.customSettings.glyphHeight;
+        len = ((halfX / 2) - 20) + (introText.length() * glyphWidth);
 
         blink = 0;
 
@@ -112,6 +114,37 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
             x = x + glyphWidth;
         }
         batch.end();
+    }    
+    
+    @Override
+    public void render(float delta) {
+        elapsedTime += Gdx.graphics.getDeltaTime();
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        batch.setColor(Color.WHITE);
+
+        batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, false), halfX - 64, halfY - 32, 64 * 2, 24 * 2);
+
+        batch.end();
+
+        if (animation.isAnimationFinished(elapsedTime)) {
+            drawText(introText, (halfX / 2) - 20, glyphHeight);
+            batch.begin();
+            if (blink > 0.4) {
+                batch.draw(font, len, glyphHeight, 0, 0, glyphWidth, glyphHeight);
+                blink += delta;
+                if (blink > 1) {
+                    blink = 0;
+                }
+            } else {
+                blink += delta;
+            }
+            batch.end();
+
+        }
+
     }
 
     @Override
@@ -167,36 +200,6 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
     }
 
-    @Override
-    public void render(float delta) {
-        elapsedTime += Gdx.graphics.getDeltaTime();
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        batch.setColor(Color.WHITE);
-
-        batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, false), halfX - 64, halfY - 32, 64 * 2, 24 * 2);
-
-        batch.end();
-
-        if (animation.isAnimationFinished(elapsedTime)) {
-            batch.begin();
-            if (blink > 0.4) {
-                batch.draw(font, 232, 8, 0, 0, glyphWidth, glyphHeight);
-                blink += delta;
-                if (blink > 1) {
-                    blink = 0;
-                }
-            } else {
-                blink += delta;
-            }
-            batch.end();
-            drawText("Press button to start...", (halfX / 2) - 20, 8);
-
-        }
-
-    }
 
     @Override
     public void resize(int width, int height) {
