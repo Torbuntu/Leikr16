@@ -89,7 +89,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 
     int fontWidth;
     int fontHeight;
-    
+
     public void create() {
         game = LeikrGameScreen.game;
         batch = game.batch;
@@ -101,35 +101,11 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
-        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/"+game.customSettings.fontName));
-        fontWidth = 8;
-        fontHeight = 8;
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/" + game.customSettings.fontName));
+        fontWidth = (int) game.customSettings.glyphWidth;
+        fontHeight = (int) game.customSettings.glyphHeight;
         Controllers.addListener(this);
 
-    }
-    
-    public void setFont(String fontName, int width, int height){
-        font = new Texture(new FileHandle(Leikr.ROOT_PATH+"ChipSpace/"+fileName+"/"+fontName+".png"));
-        fontWidth = width;
-        fontHeight = height;
-    }
-
-    public void loadMap(int mapType) {
-        this.mapType = mapType;
-        useMap = true;
-        tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/" + fileName + ".tmx");
-        tiledMapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
-
-//        tiledMapLayer.getCell(1, 1).getTile()
-    }
-
-    public int getCameraX() {
-        return (int) camera.position.x - 128;
-    }
-
-    public int getCameraY() {
-        return (int) camera.position.y - 120;
     }
 
     public void preRender() {
@@ -154,14 +130,42 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public void render() {
     }
 
+    //Updates the view on resize in the Leikr main.
+    public void updateViewport(int width, int height) {
+        viewport.update(width, height, true);
+    }
+
     public void dispose() {
         shapeRenderer.dispose();
         font.dispose();
     }
 
-    //Updates the view on resize in the Leikr main.
-    public void updateViewport(int width, int height) {
-        viewport.update(width, height, true);
+    public void setFont(String fontName, int width, int height) {
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/" + fontName + ".png"));
+        fontWidth = width;
+        fontHeight = height;
+    }
+
+    public void loadMap(int mapType) {
+        this.mapType = mapType;
+        useMap = true;
+        tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/" + fileName + ".tmx");
+        tiledMapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
+
+//        tiledMapLayer.getCell(1, 1).getTile()
+    }
+
+    public int getCameraX() {
+        return (int) camera.position.x;
+    }
+
+    public int getCameraY() {
+        return (int) camera.position.y;
+    }
+
+    public void setCamera(int x, int y) {
+        camera.position.set(x, y, 0);
     }
 
     public int getScreenWidth() {
@@ -220,7 +224,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public void drawSprite(int id, float x, float y, int scaleX, int scaleY) {
         spriteHandler.drawSprite(id, x, y, scaleX, scaleY);
     }
-    
+
     public void drawBigSprite(int idtl, int idtr, int idbl, int idbr, float x, float y) {
         spriteHandler.drawBigSprite(idtl, idtr, idbl, idbr, x, y);
     }
@@ -244,7 +248,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public void drawColor(int id, int x, int y) {
         paintBrush.drawColor(id, x, y);
     }
-    
+
     public void drawColor(int id, int x, int y, int width, int height) {
         paintBrush.drawColor(id, x, y, width, height);
     }

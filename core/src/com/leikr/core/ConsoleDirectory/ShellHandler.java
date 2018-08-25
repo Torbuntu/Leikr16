@@ -155,21 +155,26 @@ public class ShellHandler {
             case "help":
                 historyBuffer.add("Type `load` followed by the game you wish to load. Then type `run` to play. Type Exit to quit Leikr.");
                 break;
+            case "close":
             case "exit": //close on exit command.
                 System.exit(0);
                 break;
+            case "cls":
             case "clear":
                 fontHandler.clearCommandBuffer();
                 fontHandler.clearHistoryBuffer();
                 break;
+            case "start":
             case "run":
                 game.setScreen(new LeikrGameScreen(game));
                 consoleScreen.dispose();
                 break;
+            case "./SPE":
             case "SpriteEditor":
                 game.setScreen(new SpriteEditorScreen(game));
                 consoleScreen.dispose();
                 break;
+            case "./ME":
             case "MapEditor":
                 game.setScreen(new MapEditorScreen(game));
                 consoleScreen.dispose();

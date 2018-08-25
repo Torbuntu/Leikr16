@@ -71,6 +71,7 @@ public class SystemLoader {
             case "mnt":
                 result = groovySystemMethods.mnt(methodName[1]);
                 break;
+            case "del":
             case "rm":
                 if (methodName[1].equals("-rf")) {
                     result = groovySystemMethods.rmdir(methodName[2]);
@@ -78,6 +79,7 @@ public class SystemLoader {
                     result = groovySystemMethods.rm(methodName[1]);
                 }
                 break;
+            case "dir":
             case "ls":
                 if (methodName.length > 1) {
                     result = groovySystemMethods.lsPath(methodName[1]);
