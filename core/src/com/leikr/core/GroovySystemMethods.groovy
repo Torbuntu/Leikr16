@@ -141,7 +141,7 @@ public class GroovySystemMethods {
         Gdx.files.external("LeikrVirtualDrive/").deleteDirectory();
          
         initFileSystem();
-        return "System files restored.";
+        return "System files restored. Backup image created.";
     }
     
     
