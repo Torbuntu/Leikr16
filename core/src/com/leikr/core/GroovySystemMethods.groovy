@@ -132,5 +132,17 @@ public class GroovySystemMethods {
         return "File system init.";
     }
     
+    String restartSystem(){
+        
+        new AntBuilder().copy( todir: RootFileSystem+"Backup") {
+            fileset( dir: RootFileSystem);
+        }
+       
+        Gdx.files.external("LeikrVirtualDrive/").deleteDirectory();
+         
+        initFileSystem();
+        return "System files restored.";
+    }
+    
     
 }

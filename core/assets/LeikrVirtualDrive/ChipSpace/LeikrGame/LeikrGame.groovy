@@ -26,8 +26,8 @@ class LeikrGame extends LeikrEngine{
     def solid(x, y){
     	int nx = Math.floor(x/8);
     	int ny = Math.floor(y/8);
-		
-    	return getCellTileId(nx,ny) == 3;
+
+    	return getCellTileId(nx,ny) == 3 || getCellTileId(nx,ny) == 4;
     }
 
     def movep(){

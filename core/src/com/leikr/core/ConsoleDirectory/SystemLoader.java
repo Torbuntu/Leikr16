@@ -98,6 +98,9 @@ public class SystemLoader {
                 }
 
                 break;
+            case "initFileSystem":
+                result = groovySystemMethods.restartSystem();
+                break;
             default:
                 try {
                     if (methodName.length == 1) {
