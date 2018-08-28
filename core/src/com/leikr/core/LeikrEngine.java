@@ -164,7 +164,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         return (int) camera.position.y;
     }
 
-    public void setCamera(int x, int y) {
+    public void setCamera(float x, float y) {
         camera.position.set(x, y, 0);
     }
 
@@ -184,11 +184,11 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         return tiledMap.getProperties().get("height", Integer.class);
     }
 
-    public int getCellTileId(int x, int y) {
+    public int getCellTileId(float x, float y) {
 //        System.out.println("X: " + x + " Y: " + y);
         try {
             if (x >= 0 && y >= 0 && x <= tiledMap.getProperties().get("width", Integer.class) - 1 && y <= tiledMap.getProperties().get("height", Integer.class) - 1) {
-                return tiledMapLayer.getCell(x, y).getTile().getId();
+                return tiledMapLayer.getCell(Math.round(x), Math.round(y)).getTile().getId();
             }
         } catch (Exception e) {
             return -1;
@@ -200,7 +200,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         return new Random().nextInt(range);
     }
 
-    public void drawText(String text, int x, int y, int color) {
+    public void drawText(String text, float x, float y, int color) {
         int fontX;
         int fontY;
         // Set the variable test for evaluating the x and y position of the ASCII set.
@@ -221,7 +221,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         spriteHandler.drawSprite(id, x, y);
     }
 
-    public void drawSprite(int id, float x, float y, int scaleX, int scaleY) {
+    public void drawSprite(int id, float x, float y, float scaleX, float scaleY) {
         spriteHandler.drawSprite(id, x, y, scaleX, scaleY);
     }
 
@@ -229,27 +229,27 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         spriteHandler.drawBigSprite(idtl, idtr, idbl, idbr, x, y);
     }
 
-    public void drawRect(int x, int y, int width, int height, int color, String type) {
+    public void drawRect(float x, float y, float width, float height, int color, String type) {
         paintBrush.drawRect(x, y, width, height, color, type);
     }
 
-    public void drawCircle(int x, int y, int radius, int color, String type) {
+    public void drawCircle(float x, float y, float radius, int color, String type) {
         paintBrush.drawCircle(x, y, radius, color, type);
     }
 
-    public void drawArc(int x, int y, int radius, int start, int degrees, int color, String type) {
+    public void drawArc(float x, float y, float radius, float start, float degrees, int color, String type) {
         paintBrush.drawArc(x, y, radius, start, degrees, color, type);
     }
 
-    public void drawLine(int x, int y, int x2, int y2, int color) {
+    public void drawLine(float x, float y, float x2, float y2, int color) {
         paintBrush.drawLine(x, y, x2, y2, color);
     }
 
-    public void drawColor(int id, int x, int y) {
+    public void drawColor(int id, float x, float y) {
         paintBrush.drawColor(id, x, y);
     }
 
-    public void drawColor(int id, int x, int y, int width, int height) {
+    public void drawColor(int id, float x, float y, float width, float height) {
         paintBrush.drawColor(id, x, y, width, height);
     }
 
@@ -257,7 +257,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         backgroundColor = color;
     }
 
-    public void drawPalette(int x, int y, int w, int h) {
+    public void drawPalette(float x, float y, float w, float h) {
         shapeRenderer.begin(ShapeType.Filled);
         for (int c : leikrPalette.palette) {
             shapeRenderer.setColor(new Color(c));

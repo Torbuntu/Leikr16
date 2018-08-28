@@ -44,7 +44,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     ScriptEngineManager scriptManager;
     ScriptEngine scriptEngine;
 
-    public LeikrGameScreen(Leikr game) throws IOException {
+    public LeikrGameScreen(Leikr game){
         LeikrGameScreen.game = game;
         scriptManager = new ScriptEngineManager();
 

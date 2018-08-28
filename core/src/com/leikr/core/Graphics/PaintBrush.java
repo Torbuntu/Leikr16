@@ -39,7 +39,7 @@ public class PaintBrush {
         }
     }
 
-    public void drawPalette(int x, int y, int w, int h) {
+    public void drawPalette(float x, float y, float w, float h) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (int c : leikrPalette.palette) {
             shapeRenderer.setColor(new Color(c));
@@ -49,7 +49,7 @@ public class PaintBrush {
         shapeRenderer.end();
     }
 
-    public void drawColor(int id, int x, int y) {
+    public void drawColor(int id, float x, float y) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         int color = leikrPalette.palette.get(id);
         shapeRenderer.setColor(new Color(color));
@@ -57,7 +57,7 @@ public class PaintBrush {
         shapeRenderer.end();
     }
     
-    public void drawColor(int id, int x, int y, int width, int height) {
+    public void drawColor(int id, float x, float y, float width, float height) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         int color = leikrPalette.palette.get(id);
         shapeRenderer.setColor(new Color(color));
@@ -65,28 +65,28 @@ public class PaintBrush {
         shapeRenderer.end();
     }
 
-    public void drawRect(int x, int y, int width, int height, int color, String type) {
+    public void drawRect(float x, float y, float width, float height, int color, String type) {
         shapeRenderer.begin(getType(type));
         shapeRenderer.setColor(new Color(leikrPalette.palette.get(color)));
         shapeRenderer.rect(x, y, width, height);
         shapeRenderer.end();
     }
 
-    public void drawCircle(int x, int y, int radius, int color, String type) {
+    public void drawCircle(float x, float y, float radius, int color, String type) {
         shapeRenderer.begin(getType(type));
         shapeRenderer.setColor(new Color(leikrPalette.palette.get(color)));
         shapeRenderer.circle(x, y, radius);
         shapeRenderer.end();
     }
 
-    public void drawArc(int x, int y, int radius, int start, int degrees, int color, String type) {
+    public void drawArc(float x, float y, float radius, float start, float degrees, int color, String type) {
         shapeRenderer.begin(getType(type));
         shapeRenderer.setColor(new Color(leikrPalette.palette.get(color)));
         shapeRenderer.arc(x, y, radius, start, degrees);
         shapeRenderer.end();
     }
 
-    public void drawLine(int x, int y, int x2, int y2, int color) {
+    public void drawLine(float x, float y, float x2, float y2, int color) {
         shapeRenderer.setAutoShapeType(true);
 
         shapeRenderer.begin();

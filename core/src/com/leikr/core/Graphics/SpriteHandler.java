@@ -35,14 +35,19 @@ public class SpriteHandler {
 
         fileName = Console.fileName;
         String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/";//sets game path
-        spriteSheet = new Texture(filePath + fileName + ".png");
+        try {
+            spriteSheet = new Texture(filePath + fileName + ".png");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            spriteSheet = new Texture("Logo.png");
+        }
 
         regions = TextureRegion.split(spriteSheet, 8, 8);
         sprites = new HashMap<>();
         mapAllSprites();
     }
-    
-    void setSpriteRegion(Texture newRegion){
+
+    void setSpriteRegion(Texture newRegion) {
         regions = TextureRegion.split(newRegion, 8, 8);
         sprites = new HashMap<>();
         mapAllSprites();
@@ -58,11 +63,11 @@ public class SpriteHandler {
             }
         }
     }
-    
-    public TextureRegion getSpriteByRegion(int x, int y){
+
+    public TextureRegion getSpriteByRegion(int x, int y) {
         return regions[y][x];
     }
-    
+
     public void drawSprite(int id, float x, float y) {
         game.batch.begin();
         game.batch.setColor(Color.WHITE);
@@ -70,22 +75,22 @@ public class SpriteHandler {
         game.batch.end();
     }
 
-    public void drawSprite(int id, float x, float y, int scaleX, int scaleY) {
+    public void drawSprite(int id, float x, float y, float scaleX, float scaleY) {
         game.batch.begin();
         game.batch.setColor(Color.WHITE);
         game.batch.draw(sprites.get(id), x, y, scaleX, scaleY);
         game.batch.end();
     }
-    
+
     public void drawBigSprite(int idtl, int idtr, int idbl, int idbr, float x, float y) {
         game.batch.begin();
         game.batch.setColor(Color.WHITE);
         game.batch.draw(sprites.get(idbl), x, y);
-        game.batch.draw(sprites.get(idbr), x+8, y);
-        
-        game.batch.draw(sprites.get(idtl), x, y+8);
-        game.batch.draw(sprites.get(idtr), x+8, y+8);
+        game.batch.draw(sprites.get(idbr), x + 8, y);
+
+        game.batch.draw(sprites.get(idtl), x, y + 8);
+        game.batch.draw(sprites.get(idtr), x + 8, y + 8);
         game.batch.end();
     }
-    
+
 }
