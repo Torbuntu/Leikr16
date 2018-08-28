@@ -161,7 +161,13 @@ public class ShellHandler {
                 break;
             case "start":
             case "run":
-                game.setScreen(new LeikrGameScreen(game));
+                try {
+                    game.setScreen(new LeikrGameScreen(game));
+
+                } catch (Exception e) {
+                    historyBuffer.add(e.getMessage());
+                    return;
+                }
                 consoleScreen.dispose();
                 break;
             case "./SPE":

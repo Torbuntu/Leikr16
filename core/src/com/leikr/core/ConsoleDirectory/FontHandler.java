@@ -125,6 +125,10 @@ public class FontHandler {
     public ArrayList<String> getHistory() {
         return textBuffer.history;
     }
+    
+    public void setHistory(String history) {
+        textBuffer.history.add(history);
+    }
 
     public ArrayList<String> getCommands() {
         return textBuffer.command;

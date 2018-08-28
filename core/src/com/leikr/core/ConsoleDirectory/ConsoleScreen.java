@@ -18,12 +18,16 @@ public class ConsoleScreen implements Screen{
     Console console;
     public ConsoleScreen(final Leikr game){
         this.game = game;
+        console = new Console(this);
+    }
+    
+    public ConsoleScreen(final Leikr game, String error){
+        this.game = game;
+        console = new Console(this, error);
     }
     
     @Override
     public void show() {
-        console = new Console(game, this);  
-
     }
 
     @Override

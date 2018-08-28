@@ -33,8 +33,8 @@ public class Console implements InputProcessor {
     ShellHandler shellHandler;
     
     
-    public Console(final Leikr game, ConsoleScreen consoleScreen) {
-        this.game = game;
+    public Console(ConsoleScreen consoleScreen) {
+        this.game = consoleScreen.game;
         this.consoleScreen = consoleScreen;
         batch = game.batch;
 
@@ -45,6 +45,23 @@ public class Console implements InputProcessor {
         fontHandler = new FontHandler(game, viewport);//handles command and history buffer for displaying font to screen.
         shellHandler = new ShellHandler(game, consoleScreen, fontHandler);
     }
+    
+    public Console(ConsoleScreen consoleScreen, String error) {
+        this.game = consoleScreen.game;
+        this.consoleScreen = consoleScreen;
+        batch = game.batch;
+
+        viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
+        camera = viewport.getCamera();
+        Gdx.input.setInputProcessor(this);
+
+        fontHandler = new FontHandler(game, viewport);//handles command and history buffer for displaying font to screen.
+        fontHandler.setHistory(error);
+        shellHandler = new ShellHandler(game, consoleScreen, fontHandler);
+        
+    }
+    
+    
 
     //Sets the camera projection. Begins the sprite batch, runs the console buffer to display text.
     public void renderConsole(float delta) {

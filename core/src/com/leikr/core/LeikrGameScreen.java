@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.script.ScriptEngine;
@@ -50,32 +51,34 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         fileName = Console.fileName;
         String filePath = Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/";//sets game path
 
-        switch (gameType.toLowerCase()) {
-            case "groovy":
-            case "gv":
-                loadGroovyGame(filePath);
-                break;
-            case "java":
-            case "jv":
-                loadJavaGame(filePath);
-                break;
-            case "jython":
-            case "python":
-            case "jy":
-            case "py":
-                loadJythonGame(filePath);
-                break;
-            default:
-                try{
+        try {
+            switch (gameType.toLowerCase()) {
+                case "groovy":
+                case "gv":
                     loadGroovyGame(filePath);
-                }catch(Exception e){
-                    
-                }
-                break;
+                    break;
+                case "java":
+                case "jv":
+                    loadJavaGame(filePath);
+                    break;
+                case "jython":
+                case "python":
+                case "jy":
+                case "py":
+                    loadJythonGame(filePath);
+                    break;
+                default:
+                    loadGroovyGame(filePath);
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            this.dispose();
         }
 
     }
-   
+
     public void loadScalaGame(String filePath) {
 //        Global g = new Global(new Settings());
 
@@ -152,18 +155,29 @@ public class LeikrGameScreen implements Screen, InputProcessor {
 
     @Override
     public void show() {
-
-        leikrGame.create();
-        Gdx.input.setInputProcessor(leikrGame);
+        try {
+            leikrGame.create();
+            Gdx.input.setInputProcessor(leikrGame);
+        } catch (Exception e) {
+            e.printStackTrace();
+            game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            this.dispose();
+        }
     }
 
     @Override
     public void render(float delta) {
-        leikrGame.preRender();
+        try {
+            leikrGame.preRender();
 
-        leikrGame.renderCamera();
+            leikrGame.renderCamera();
 
-        leikrGame.render();
+            leikrGame.render();
+        } catch (Exception e) {
+            e.printStackTrace();
+            game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            this.dispose();
+        }
     }
 
     @Override
@@ -232,7 +246,5 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     public boolean scrolled(int amount) {
         return false;
     }
-
-    
 
 }
