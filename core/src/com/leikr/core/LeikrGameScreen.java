@@ -44,7 +44,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     ScriptEngineManager scriptManager;
     ScriptEngine scriptEngine;
 
-    public LeikrGameScreen(Leikr game){
+    public LeikrGameScreen(Leikr game) {
         LeikrGameScreen.game = game;
         scriptManager = new ScriptEngineManager();
 
@@ -149,7 +149,9 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         try {
             leikrGame = (LeikrEngine) groovyGameLoader.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(LeikrGameScreen.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            this.dispose();
         }
     }
 
@@ -171,7 +173,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             leikrGame.preRender();
 
             leikrGame.renderCamera();
-            
+
             leikrGame.render(delta);
 
             leikrGame.render();
