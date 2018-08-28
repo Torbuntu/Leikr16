@@ -129,6 +129,9 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 
     public void render() {
     }
+    
+    public void render(float delta){        
+    }
 
     //Updates the view on resize in the Leikr main.
     public void updateViewport(int width, int height) {

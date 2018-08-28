@@ -171,6 +171,8 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             leikrGame.preRender();
 
             leikrGame.renderCamera();
+            
+            leikrGame.render(delta);
 
             leikrGame.render();
         } catch (Exception e) {
