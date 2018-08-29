@@ -5,9 +5,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.Leikr;
@@ -32,6 +34,8 @@ public class Console implements InputProcessor {
     FontHandler fontHandler;
     ShellHandler shellHandler;
     
+    ShapeRenderer renderer;
+    
     
     public Console(ConsoleScreen consoleScreen) {
         this.game = consoleScreen.game;
@@ -44,6 +48,7 @@ public class Console implements InputProcessor {
 
         fontHandler = new FontHandler(game, viewport);//handles command and history buffer for displaying font to screen.
         shellHandler = new ShellHandler(game, consoleScreen, fontHandler);
+        renderer = new ShapeRenderer();
     }
     
     public Console(ConsoleScreen consoleScreen, String error) {
@@ -65,8 +70,15 @@ public class Console implements InputProcessor {
 
     //Sets the camera projection. Begins the sprite batch, runs the console buffer to display text.
     public void renderConsole(float delta) {
-        Gdx.gl.glClearColor(shellHandler.bgRed, shellHandler.bgGreen, shellHandler.bgBlue, 1);
+        Gdx.gl.glClearColor(0,0,0,0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        
+        renderer.setProjectionMatrix(camera.combined);
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.setColor(shellHandler.bgRed, shellHandler.bgGreen, shellHandler.bgBlue, 0);
+        renderer.rect(0, 0, Leikr.WIDTH, Leikr.HEIGHT);
+        renderer.end();
+        
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.setColor(shellHandler.fontRed, shellHandler.fontGreen, shellHandler.fontBlue, 1); // sets font color

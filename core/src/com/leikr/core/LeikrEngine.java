@@ -53,7 +53,6 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     TiledMapTileLayer tiledMapLayer;
 
     boolean useMap;
-    int mapType;//1. free map, 2. area map
 
     //keyboard buttons
     public boolean rightKeyPressed = false;
@@ -81,8 +80,6 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public int screenWidth = (int) Leikr.WIDTH;
     public int screenHeight = (int) Leikr.HEIGHT;
 
-    public int backgroundColor = 2;
-
     LeikrPalette leikrPalette;
     SpriteHandler spriteHandler;
     PaintBrush paintBrush;
@@ -109,28 +106,22 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     }
 
     public void preRender() {
-        Color color = new Color(leikrPalette.palette.get(backgroundColor));
-        Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);        
     }
 
     public void renderCamera() {
         //camera.update();
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
-        if (tiledMapRenderer != null && useMap) {
-            tiledMapRenderer.setView((OrthographicCamera) camera);
-            tiledMapRenderer.render();
-//            TextureRegion mpl = tiledMap.getTileSets().getTileSet("tileset").getTile(0).getTextureRegion();
 
-        }
         camera.update();
     }
 
     public void render() {
     }
-    
-    public void render(float delta){        
+
+    public void render(float delta) {
     }
 
     //Updates the view on resize in the Leikr main.
@@ -149,14 +140,27 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         fontHeight = height;
     }
 
-    public void loadMap(int mapType) {
-        this.mapType = mapType;
+    public void loadMap() {
         useMap = true;
         tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/" + fileName + ".tmx");
         tiledMapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
+    }
 
-//        tiledMapLayer.getCell(1, 1).getTile()
+    public void drawMap() {
+        if (tiledMapRenderer != null && useMap) {
+            tiledMapRenderer.setView((OrthographicCamera) camera);
+            tiledMapRenderer.render();
+//            TextureRegion mpl = tiledMap.getTileSets().getTileSet("tileset").getTile(0).getTextureRegion();
+        }
+    }
+    
+    public void setMapSection(int row, int column){
+        //row is the row id, column is the column id.
+        int width = row*320;
+        int height = column*240;
+        camera.position.x = width+160;
+        camera.position.y = height+120;
     }
 
     public int getCameraX() {
@@ -254,10 +258,6 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 
     public void drawColor(int id, float x, float y, float width, float height) {
         paintBrush.drawColor(id, x, y, width, height);
-    }
-
-    public void setBackgroundColor(int color) {
-        backgroundColor = color;
     }
 
     public void drawPalette(float x, float y, float w, float h) {

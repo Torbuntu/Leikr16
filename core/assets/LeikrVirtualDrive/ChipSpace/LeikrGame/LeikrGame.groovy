@@ -8,19 +8,21 @@ class LeikrGame extends LeikrEngine{
     def id;
 
     def p = [:];
-
+    def color = 5;
     def void create(){
         super.create();// Very important for initializing core engine variables.
+
         println("Hello, World! From the LeikrGame script.");
-        loadMap(1);
+        loadMap(); //This game uses the provided map files.
         x = 0;
         y = 0;
 
-        p.x = 32;
+        p.x = 30;
         p.y = 32;
         p.spriteId = 4;
         p.vx = 0;
         p.vy = 0;
+
     }
 
     def solid(x, y){
@@ -48,9 +50,11 @@ class LeikrGame extends LeikrEngine{
 
         if (solid(p.x+p.vx, p.y-8+p.vy+8) || solid(p.x+7+p.vx, p.y-8+p.vy+8) ){
             p.vy=0;
+            color = 5;
         }
         else{
             p.vy=p.vy-0.2;
+            color = 4;
         }
 
         if(p.vy == 0 && (upKeyPressed() || upBtnPressed())){
@@ -59,25 +63,22 @@ class LeikrGame extends LeikrEngine{
 
         if (p.vy > 0 && (solid(p.x+p.vx,p.y+p.vy+8) || solid(p.x+7+p.vx,p.y+p.vy+8))){
             p.vy=0;
+            color = 5;
         }
-
-
 
         p.x = p.vx + p.x;
         p.y = (int)Math.floor(p.vy + p.y);
     }
 
     def void render(){
-        id = getCellTileId(x,y);
+        drawRect(0,0,320,240,color, "filled");
 
-        drawText(Integer.toString(id), 100, 100, 9 );
+        // setMapSection(0, 0);
+        drawMap();
 
         movep();
         drawSprite(p.spriteId, p.x, p.y);
-        // drawRect(p.x, p.y, 8, -8, 8, "Filled");
         setCamera(p.x, p.y);
-        //setCamera(0,0);
 
     }
-
 }
