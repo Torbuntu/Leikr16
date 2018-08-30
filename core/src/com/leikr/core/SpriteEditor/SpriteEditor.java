@@ -138,21 +138,21 @@ class SpriteEditor implements InputProcessor {
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
         Gdx.input.setInputProcessor(this);
-        
+
     }
 
     public void renderSpriteEditor(float delta) {
-        Gdx.gl.glClearColor(0,0,0,0);  
-        
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.setProjectionMatrix(camera.combined);
+
         renderer.setProjectionMatrix(camera.combined);
-        
-        renderer.begin(ShapeRenderer.ShapeType.Filled);        
-        renderer.setColor(.3f,.3f,.3f,1);
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.setColor(.3f, .3f, .3f, 1);
         renderer.rect(0, 0, Leikr.WIDTH, Leikr.HEIGHT);
         renderer.end();
-        
+
+        batch.setProjectionMatrix(camera.combined);
+
         count = 0;
         color = 0;
         for (float item : paintBrush.leikrPalette.palette) {

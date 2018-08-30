@@ -8,10 +8,12 @@ package com.leikr.core.MapEditor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -29,36 +31,47 @@ import com.leikr.core.Leikr;
  */
 public class MapEditor implements InputProcessor {
 
-    Stage stage;
     Leikr game;
-    Table table;
 
     Texture map;
     private final TiledMap tiledMap;
     private final TiledMapTileLayer tiledMapLayer;
     private final OrthogonalTiledMapRenderer tiledMapRenderer;
+    
+    ShapeRenderer renderer;
+    private final FitViewport viewport;
+    private final Camera camera;
 
     public MapEditor(Leikr game) {
         this.game = game;
-        stage = new Stage(new FitViewport(Leikr.WIDTH, Leikr.HEIGHT));
-        table = new Table();
-        table.setWidth(stage.getWidth());
-        table.setHeight(stage.getHeight());
-        table.setPosition(0, 0);
 
         tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/" + fileName + ".tmx");
         tiledMapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
 
-        stage.addActor(table);
+        viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
+        camera = viewport.getCamera();
+        renderer = new ShapeRenderer();
+        
         Gdx.input.setInputProcessor(this);
     }
 
     public void renderMapEditor() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.draw();
-        tiledMapRenderer.setView((OrthographicCamera) stage.getViewport().getCamera());
+        renderer.setProjectionMatrix(camera.combined);
+        
+        renderer.begin(ShapeRenderer.ShapeType.Filled);        
+        renderer.setColor(.3f,.3f,.3f,1);
+        renderer.rect(0, 0, Leikr.WIDTH, Leikr.HEIGHT);
+        renderer.end();
+        
+        tiledMapRenderer.setView((OrthographicCamera) camera);
         tiledMapRenderer.render();
+    }
+    
+    public void updateMapEditor(int x, int y){
+        viewport.update(x, y, true);
+        camera.update();
     }
 
     @Override

@@ -32,8 +32,8 @@ public class MapEditorScreen implements Screen{
     }
 
     @Override
-    public void resize(int i, int i1) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void resize(int x, int y) {
+        mapEditor.updateMapEditor(x, y);
     }
 
     @Override

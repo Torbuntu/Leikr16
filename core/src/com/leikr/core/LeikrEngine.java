@@ -211,7 +211,6 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
             TiledMapTileLayer.Cell newCell = new Cell();
             tiledMapLayer.setCell(Math.round(x), Math.round(y), newCell.setTile(tiledMap.getTileSets().getTile(newId)));
         }
-
     }
 
     public int getRandom(int range) {
