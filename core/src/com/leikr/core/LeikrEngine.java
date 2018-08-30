@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -206,7 +207,9 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public void setCellTile(float x, float y, int newId) {
         if (tiledMapLayer.getCell((int) x, (int) y) != null) {
             tiledMapLayer.getCell((int) x, (int) y).setTile(tiledMap.getTileSets().getTile(newId));
-
+        }else{
+            TiledMapTileLayer.Cell newCell = new Cell();
+            tiledMapLayer.setCell(Math.round(x), Math.round(y), newCell.setTile(tiledMap.getTileSets().getTile(newId)));
         }
 
     }
