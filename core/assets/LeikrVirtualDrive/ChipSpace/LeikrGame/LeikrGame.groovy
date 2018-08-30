@@ -71,7 +71,7 @@ class LeikrGame extends LeikrEngine{
 
         // setMapSection(0, 0);
         drawMap();
-        setCellTile(p.x/8, p.y/8, 3);
+        setCellTile(p.x/8, (p.y-8)/8, 3);
         movep();
         drawSprite(p.spriteId, p.x, p.y);
         //setCamera(p.x, p.y);
