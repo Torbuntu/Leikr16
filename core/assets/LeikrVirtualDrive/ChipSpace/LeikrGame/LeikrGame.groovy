@@ -8,7 +8,6 @@ class LeikrGame extends LeikrEngine{
     def id;
 
     def p = [:];
-    def color = 5;
     def void create(){
         super.create();// Very important for initializing core engine variables.
 
@@ -50,11 +49,9 @@ class LeikrGame extends LeikrEngine{
 
         if (solid(p.x+p.vx, p.y-8+p.vy+8) || solid(p.x+7+p.vx, p.y-8+p.vy+8) ){
             p.vy=0;
-            color = 5;
         }
         else{
             p.vy=p.vy-0.2;
-            color = 4;
         }
 
         if(p.vy == 0 && (upKeyPressed() || upBtnPressed())){
@@ -63,7 +60,6 @@ class LeikrGame extends LeikrEngine{
 
         if (p.vy > 0 && (solid(p.x+p.vx,p.y+p.vy+8) || solid(p.x+7+p.vx,p.y+p.vy+8))){
             p.vy=0;
-            color = 5;
         }
 
         p.x = p.vx + p.x;
@@ -71,14 +67,14 @@ class LeikrGame extends LeikrEngine{
     }
 
     def void render(){
-        drawRect(0,0,320,240,color, "filled");
+        drawRect(0,0,320,240,5, "filled");
 
         // setMapSection(0, 0);
         drawMap();
-
+        setCellTile(p.x/8, p.y/8, 3);
         movep();
         drawSprite(p.spriteId, p.x, p.y);
-        setCamera(p.x, p.y);
+        //setCamera(p.x, p.y);
 
     }
 }

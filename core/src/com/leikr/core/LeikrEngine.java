@@ -107,7 +107,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 
     public void preRender() {
         Gdx.gl.glClearColor(0, 0, 0, 0);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);        
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
     public void renderCamera() {
@@ -154,13 +154,13 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 //            TextureRegion mpl = tiledMap.getTileSets().getTileSet("tileset").getTile(0).getTextureRegion();
         }
     }
-    
-    public void setMapSection(int row, int column){
+
+    public void setMapSection(int row, int column) {
         //row is the row id, column is the column id.
-        int width = row*320;
-        int height = column*240;
-        camera.position.x = width+160;
-        camera.position.y = height+120;
+        int width = row * 320;
+        int height = column * 240;
+        camera.position.x = width + 160;
+        camera.position.y = height + 120;
     }
 
     public int getCameraX() {
@@ -201,6 +201,14 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
             return -1;
         }
         return -1;
+    }
+
+    public void setCellTile(float x, float y, int newId) {
+        if (tiledMapLayer.getCell((int) x, (int) y) != null) {
+            tiledMapLayer.getCell((int) x, (int) y).setTile(tiledMap.getTileSets().getTile(newId));
+
+        }
+
     }
 
     public int getRandom(int range) {
