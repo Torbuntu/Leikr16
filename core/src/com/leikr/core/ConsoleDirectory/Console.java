@@ -63,7 +63,7 @@ public class Console implements InputProcessor {
         fontHandler = new FontHandler(game, viewport);//handles command and history buffer for displaying font to screen.
         fontHandler.setHistory(error);
         shellHandler = new ShellHandler(game, consoleScreen, fontHandler);
-        
+        renderer = new ShapeRenderer();
     }
     
     

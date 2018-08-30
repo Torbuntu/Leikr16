@@ -103,7 +103,9 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             //New instance
             leikrGame = (LeikrEngine) urlCl.loadClass(fileName).newInstance();
         } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(LeikrGameScreen.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            this.dispose();
         }
 
     }
@@ -112,27 +114,30 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         leikrGame = (LeikrEngine) getJythonObject("com.leikr.core.LeikrEngine", filePath + fileName + ".py");
     }
 
-    public static Object getJythonObject(String interfaceName, String pathToJythonModule) {
-
+    public Object getJythonObject(String interfaceName, String pathToJythonModule) {
         Object javaInt = null;
-        PythonInterpreter interpreter = new PythonInterpreter();
 
-        interpreter.execfile(pathToJythonModule);
-
-        String tempName = pathToJythonModule.substring(pathToJythonModule.lastIndexOf("/") + 1);
-
-        tempName = tempName.substring(0, tempName.indexOf("."));
-
-        System.out.println(tempName);
-        String instanceName = tempName.toLowerCase();
-        String javaClassName = tempName.substring(0, 1).toUpperCase() + tempName.substring(1);
-        String objectDef = "=" + javaClassName + "()";
-        interpreter.exec(instanceName + objectDef);
         try {
+
+            PythonInterpreter interpreter = new PythonInterpreter();
+
+            interpreter.execfile(pathToJythonModule);
+
+            String tempName = pathToJythonModule.substring(pathToJythonModule.lastIndexOf("/") + 1);
+
+            tempName = tempName.substring(0, tempName.indexOf("."));
+
+            System.out.println(tempName);
+            String instanceName = tempName.toLowerCase();
+            String javaClassName = tempName.substring(0, 1).toUpperCase() + tempName.substring(1);
+            String objectDef = "=" + javaClassName + "()";
+            interpreter.exec(instanceName + objectDef);
             Class JavaInterface = Class.forName(interfaceName);
             javaInt = interpreter.get(instanceName).__tojava__(JavaInterface);
         } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();  // Add logging here
+            ex.printStackTrace();
+            game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            this.dispose();
         }
 
         return javaInt;
@@ -141,14 +146,9 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     public void loadGroovyGame(String filePath) {
         groovyClassLoader = new GroovyClassLoader();
         try {
-            groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + fileName + ".groovy"));//loads the game code
-        } catch (CompilationFailedException | IOException ex) {
-            Logger.getLogger(LeikrGameScreen.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
+            groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + fileName + ".groovy"));//loads the game code        
             leikrGame = (LeikrEngine) groovyGameLoader.newInstance();
-        } catch (InstantiationException | IllegalAccessException ex) {
+        } catch (InstantiationException | CompilationFailedException | IOException | IllegalAccessException ex) {
             ex.printStackTrace();
             game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
