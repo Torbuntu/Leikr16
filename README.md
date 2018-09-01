@@ -1,4 +1,6 @@
 # Leikr16
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 A Java Fantasy Computer.
 - Written in Java libgdx and Groovy.
 - Supports games written in Java, Groovy, and Jython (using the Leikr Engine)
