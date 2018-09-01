@@ -285,11 +285,11 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     }
 
     // Sound Section
-    public void playBeep(float dur, float freq, String oscType) {
+    public void playBeep(float dur, float freq, float amp, String oscType) {
         new Thread() {
             @Override
             public void run() {
-                soundEngine.soundEnginePlayBeep(dur, freq, oscType);
+                soundEngine.soundEnginePlayBeep(dur, freq, amp, oscType);
             }
         }.start();
     }

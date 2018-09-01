@@ -27,7 +27,7 @@ public class SoundEngine {
         this.game = game;
     }
 
-    public void soundEnginePlayBeep(float dur, float freq, String oscType) {
+    public void soundEnginePlayBeep(float dur, float freq, float amp, String oscType) {
         Synthesizer synth;
         UnitOscillator osc;
         LineOut lineOut;
@@ -63,7 +63,7 @@ public class SoundEngine {
 
         // Set the frequency and amplitude for the sine wave.
         osc.frequency.set(freq);
-        osc.amplitude.set(0.6);
+        osc.amplitude.set(amp);
 
         // We only need to start the LineOut. It will pull data from the
         // oscillator.
@@ -78,6 +78,7 @@ public class SoundEngine {
             e.printStackTrace();
         }
 
+        lineOut.stop();
         // Stop everything.
         synth.stop();
     }
