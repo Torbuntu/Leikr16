@@ -101,6 +101,10 @@ public class SystemLoader {
             case "initFileSystem":
                 result = groovySystemMethods.restartSystem();
                 break;
+                
+            case "new":
+                result = groovySystemMethods.newGame(methodName[1], methodName[2]);
+                break;
             default:
                 try {
                     if (methodName.length == 1) {

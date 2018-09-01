@@ -25,15 +25,10 @@ public class GroovySystemMethods {
         "System Name: $SystemName, Bios Version: $BiosVersion ";
     }
     
-    
-    
-    
     String cd(String directory){
         locPath += "/"+directory;
         return locPath;
     }
-    
-    
     
     String mkdir(def name){
         String result = "";
@@ -46,10 +41,10 @@ public class GroovySystemMethods {
             result += "Directories initialized";
         }
         if(locPath.length() > 0){
-            new File(RootFileSystem+"LeikrVirtualDrive/"+name).mkdir();
+            new File(RootFileSystem+"/"+name).mkdir();
 
         }else{
-            new File(RootFileSystem+"LeikrVirtualDrive/"+locPath+"/"+name).mkdir();
+            new File(RootFileSystem+"/"+locPath+"/"+name).mkdir();
 
         }
         return result += "New directory `$name` successfully created.";
@@ -121,6 +116,22 @@ public class GroovySystemMethods {
             fileset( dir: RootFileSystem+"/Download/"+from);
         }
         return "mounted "+from+" to ChipSpace from Downloads";
+    }
+    
+    String newGame(String name, String type){
+        new File(RootFileSystem+"/ChipSpace/"+name).mkdir();
+        switch(type.toLowerCase()){
+            case "groovy":
+            default:
+                //new File( RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy")
+                return "Not imnplemented yet";
+                break;
+        }
+        
+        new AntBuilder().copy( todir: RootFileSystem+"/ChipSpace/"+name) {
+            fileset( dir: RootFileSystem+"/Download/"+from);
+        }
+        return "New game project `"+name+"` initialized with type `"+type+"`";
     }
    
     
