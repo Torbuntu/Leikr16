@@ -438,6 +438,27 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         return false;
     }
 
+		@Override
+    public boolean povMoved(Controller controller, int povCode, PovDirection value) {
+        // This is the dpad
+				if (value == PovDirection.north)
+					upButtonPressed = true;
+				if (value == PovDirection.south)
+					downButtonPressed = true;
+				if ( value == PovDirection.east)
+					rightButtonPressed = true;
+				if ( value == PovDirection.west)
+					leftButtonPressed = true;
+				if (value == PovDirection.center) {
+					upButtonPressed = false;
+					downButtonPressed = false;
+					rightButtonPressed = false;
+					leftButtonPressed = false;
+				}
+    		return false;
+		}
+
+
     @Override
     public boolean buttonDown(Controller controller, int buttonCode) {
         System.out.println(controller.getName() + " : " + buttonCode);
@@ -558,11 +579,6 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     @Override
     public void disconnected(Controller controller) {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean povMoved(Controller controller, int povCode, PovDirection value) {
-        return false;
     }
 
     @Override
