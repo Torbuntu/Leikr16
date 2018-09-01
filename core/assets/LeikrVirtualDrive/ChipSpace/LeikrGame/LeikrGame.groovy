@@ -48,7 +48,7 @@ class LeikrGame extends LeikrEngine{
 
 
         if (solid(p.x+p.vx, p.y-8+p.vy+8) || solid(p.x+7+p.vx, p.y-8+p.vy+8) ){
-            p.vy=0;
+            p.vy=0;            
         }
         else{
             p.vy=p.vy-0.2;
@@ -59,7 +59,8 @@ class LeikrGame extends LeikrEngine{
         }
 
         if (p.vy > 0 && (solid(p.x+p.vx,p.y+p.vy+8) || solid(p.x+7+p.vx,p.y+p.vy+8))){
-            p.vy=0;
+            p.vy=0;      
+            playBeep(0.1, 340.5, "triangle");      
         }
 
         p.x = p.vx + p.x;
@@ -71,7 +72,7 @@ class LeikrGame extends LeikrEngine{
 
         // setMapSection(0, 0);
         drawMap();
-        setCellTile(p.x/8, (p.y-8)/8, 3);
+        //setCellTile(p.x/8, (p.y-8)/8, 3);
         movep();
         drawSprite(p.spriteId, p.x, p.y);
         //setCamera(p.x, p.y);

@@ -34,6 +34,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Graphics.SpriteHandler;
+import com.leikr.core.SoundEngine.SoundEngine;
 import java.util.Random;
 
 /**
@@ -84,6 +85,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     LeikrPalette leikrPalette;
     SpriteHandler spriteHandler;
     PaintBrush paintBrush;
+    SoundEngine soundEngine;
 
     int fontWidth;
     int fontHeight;
@@ -96,6 +98,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         spriteHandler = new SpriteHandler(game);
         paintBrush = new PaintBrush(shapeRenderer, game);
         leikrPalette = new LeikrPalette();
+        soundEngine = new SoundEngine(game);
 
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
@@ -207,7 +210,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public void setCellTile(float x, float y, int newId) {
         if (tiledMapLayer.getCell((int) x, (int) y) != null) {
             tiledMapLayer.getCell((int) x, (int) y).setTile(tiledMap.getTileSets().getTile(newId));
-        }else{
+        } else {
             TiledMapTileLayer.Cell newCell = new Cell();
             tiledMapLayer.setCell(Math.round(x), Math.round(y), newCell.setTile(tiledMap.getTileSets().getTile(newId)));
         }
@@ -278,6 +281,16 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
             x += w;
         }
         shapeRenderer.end();
+    }
+
+    // Sound Section
+    public void playBeep(float dur, float freq, String oscType) {
+        new Thread() {
+            @Override
+            public void run() {
+                soundEngine.soundEnginePlayBeep(dur, freq, oscType);
+            }
+        }.start();
     }
 
     public boolean rightKeyPressed() {

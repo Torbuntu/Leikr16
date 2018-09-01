@@ -8,4 +8,8 @@
     <spec-name>j2se</spec-name>
     <spec-version>10</spec-version>
   </script-platform>
+  <license-header>
+    <name>apache20</name>
+    <property name="organization"/>
+  </license-header>
 </gradle-project-properties>
