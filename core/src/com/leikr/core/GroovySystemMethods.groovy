@@ -13,7 +13,7 @@ import java.lang.String;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
-//TODO: configure a path handler and `cd` method
+
 public class GroovySystemMethods {
     String BiosVersion = "V0.0.1";
     String SystemName = "Leikr 16";
@@ -121,16 +121,34 @@ public class GroovySystemMethods {
     String newGame(String name, String type){
         new File(RootFileSystem+"/ChipSpace/"+name).mkdir();
         switch(type.toLowerCase()){
+            case "python":
+            case "jython":
+            case "py":
+            case "jy":
+                new AntBuilder().copy( file:Gdx.files.internal("GameModels/JythonTemplate.py"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".py");
+                new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".py", token: "GAME_NAME", value: name);        
+                break;
+            case "java":
+                new AntBuilder().copy( file:Gdx.files.internal("GameModels/JavaTemplate.java"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".java");
+                new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".java", token: "GAME_NAME", value: name);
+                break;
             case "groovy":
             default:
                 //new File( RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy")
-                return "Not imnplemented yet";
+                new AntBuilder().copy( file:Gdx.files.internal("GameModels/GroovyTemplate.groovy"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy");
+                new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy", token: "GAME_NAME", value: name);
+                //return "Not imnplemented yet";
                 break;
         }
+        new AntBuilder().copy( file:Gdx.files.internal("GameModels/spriteTemplate.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".png");
+        new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".png", token: "GAME_NAME", value: name);
         
-        new AntBuilder().copy( todir: RootFileSystem+"/ChipSpace/"+name) {
-            fileset( dir: RootFileSystem+"/Download/"+from);
-        }
+        new AntBuilder().copy( file:Gdx.files.internal("GameModels/tmxTemplate.tmx"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".tmx");
+        new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".tmx", token: "GAME_NAME", value: name);
+                
+        new AntBuilder().copy( file:Gdx.files.internal("GameModels/tsxTemplate.tsx"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".tsx");
+        new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".tsx", token: "GAME_NAME", value: name);
+        
         return "New game project `"+name+"` initialized with type `"+type+"`";
     }
    

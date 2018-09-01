@@ -177,6 +177,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             leikrGame.render(delta);
 
             leikrGame.render();
+            
         } catch (Exception e) {
             e.printStackTrace();
             game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
