@@ -11,7 +11,6 @@ import com.leikr.core.Leikr;
 import com.leikr.core.LeikrGameScreen;
 import com.leikr.core.MapEditor.MapEditorScreen;
 import com.leikr.core.RepoDirectory.RepoHandler;
-import com.leikr.core.SoundEngine.SoundEngine;
 import com.leikr.core.SpriteEditor.SpriteEditorScreen;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;

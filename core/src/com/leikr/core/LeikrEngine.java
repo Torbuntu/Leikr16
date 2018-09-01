@@ -122,6 +122,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         camera.update();
     }
 
+    // Render methods used by the game scripts. 
     public void render() {
     }
 
@@ -133,16 +134,14 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         viewport.update(width, height, true);
     }
 
-    public void dispose() {
-        shapeRenderer.dispose();
-        font.dispose();
-    }
-
     public void setFont(String fontName, int width, int height) {
         font = new Texture(new FileHandle(Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/" + fontName + ".png"));
         fontWidth = width;
         fontHeight = height;
     }
+    
+    
+    // Map and Camera section
 
     public void loadMap() {
         useMap = true;
@@ -220,6 +219,8 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         return new Random().nextInt(range);
     }
 
+    
+    // Drawing section
     public void drawText(String text, float x, float y, int color) {
         int fontX;
         int fontY;
@@ -292,6 +293,18 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
             }
         }.start();
     }
+    
+    
+    
+    
+    // disposals
+    public void dispose() {
+        shapeRenderer.dispose();
+        font.dispose();
+    }
+    
+    
+    // Control handling methods
 
     public boolean rightKeyPressed() {
         return rightKeyPressed;

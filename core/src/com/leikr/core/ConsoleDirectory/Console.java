@@ -3,11 +3,8 @@ package com.leikr.core.ConsoleDirectory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -88,19 +85,14 @@ public class Console implements InputProcessor {
 
     }
 
-    //Disposes batch and font
-    public void disposeConsole() {
-        fontHandler.disposeFont();
-    }
-
     //Updates the view on resize in the Leikr main.
     public void updateViewport(int width, int height) {
         fontHandler.updateViewport(width, height);
     }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
+    
+    //Disposes batch and font
+    public void disposeConsole() {
+        fontHandler.disposeFont();
     }
 
     @Override
@@ -128,6 +120,11 @@ public class Console implements InputProcessor {
     public boolean keyTyped(char character) {
         //If the character not backspace or enter.
         fontHandler.addKeyStroke(character);
+        return false;
+    }
+    
+      @Override
+    public boolean keyDown(int keycode) {
         return false;
     }
 
