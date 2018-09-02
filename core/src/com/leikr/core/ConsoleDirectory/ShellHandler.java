@@ -5,8 +5,10 @@
  */
 package com.leikr.core.ConsoleDirectory;
 
+import com.leikr.core.CustomSettings;
 import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import static com.leikr.core.ConsoleDirectory.Console.gameType;
+import com.leikr.core.DesktopEnvironment.DesktopEnvironmentScreen;
 import com.leikr.core.Leikr;
 import com.leikr.core.LeikrGameScreen;
 import com.leikr.core.MapEditor.MapEditorScreen;
@@ -173,6 +175,12 @@ public class ShellHandler {
             case "./ME":
             case "MapEditor":
                 game.setScreen(new MapEditorScreen(game));
+                consoleScreen.dispose();
+                break;
+            case "./DE":
+            case "DesktopEnvironment":
+            case "startx":
+                game.setScreen(new DesktopEnvironmentScreen(game));
                 consoleScreen.dispose();
                 break;
             case "setUserRepo":

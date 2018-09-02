@@ -8,6 +8,7 @@ package com.leikr.core.SpriteEditor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
@@ -18,8 +19,14 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import static com.leikr.core.ConsoleDirectory.Console.fileName;
@@ -49,10 +56,6 @@ class SpriteEditor implements InputProcessor {
 
     Texture texture;
     Texture zoomTexture;
-
-    Texture saveIcon;
-    Texture undoIcon;
-    Texture eraserIcon;
 
     String filePath;
     Color drawColor;
@@ -86,6 +89,27 @@ class SpriteEditor implements InputProcessor {
     GuiObjectHandler guiHandler;
     boolean exitDialog = false;
 
+    Texture saveIcon;
+    Texture undoIcon;
+    Texture eraserIcon;
+    private final TextureRegionDrawable saveIconDrawable;
+    private final ImageButton saveIconButton;
+
+    private final TextureRegionDrawable undoIconDrawable;
+    private final ImageButton undoIconButton;
+    private final TextureRegionDrawable eraserIconDrawable;
+    private final ImageButton eraserIconButton;
+    Stage stage;
+
+    Texture okIcon;
+    TextureRegionDrawable okIconDrawable;
+    ImageButton okIconButton;
+
+    Stage confirmExitStage;
+    private final Texture noIcon;
+    private final TextureRegionDrawable noIconDrawable;
+    private final ImageButton noIconButton;
+
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
         batch = game.batch;
@@ -114,6 +138,9 @@ class SpriteEditor implements InputProcessor {
         zoomPixmap.setBlending(Pixmap.Blending.None);
         zoomTexture = new Texture(zoomPixmap);
 
+        zoomPixmap.drawPixmap(pixmap, 0, 0, 8, 8, 0, 0, 8, 8);
+        zoomTexture.draw(zoomPixmap, 0, 0);
+
         actualX = 0;
         actualY = 0;
         zoomX = 0;
@@ -122,29 +149,109 @@ class SpriteEditor implements InputProcessor {
         mainBoxWidth = texture.getWidth() + 2;
         mainBoxHeight = texture.getHeight() + 2;
 
-        saveIcon = new Texture("saveIcon.png");
-        undoIcon = new Texture("undoIcon.png");
-        eraserIcon = new Texture("eraserIcon.png");
-
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
         guiHandler = new GuiObjectHandler(game, viewport);
+
+        stage = new Stage(viewport);
 
         eraserIconPos = (int) viewport.getWorldWidth() - 28;
         saveIconXPos = (int) viewport.getWorldWidth() - 18;
         undoIconXPos = (int) viewport.getWorldWidth() - 8;
 
+        saveIcon = new Texture("saveIcon.png");
+        saveIconDrawable = new TextureRegionDrawable(new TextureRegion(saveIcon));
+        saveIconButton = new ImageButton(saveIconDrawable);
+        saveIconButton.setPosition(saveIconXPos, 0);
+        saveIconButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                savePixmapImage();
+                System.out.println("Save clicked!");
+            }
+        });
+
+        undoIcon = new Texture("undoIcon.png");
+        undoIconDrawable = new TextureRegionDrawable(new TextureRegion(undoIcon));
+        undoIconButton = new ImageButton(undoIconDrawable);
+        undoIconButton.setPosition(undoIconXPos, 0);
+        undoIconButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                undoRecentEdits();
+                System.out.println("Undo clicked!");
+            }
+        });
+
+        eraserIcon = new Texture("eraserIcon.png");
+        eraserIconDrawable = new TextureRegionDrawable(new TextureRegion(eraserIcon));
+        eraserIconButton = new ImageButton(eraserIconDrawable);
+        eraserIconButton.setPosition(eraserIconPos, 0);
+        eraserIconButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                drawColor.set(0, 0, 0, -1);
+                System.out.println("Eraser clicked!");
+            }
+        });
+
+        stage.addActor(saveIconButton);
+        stage.addActor(undoIconButton);
+        stage.addActor(eraserIconButton);
+
+        confirmExitStage = new Stage(viewport);
+        okIcon = new Texture("ok.png");
+        okIconDrawable = new TextureRegionDrawable(new TextureRegion(okIcon));
+        okIconButton = new ImageButton(okIconDrawable);
+        okIconButton.setPosition(viewport.getWorldWidth() / 2 - 48, viewport.getWorldHeight() / 2 + 16);
+        okIconButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (exitDialog) {
+                    savePixmapImage();
+                    game.setScreen(new ConsoleScreen(game));
+                    Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+                    System.out.println("Exit clicked!");
+                }
+
+            }
+        });
+
+        noIcon = new Texture("no.png");
+        noIconDrawable = new TextureRegionDrawable(new TextureRegion(noIcon));
+        noIconButton = new ImageButton(noIconDrawable);
+        noIconButton.setPosition(viewport.getWorldWidth() / 2 - 24, viewport.getWorldHeight() / 2 + 16);
+        noIconButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (exitDialog) {
+                    exitDialog = false;
+                    System.out.println("Stay clicked!");
+                }
+            }
+        });
+
+        confirmExitStage.addActor(okIconButton);
+        confirmExitStage.addActor(noIconButton);
+
         Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/HideCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
-        Gdx.input.setInputProcessor(this);
+//        Gdx.input.setInputProcessor(this);
 
+        // input processors
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(this);
+        inputMultiplexer.addProcessor(stage);
+        inputMultiplexer.addProcessor(confirmExitStage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     public void renderSpriteEditor(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        //background gray
         renderer.setProjectionMatrix(camera.combined);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.setColor(.3f, .3f, .3f, 1);
@@ -161,6 +268,7 @@ class SpriteEditor implements InputProcessor {
             color++;
         }
 
+        // Outlines
         renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setColor(Color.RED);
         renderer.rect(7, 7, mainBoxWidth, mainBoxHeight);
@@ -180,30 +288,27 @@ class SpriteEditor implements InputProcessor {
 
         drawText();
 
-        if (saveIcon != null) {
-            batch.draw(saveIcon, saveIconXPos, 0);
-        }
-        if (undoIcon != null) {
-            batch.draw(undoIcon, undoIconXPos, 0);
-        }
-        if (eraserIcon != null) {
-            batch.draw(eraserIcon, eraserIconPos, 0);
-        }
-
         batch.end();
 
+        // draw gui buttons
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
+
         if (exitDialog) {
-            int x = (int) (viewport.getWorldWidth() / 2) - 100;
-            int y = (int) viewport.getWorldHeight() / 2;
-            guiHandler.drawRectWindow(x, y, 220, 50, 2, "Exit Sprite Editor?", x + 8, y + 42, 0, 2, 3);//Main windows
-
-            x = x + 5;
-            guiHandler.drawRectWindow(x, y + 8, 40, 24, 9, "(Y)es", x + 1, y + 16, 2, 1, 1);
-
-            guiHandler.drawRectWindow(x + 56, y + 8, 40, 24, 15, "(N)o", x + 57, y + 16, 2, 1, 1);
-
+            //background gray
+            renderer.setProjectionMatrix(camera.combined);
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            renderer.setColor(0, 0, 0, 1);
+            renderer.rect(viewport.getWorldWidth() / 2 - 100, viewport.getWorldHeight() / 2 + 12, 224, 60);
+            renderer.end();
+            batch.begin();
+            drawExitText();
+            batch.end();
+            confirmExitStage.act(Gdx.graphics.getDeltaTime());
+            confirmExitStage.draw();
         }
 
+        // Draw custom cursor
         batch.begin();
         viewport.unproject(cursorCoords.set(Gdx.input.getX(), Gdx.input.getY()));
 //        int tmpY = (int) (camera.viewportHeight - (cursorCoords.y));
@@ -212,6 +317,21 @@ class SpriteEditor implements InputProcessor {
         cursorY = (int) (cursorCoords.y - 8);
         batch.draw(cursor, cursorX, cursorY);
         batch.end();
+    }
+
+    public void drawExitText() {
+        int fontX;
+        int fontY;
+        int x = (int) (viewport.getWorldWidth() / 2 - 98);
+        int y = (int) (viewport.getWorldHeight() / 2+40);
+        // Set the variable test for evaluating the x and y position of the ASCII set.
+        String text = "Would you like exit (y/n)?";
+        for (char C : text.toCharArray()) {
+            fontX = ((int) C % 16) * 8;
+            fontY = ((int) C / 16) * 8;
+            batch.draw(font, x, y, fontX, fontY, 8, 8);
+            x = x + 8;
+        }
     }
 
     public void drawText() {
@@ -251,6 +371,9 @@ class SpriteEditor implements InputProcessor {
         zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
         zoomPixmap.setBlending(Pixmap.Blending.None);
         zoomTexture = new Texture(zoomPixmap);
+
+        zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, 8, 8, 0, 0, 8, 8);
+        zoomTexture.draw(zoomPixmap, 0, 0);
     }
 
     public void drawSelectedPixmapToMain() {
@@ -292,17 +415,7 @@ class SpriteEditor implements InputProcessor {
 
         switch (button) {
             case 0:
-                if (coords.x >= saveIconXPos && coords.x <= saveIconXPos + 8 && coords.y <= 8) {
-                    System.out.println("Save Pressed");
-                    savePixmapImage();
-                } else if (coords.x >= undoIconXPos && coords.x <= undoIconXPos + 8 && coords.y <= 8) {
-                    System.out.println("Undo pressed");
-                    undoRecentEdits();
-                } else if (coords.x >= eraserIconPos && coords.x <= eraserIconPos + 8 && coords.y <= 8) {
-                    drawColor.set(0, 0, 0, -1);
-                } else {
-                    drawSelectedPixmapToMain();
-                }
+                drawSelectedPixmapToMain();
                 break;
             case 1:
                 if (coords.x >= 1 && coords.x <= 10) {

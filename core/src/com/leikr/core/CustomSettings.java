@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.leikr.core.ConsoleDirectory;
+package com.leikr.core;
 
+import com.leikr.core.ConsoleDirectory.ShellHandler;
 import com.leikr.core.Leikr;
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,6 +34,7 @@ public class CustomSettings {
     
     public float glyphWidth;
     public float glyphHeight;
+    public String appMenuIcon;
     
     
     public CustomSettings(){
@@ -59,6 +61,8 @@ public class CustomSettings {
             
             glyphWidth = (prop.getProperty("glyphWidth") != null) ? Float.parseFloat(prop.getProperty("glyphWidth")) : 8;
             glyphHeight = (prop.getProperty("glyphHeight") != null) ? Float.parseFloat(prop.getProperty("glyphHeight")) : 8;
+            
+            appMenuIcon = (prop.getProperty("appMenuIcon") != null) ? prop.getProperty("appMenuIcon") : "Logo.png";
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ShellHandler.class.getName()).log(Level.SEVERE, null, ex);
