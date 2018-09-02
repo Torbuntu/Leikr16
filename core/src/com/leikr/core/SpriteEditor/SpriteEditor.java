@@ -33,7 +33,6 @@ import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Leikr;
-import com.leikr.core.UserInterface.GuiObjectHandler;
 
 /**
  *
@@ -86,7 +85,6 @@ class SpriteEditor implements InputProcessor {
     int cursorX = 0;
     int cursorY = 0;
 
-    GuiObjectHandler guiHandler;
     boolean exitDialog = false;
 
     Texture saveIcon;
@@ -151,7 +149,6 @@ class SpriteEditor implements InputProcessor {
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
-        guiHandler = new GuiObjectHandler(game, viewport);
 
         stage = new Stage(viewport);
 
