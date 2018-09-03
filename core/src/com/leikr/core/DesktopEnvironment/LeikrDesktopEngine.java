@@ -176,7 +176,11 @@ public class LeikrDesktopEngine {
     }
 
     public void dispose() {
-        this.dispose();
+        stage.dispose();
+        appStage.dispose();
+        renderer.dispose();
+        consoleTexture.dispose();
+        appMenuTexture.dispose();
     }
 
 }
