@@ -89,8 +89,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 
     int fontWidth;
     int fontHeight;
-    
-    
+
     void preCreate() {
         game = LeikrGameScreen.game;
         batch = game.batch;
@@ -110,7 +109,6 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     }
 
     public void create() {
-       
 
     }
 
@@ -144,10 +142,8 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         fontWidth = width;
         fontHeight = height;
     }
-    
-    
-    // Map and Camera section
 
+    // Map and Camera section
     public void loadMap() {
         useMap = true;
         tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/" + fileName + ".tmx");
@@ -224,7 +220,6 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         return new Random().nextInt(range);
     }
 
-    
     // Drawing section
     public void drawText(String text, float x, float y, int color) {
         int fontX;
@@ -298,19 +293,14 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
             }
         }.start();
     }
-    
-    
-    
-    
+
     // disposals
     public void dispose() {
         shapeRenderer.dispose();
         font.dispose();
     }
-    
-    
-    // Control handling methods
 
+    // Control handling methods
     public boolean rightKeyPressed() {
         return rightKeyPressed;
     }
@@ -443,26 +433,29 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         return false;
     }
 
-		@Override
+    @Override
     public boolean povMoved(Controller controller, int povCode, PovDirection value) {
         // This is the dpad
-				if (value == PovDirection.north)
-					upButtonPressed = true;
-				if (value == PovDirection.south)
-					downButtonPressed = true;
-				if ( value == PovDirection.east)
-					rightButtonPressed = true;
-				if ( value == PovDirection.west)
-					leftButtonPressed = true;
-				if (value == PovDirection.center) {
-					upButtonPressed = false;
-					downButtonPressed = false;
-					rightButtonPressed = false;
-					leftButtonPressed = false;
-				}
-    		return false;
-		}
-
+        if (value == PovDirection.north) {
+            upButtonPressed = true;
+        }
+        if (value == PovDirection.south) {
+            downButtonPressed = true;
+        }
+        if (value == PovDirection.east) {
+            rightButtonPressed = true;
+        }
+        if (value == PovDirection.west) {
+            leftButtonPressed = true;
+        }
+        if (value == PovDirection.center) {
+            upButtonPressed = false;
+            downButtonPressed = false;
+            rightButtonPressed = false;
+            leftButtonPressed = false;
+        }
+        return false;
+    }
 
     @Override
     public boolean buttonDown(Controller controller, int buttonCode) {
@@ -600,6 +593,5 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
         return false;
     }
-
 
 }
