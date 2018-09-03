@@ -10,6 +10,9 @@ A Java Fantasy Computer.
 - 256 8x8 Sprites
 - 640x120 Tiled Map (each tile is 8x8). (4 screens tall and 16 wide)
 
+INFO: if you do a gradle dist for the desktop jar the LeikrVirtualDrive will not be able to copy to the user directory so it will need to be extracted manually. 
+
+
 # Current features
 - Terminal Emulator. Not many commands yet.
 - Groovysh repl by prefixing commands with `gv`.
