@@ -9,7 +9,6 @@ class LeikrGame extends LeikrEngine{
 
     def p = [:];
     def void create(){
-        super.create();// Very important for initializing core engine variables.
 
         println("Hello, World! From the LeikrGame script.");
         loadMap(); //This game uses the provided map files.

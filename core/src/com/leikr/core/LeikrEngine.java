@@ -89,8 +89,9 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 
     int fontWidth;
     int fontHeight;
-
-    public void create() {
+    
+    
+    void preCreate() {
         game = LeikrGameScreen.game;
         batch = game.batch;
         shapeRenderer = new ShapeRenderer();
@@ -106,6 +107,10 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         fontWidth = (int) game.customSettings.glyphWidth;
         fontHeight = (int) game.customSettings.glyphHeight;
         Controllers.addListener(this);
+    }
+
+    public void create() {
+       
 
     }
 
@@ -579,5 +584,6 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
         return false;
     }
+
 
 }

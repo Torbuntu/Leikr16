@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,14 +35,15 @@ public class CustomSettings {
     
     public float glyphWidth;
     public float glyphHeight;
-    public String appMenuIcon;
+    
+    public String userDesktop;
+    public boolean startx;
     
     
     public CustomSettings(){
         loadCustomSettings();
     }
-    
-    
+        
     public void loadCustomSettings() {
 
         Properties prop = new Properties();
@@ -62,7 +64,9 @@ public class CustomSettings {
             glyphWidth = (prop.getProperty("glyphWidth") != null) ? Float.parseFloat(prop.getProperty("glyphWidth")) : 8;
             glyphHeight = (prop.getProperty("glyphHeight") != null) ? Float.parseFloat(prop.getProperty("glyphHeight")) : 8;
             
-            appMenuIcon = (prop.getProperty("appMenuIcon") != null) ? prop.getProperty("appMenuIcon") : "Logo.png";
+            startx = (prop.getProperty("startx") != null) ? Boolean.parseBoolean(prop.getProperty("startx")) : false;
+            
+            userDesktop = (prop.getProperty("userDesktop") != null) ? prop.getProperty("userDesktop") : "userDesktop";
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ShellHandler.class.getName()).log(Level.SEVERE, null, ex);

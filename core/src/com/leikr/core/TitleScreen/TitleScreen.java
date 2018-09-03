@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
+import com.leikr.core.DesktopEnvironment.DesktopEnvironmentScreen;
 import com.leikr.core.Leikr;
 import com.leikr.core.GroovySystemMethods;
 import static com.leikr.core.LeikrEngine.game;
@@ -94,7 +95,12 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     }
 
     void BeginLeikr() {
-        game.setScreen(new ConsoleScreen(game));
+        if (game.customSettings.startx) {
+            game.setScreen(new DesktopEnvironmentScreen(game));
+        } else {
+            game.setScreen(new ConsoleScreen(game));
+
+        }
         this.dispose();
     }
 
@@ -110,8 +116,8 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
             x = x + glyphWidth;
         }
         batch.end();
-    }    
-    
+    }
+
     @Override
     public void render(float delta) {
         elapsedTime += Gdx.graphics.getDeltaTime();
@@ -195,7 +201,6 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     public void show() {
 
     }
-
 
     @Override
     public void resize(int width, int height) {

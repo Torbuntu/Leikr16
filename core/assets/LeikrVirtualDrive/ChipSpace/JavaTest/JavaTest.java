@@ -12,7 +12,6 @@ public class JavaTest extends LeikrEngine{
     int ballSpeedX;
 
     public void create(){
-        super.create();// Very important for initializing core engine variables.
         //println("Hello, World! From the LeikrGame script.");
         
         ballWidth = 80;

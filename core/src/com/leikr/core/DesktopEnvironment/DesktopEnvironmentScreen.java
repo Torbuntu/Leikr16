@@ -16,35 +16,64 @@
 package com.leikr.core.DesktopEnvironment;
 
 import com.badlogic.gdx.Screen;
+import com.leikr.core.ConsoleDirectory.Console;
+import static com.leikr.core.ConsoleDirectory.Console.fileName;
+import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Leikr;
 import com.leikr.core.MapEditor.MapEditor;
+import groovy.lang.GroovyClassLoader;
+import java.io.File;
+import java.io.IOException;
+import org.codehaus.groovy.control.CompilationFailedException;
 
 /**
  *
  * @author tor
  */
-public class DesktopEnvironmentScreen implements Screen{
-    
-    DesktopEnvironment desktopEnvironment;
+public class DesktopEnvironmentScreen implements Screen {
+
+    LeikrDesktopEngine leikrDesktopEngine;
     Leikr game;
-    
-    public DesktopEnvironmentScreen(Leikr game){
+    private GroovyClassLoader groovyClassLoader;
+    private Class groovyGameLoader;
+
+    public DesktopEnvironmentScreen(Leikr game) {
         this.game = game;
+        String filePath = Leikr.ROOT_PATH + "OS/" + game.customSettings.userDesktop;//sets game path
+        loadUserDesktop(filePath);
     }
+
+    public void loadUserDesktop(String filePath) {
+        groovyClassLoader = new GroovyClassLoader();
+        try {
+            groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + ".groovy"));//loads the game code        
+            leikrDesktopEngine = (LeikrDesktopEngine) groovyGameLoader.newInstance();
+        } catch (InstantiationException | CompilationFailedException | IOException | IllegalAccessException ex) {
+            ex.printStackTrace();
+            game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            this.dispose();
+        }
+    }
+
     @Override
     public void show() {
-        desktopEnvironment = new DesktopEnvironment(game);
+        leikrDesktopEngine.preCreate(game);
+        leikrDesktopEngine.create();
     }
 
     @Override
     public void render(float f) {
-        desktopEnvironment.renderDesktopEnvironment();
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        leikrDesktopEngine.preRender();
+
+        leikrDesktopEngine.render();
+
+        leikrDesktopEngine.renderStageAndCursor();
+
     }
 
     @Override
     public void resize(int x, int y) {
-        desktopEnvironment.updateDesktopEnvironment(x, y);
+        leikrDesktopEngine.update(x, y);
     }
 
     @Override
@@ -64,7 +93,7 @@ public class DesktopEnvironmentScreen implements Screen{
 
     @Override
     public void dispose() {
-        desktopEnvironment.DisposeDesktopEnvironment();
+        leikrDesktopEngine.dispose();
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -158,6 +158,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     @Override
     public void show() {
         try {
+            leikrGame.preCreate();
             leikrGame.create();
             Gdx.input.setInputProcessor(leikrGame);
         } catch (Exception e) {
