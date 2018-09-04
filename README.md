@@ -16,7 +16,7 @@ A Java Fantasy Computer.
 - Small games can be loaded and played by typing `load [game name] [optional: game type]` then `run` games loaded from the ChipSpace directory.
 - Exit to Terminal with ESC
 - Sprite Editor. (functional, but needs improvement)
-- Github repo downloads using `setUserRepo [github username]` then `lpm install [repo name]`. Then to load the game use `mnt [game name]` which will load the game from the Download directory into ChipSpace. Then you can `load [game name]` and `run`. (Will add support for other git repos with the `setRepoType [repo type]` command in the future.
+- Github repo downloads using `setUserRepo [github username]` then `lpm install [repo name]`. Then to load the game use `mnt [game name]` which will load the game from the Download directory into ChipSpace. Then you can `load [game name]` and `run`. To set where the repository exists use the `setRepoType [repo website]` command. Options known to work are github and gitlab. To set repository user and type all at once use `repoSettings [repo name] [repo type]`.
 - settings.properties file for customizing the colors of the background and font in terminal as well as the font itself (font name file and size in width and height).
 - [WIP] Desktop Environment screen that is customizable through settings.properties and a programmed groovy file.
 
