@@ -160,7 +160,7 @@ public class GroovySystemMethods {
         new File(RootFileSystem+"/OS/").mkdir();
         
         new AntBuilder().copy( todir: RootFileSystem+"/ChipSpace/") {
-            fileset( dir: Gdx.files.internal("LeikrVirtualDrive/ChipSpace/"));
+            fileset( file: Gdx.files.internal("LeikrVirtualDrive/ChipSpace/LeikrGame/LeikrGame.groovy"));
         }
         new AntBuilder().copy( todir: RootFileSystem+"/Download/") {
             fileset( dir: Gdx.files.internal("LeikrVirtualDrive/Download/"));
