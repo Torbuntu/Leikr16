@@ -68,7 +68,7 @@ public class CustomSettings {
             
             userDesktop = (prop.getProperty("userDesktop") != null) ? prop.getProperty("userDesktop") : "userDesktop";
             
-        } catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException  ex ) {
             Logger.getLogger(ShellHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(ShellHandler.class.getName()).log(Level.SEVERE, null, ex);

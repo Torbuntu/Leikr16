@@ -188,6 +188,16 @@ public class ShellHandler {
                 result = "User repository set to " + inputList[1];
                 historyBuffer.add(result);
                 break;
+            case "setRepoType":
+                repoHandler.setRepoType(inputList[1]);
+                result = "Repository type set to " + inputList[1];
+                historyBuffer.add(result);
+                break;
+            case "repoSettings":
+                repoHandler.repoSettings(inputList[1], inputList[2]);
+                result = "User repository set to " + inputList[1] + ". Repository type set to "+inputList[2];
+                historyBuffer.add(result);
+                break;
             case "lpm":
                 result = "lpm command " + inputList[1] + " not found.";
                 switch (inputList[1]) {
