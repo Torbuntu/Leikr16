@@ -27,7 +27,7 @@ public class RepoHandler {
             return "No user repository set. Set it with `setUserRepo [name]`";
         }
         try {
-            Git.cloneRepository().setURI("https://github.com/" + userRepo + "/" + repoName + ".git").setDirectory(new File(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/Download/" + repoName)).call();
+            Git.cloneRepository().setURI("https://github.com/" + userRepo + "/" + repoName + ".git").setDirectory(new File(Gdx.files.getExternalStoragePath() + "Leikr/Download/" + repoName)).call();
             return repoName + " installed";
         } catch (GitAPIException ex) {
             return ex.getMessage();
@@ -39,7 +39,7 @@ public class RepoHandler {
             return "No user repository set. Set it with `setUserRepo [name]`";
         }
         try {
-            Git.cloneRepository().setURI("https://github.com/" + userRepo + "/" + repoName + ".git").setDirectory(new File(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/Download/" + localDir)).call();
+            Git.cloneRepository().setURI("https://github.com/" + userRepo + "/" + repoName + ".git").setDirectory(new File(Gdx.files.getExternalStoragePath() + "Leikr/Download/" + localDir)).call();
             return repoName + " installed to " + localDir;
         } catch (GitAPIException ex) {
             return ex.getMessage();

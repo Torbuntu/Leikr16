@@ -73,7 +73,7 @@ public class LeikrDesktopEngine {
         stage = new Stage(viewport);
         appStage = new Stage(viewport);
 
-        consoleTexture = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Console.png"));
+        consoleTexture = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/OS/Console.png"));
         consoleDrawable = new TextureRegionDrawable(new TextureRegion(consoleTexture));
         consoleButton = new ImageButton(consoleDrawable);
         consoleButton.setPosition(100, 100);
@@ -93,10 +93,10 @@ public class LeikrDesktopEngine {
         renderer = new ShapeRenderer();
 
         // Hide system cursor and setup custom
-        Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/HideCursor.png"));
+        Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/OS/HideCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
-        cursor = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Cursor.png"));
+        cursor = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/OS/Cursor.png"));
 
         // input processors
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
@@ -157,7 +157,7 @@ public class LeikrDesktopEngine {
 
     public void setAppMenu(float x, float y, String fileName) {
         // App menu icon
-        appMenuTexture = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/" + fileName));
+        appMenuTexture = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/OS/" + fileName));
         appMenuDrawable = new TextureRegionDrawable(new TextureRegion(appMenuTexture));
         appMenuButton = new ImageButton(appMenuDrawable);
         appMenuButton.setPosition(x, y);

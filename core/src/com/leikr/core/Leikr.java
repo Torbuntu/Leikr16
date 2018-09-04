@@ -23,12 +23,13 @@ public class Leikr extends Game {
         batch = new SpriteBatch();
         font = new BitmapFont();
         
-        if (!Gdx.files.external("LeikrVirtualDrive/").exists() || !Gdx.files.external("LeikrVirtualDrive/ChipSpace/").exists() || !Gdx.files.external("LeikrVirtualDrive/OS/").exists()) {
+        if (!Gdx.files.external("Leikr/").exists() || !Gdx.files.external("Leikr/ChipSpace/").exists() || !Gdx.files.external("Leikr/OS/").exists()) {
             GroovySystemMethods groovySystemMethods = new GroovySystemMethods();
             groovySystemMethods.initFileSystem();
+             Gdx.files.classpath("Leikr/OS/");
         }
         
-        ROOT_PATH = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/";
+        ROOT_PATH = Gdx.files.getExternalStoragePath() + "Leikr/";
         
         customSettings = new CustomSettings();
 

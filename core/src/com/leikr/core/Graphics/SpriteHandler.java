@@ -34,7 +34,7 @@ public class SpriteHandler {
         this.game = game;
 
         fileName = Console.fileName;
-        String filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/";//sets game path
+        String filePath = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/";//sets game path
         try {
             spriteSheet = new Texture(filePath + fileName + ".png");
         } catch (Exception e) {

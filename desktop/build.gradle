@@ -40,6 +40,19 @@ task dist(type: Jar) {
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 }
 
+task distZip(type: Zip, dependsOn: dist){
+    from("build/libs/"){
+        include '*.jar'
+        fileMode 0755
+    }
+    from files(project.assetsDir){
+        into 'LeikrSystem'
+        include '/Leikr/**','/GameModels/**'
+    }
+    archiveName "Leikr-${version}.zip"
+    destinationDir(file("build/distributions"))
+}
+
 dist.dependsOn classes
 
 eclipse {

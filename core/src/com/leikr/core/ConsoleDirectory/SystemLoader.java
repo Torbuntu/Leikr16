@@ -34,10 +34,10 @@ public class SystemLoader {
 
     public SystemLoader() throws IOException, InstantiationException, IllegalAccessException {
         classLoader = new GroovyClassLoader();
-        if (!Gdx.files.external("LeikrVirtualDrive/").exists() || !Gdx.files.external("LeikrVirtualDrive/ChipSpace/").exists()) {
+        if (!Gdx.files.external("Leikr/").exists() || !Gdx.files.external("Leikr/ChipSpace/").exists()) {
             groovySystemMethods.initFileSystem();
         }
-        systemMethodsClass = (GroovyObject) classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Methods.groovy")).newInstance();
+        systemMethodsClass = (GroovyObject) classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "Leikr/OS/Methods.groovy")).newInstance();
     }
 
     public String getBiosVersion() {
@@ -90,7 +90,7 @@ public class SystemLoader {
                 break;
             case "exec":
                 try {
-                    GroovyObject tempObject = (GroovyObject) classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Methods.groovy")).newInstance();
+                    GroovyObject tempObject = (GroovyObject) classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "Leikr/OS/Methods.groovy")).newInstance();
                     String[] args = Arrays.copyOfRange(methodName, 2, methodName.length);
                     result = tempObject.invokeMethod(methodName[1], args);
                 } catch (IOException | IllegalAccessException | InstantiationException | CompilationFailedException e) {

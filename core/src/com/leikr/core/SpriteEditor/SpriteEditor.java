@@ -117,15 +117,15 @@ class SpriteEditor implements InputProcessor {
         cursorCoords = new Vector2();
         graphicsY = 0;
         font = new Texture("LeikrFontA.png");
-        cursor = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/Cursor.png"));
+        cursor = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/OS/Cursor.png"));
 
         renderer = new ShapeRenderer();
         paintBrush = new PaintBrush(renderer, game);
 
         if (fileName == null) {
-            filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/LeikrGame/LeikrGame.png";//sets game path
+            filePath = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/LeikrGame/LeikrGame.png";//sets game path
         } else {
-            filePath = Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/ChipSpace/" + fileName + "/" + fileName + ".png";//sets game path
+            filePath = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + fileName + ".png";//sets game path
         }
 
         pixmap = new Pixmap(new FileHandle(filePath));
@@ -231,7 +231,7 @@ class SpriteEditor implements InputProcessor {
         confirmExitStage.addActor(okIconButton);
         confirmExitStage.addActor(noIconButton);
 
-        Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "LeikrVirtualDrive/OS/HideCursor.png"));
+        Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/OS/HideCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
 //        Gdx.input.setInputProcessor(this);

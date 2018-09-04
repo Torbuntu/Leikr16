@@ -21,7 +21,7 @@ public class LeikrPalette {
     
     public LeikrPalette(){
         palette = new ArrayList<>();
-        pixmap = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath()+"LeikrVirtualDrive/OS/Palette.png"));
+        pixmap = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath()+"Leikr/OS/Palette.png"));
         for(int i = 0; i <= 16; i++){
             palette.add(pixmap.getPixel(i, 0));
         }
