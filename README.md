@@ -1,4 +1,5 @@
 # Leikr16
+# INFO: temporarily broken.
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 A Java Fantasy Computer.
@@ -9,8 +10,6 @@ A Java Fantasy Computer.
 - Resolution 320x240
 - 256 8x8 Sprites
 - 640x120 Tiled Map (each tile is 8x8). (4 screens tall and 16 wide)
-
-INFO: if you do a gradle dist for the desktop jar the LeikrVirtualDrive will not be able to copy to the user directory so it will need to be extracted manually. 
 
 
 # Current features
