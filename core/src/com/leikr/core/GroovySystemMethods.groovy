@@ -154,10 +154,20 @@ public class GroovySystemMethods {
    
     
     String initFileSystem(){
-
-        new AntBuilder().copy( todir: RootFileSystem) {
-            fileset( dir: Gdx.files.internal("LeikrVirtualDrive"));
+        new File(RootFileSystem).mkdir();
+        new File(RootFileSystem+"/ChipSpace/").mkdir();
+        new File(RootFileSystem+"/Download/").mkdir();
+        new File(RootFileSystem+"/OS/").mkdir();
+        
+        new AntBuilder().copy( todir: RootFileSystem+"/ChipSpace/") {
+            fileset( dir: Gdx.files.internal("LeikrVirtualDrive/ChipSpace/"));
         }
+        new AntBuilder().copy( todir: RootFileSystem+"/Download/") {
+            fileset( dir: Gdx.files.internal("LeikrVirtualDrive/Download/"));
+        }
+       new AntBuilder().copy( todir: RootFileSystem+"/OS/") {
+            fileset( dir: Gdx.files.internal("LeikrVirtualDrive/OS/"));
+        } 
         return "File system init.";
     }
     
