@@ -1,26 +1,35 @@
 /*
- * To change this license header, choose License Headers inputString Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template inputString the editor.
+ * Copyright 2018 .
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.leikr.core.ConsoleDirectory;
 
-import com.leikr.core.CustomSettings;
-import static com.leikr.core.ConsoleDirectory.Console.fileName;
-import static com.leikr.core.ConsoleDirectory.Console.gameType;
+import com.leikr.core.System.SystemBios;
+import com.leikr.core.System.CustomSettings;
 import com.leikr.core.DesktopEnvironment.DesktopEnvironmentScreen;
 import com.leikr.core.Leikr;
+import static com.leikr.core.Leikr.fileName;
+import static com.leikr.core.Leikr.gameType;
 import com.leikr.core.LeikrGameScreen;
 import com.leikr.core.MapEditor.MapEditorScreen;
 import com.leikr.core.RepoDirectory.RepoHandler;
 import com.leikr.core.SpriteEditor.SpriteEditorScreen;
 import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyShell;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.codehaus.groovy.control.CompilationFailedException;
 
 /**
  *
@@ -31,11 +40,8 @@ public class ShellHandler {
     final Leikr game;
     ConsoleScreen consoleScreen;
     FontHandler fontHandler;
-    SystemLoader systemLoader;
+    SystemBios systemLoader;
     RepoHandler repoHandler;
-
-    GroovyShell groovyShell;
-
     GroovyClassLoader groovyClassLoader;
     Class groovyGameLoader;
     CustomSettings customSettings;
@@ -52,11 +58,10 @@ public class ShellHandler {
         this.game = game;
         this.consoleScreen = consoleScreen;
         this.fontHandler = fontHandler;
-        groovyShell = new GroovyShell();
         repoHandler = new RepoHandler();
 
         try {
-            systemLoader = new SystemLoader();
+            systemLoader = new SystemBios();
         } catch (IOException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -103,15 +108,13 @@ public class ShellHandler {
 
         historyBuffer.add("~$" + inputString);
 
-        System.out.println("HBuffer: " + historyBuffer);
-
-        //Default command not recognized.
-        String notRecognized = "Command '" + inputString + "' is not recognized...";
-
-        String result;
+        String result = "";
 
         //Convert to switch.
         switch (inputList[0]) {
+            case "":
+                //do nothing
+                break;
             case "load":
                 fileName = inputList[1];
                 String out = "File " + inputList[1] + " has been loaded";
@@ -120,16 +123,6 @@ public class ShellHandler {
                     out += ". Game type " + inputList[2] + " set.";
                 }
                 historyBuffer.add(out);
-                break;
-            case "gv":
-                inputString = inputString.replaceFirst("gv ", "");
-                try {
-                    result = groovyShell.evaluate(inputString).toString();
-                    historyBuffer.add(result);
-                } catch (CompilationFailedException e) {
-                    System.out.println(e.toString());
-                    historyBuffer.add(notRecognized);
-                }
                 break;
 
             case "setFontColor":
@@ -146,9 +139,7 @@ public class ShellHandler {
                     historyBuffer.add(e.getMessage());
                 }
                 break;
-            case "":
-                //do nothing
-                break;
+
             case "help":
                 historyBuffer.add("Type `load` followed by the game you wish to load. Then type `run` to play. Type Exit to quit Leikr.");
                 break;
@@ -195,7 +186,7 @@ public class ShellHandler {
                 break;
             case "repoSettings":
                 repoHandler.repoSettings(inputList[1], inputList[2]);
-                result = "User repository set to " + inputList[1] + ". Repository type set to "+inputList[2];
+                result = "User repository set to " + inputList[1] + ". Repository type set to " + inputList[2];
                 historyBuffer.add(result);
                 break;
             case "lpm":
@@ -210,18 +201,14 @@ public class ShellHandler {
             default: //Default, command not recognized.
 
                 try {
-                    result = (String) systemLoader.runRegisteredMethod(inputList);
+                    result = (String) systemLoader.runSystemMethod(inputList);
                 } catch (Exception e) {
                     System.out.println(e.toString());
-                    result = "";
-                }
-
-                if (result.length() > 0) {
-                    historyBuffer.add(result);
-                } else {
-                    historyBuffer.add(notRecognized);
+                    result = "System commands failed.";
                 }
                 break;
         }
+        historyBuffer.add(result);
+
     }
 }

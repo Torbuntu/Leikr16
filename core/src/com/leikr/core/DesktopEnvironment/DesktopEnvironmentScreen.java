@@ -16,11 +16,8 @@
 package com.leikr.core.DesktopEnvironment;
 
 import com.badlogic.gdx.Screen;
-import com.leikr.core.ConsoleDirectory.Console;
-import static com.leikr.core.ConsoleDirectory.Console.fileName;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Leikr;
-import com.leikr.core.MapEditor.MapEditor;
 import groovy.lang.GroovyClassLoader;
 import java.io.File;
 import java.io.IOException;

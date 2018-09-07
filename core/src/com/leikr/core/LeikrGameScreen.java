@@ -1,32 +1,39 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2018 .
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.leikr.core;
 
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
-import com.leikr.core.ConsoleDirectory.Console;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import static com.leikr.core.ConsoleDirectory.Console.gameType;
 import groovy.lang.GroovyClassLoader;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.python.util.PythonInterpreter;
+import static com.leikr.core.Leikr.fileName;
+import static com.leikr.core.Leikr.gameType;
 
 /**
  *
@@ -35,8 +42,6 @@ import org.python.util.PythonInterpreter;
 public class LeikrGameScreen implements Screen, InputProcessor {
 
     public static Leikr game;
-    String fileName;
-
     GroovyClassLoader groovyClassLoader;
     Class groovyGameLoader;
     LeikrEngine leikrGame;
@@ -48,7 +53,6 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         LeikrGameScreen.game = game;
         scriptManager = new ScriptEngineManager();
 
-        fileName = Console.fileName;
         String filePath = Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/";//sets game path
 
         try {

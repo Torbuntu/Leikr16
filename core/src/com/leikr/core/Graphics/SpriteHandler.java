@@ -9,13 +9,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.leikr.core.ConsoleDirectory.Console;
 import com.leikr.core.Leikr;
-import com.leikr.core.LeikrEngine;
-import com.leikr.core.LeikrGameScreen;
 import java.util.HashMap;
 import java.util.Map;
 //import javafx.scene.paint.Color;
+import static com.leikr.core.Leikr.fileName;
 
 /**
  *
@@ -26,14 +24,12 @@ public class SpriteHandler {
     Leikr game;
 
     public static Texture spriteSheet;
-    String fileName;
     TextureRegion[][] regions;
     public Map<Integer, TextureRegion> sprites;
 
     public SpriteHandler(Leikr game) {
         this.game = game;
 
-        fileName = Console.fileName;
         String filePath = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/";//sets game path
         try {
             spriteSheet = new Texture(filePath + fileName + ".png");

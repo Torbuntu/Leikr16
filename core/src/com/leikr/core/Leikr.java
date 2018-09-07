@@ -1,17 +1,37 @@
+/*
+ * Copyright 2018 .
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.leikr.core;
 
+import com.leikr.core.System.CustomSettings;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.leikr.core.TitleScreen.TitleScreen;
+import com.leikr.core.System.GroovySystemMethods;
 
 public class Leikr extends Game {
 
     public SpriteBatch batch;
     public BitmapFont font;
 
-    public static final float WIDTH = 320, HEIGHT = 240;    
+    public static final float WIDTH = 320, HEIGHT = 240;  
+    public static String fileName = "LeikrGame";
+    public static String gameType = "groovy";
 
     public static String ROOT_PATH;
     
@@ -26,7 +46,6 @@ public class Leikr extends Game {
         if (!Gdx.files.external("Leikr/").exists() || !Gdx.files.external("Leikr/ChipSpace/").exists() || !Gdx.files.external("Leikr/OS/").exists()) {
             GroovySystemMethods groovySystemMethods = new GroovySystemMethods();
             groovySystemMethods.initFileSystem();
-             Gdx.files.classpath("Leikr/OS/");
         }
         
         ROOT_PATH = Gdx.files.getExternalStoragePath() + "Leikr/";
@@ -34,9 +53,7 @@ public class Leikr extends Game {
         customSettings = new CustomSettings();
 
 //        this.setScreen(new ConsoleScreen(this));
-//        this.setScreen(new IntroScreen(this));
         this.setScreen(new TitleScreen(this));
-//        Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
 
     }
 

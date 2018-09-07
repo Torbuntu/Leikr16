@@ -1,18 +1,27 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2018 .
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-package com.leikr.core.ConsoleDirectory;
+package com.leikr.core.System;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
-import com.leikr.core.GroovySystemMethods;
-import groovy.lang.Binding;
-import groovy.util.GroovyScriptEngine;
+import com.leikr.core.System.GroovySystemMethods;
+import groovy.lang.GroovyShell;
 import java.io.File;
 import java.util.Arrays;
 import org.codehaus.groovy.control.CompilationFailedException;
@@ -20,20 +29,22 @@ import org.codehaus.groovy.control.CompilationFailedException;
 /**
  *
  * @author tor
+ * This class is responsible for handling system level operations. Such as File system management. It also manages the GroovyShell.
  */
-public class SystemLoader {
-    
+public class SystemBios {
+
     final GroovyClassLoader classLoader;
     GroovyObject systemMethodsClass;
+    GroovyShell groovyShell;
+    
+    //
+    GroovySystemMethods groovySystemMethods; 
 
-    GroovyScriptEngine groovyScriptEngine;
-    Binding binding;
-
-    // The class of Bios. Eventually replace the systemMethodsClass and biosObject
-    GroovySystemMethods groovySystemMethods = new GroovySystemMethods();
-
-    public SystemLoader() throws IOException, InstantiationException, IllegalAccessException {
+    public SystemBios() throws IOException, InstantiationException, IllegalAccessException {
         classLoader = new GroovyClassLoader();
+        groovyShell = new GroovyShell();
+        groovySystemMethods = new GroovySystemMethods();
+
         if (!Gdx.files.external("Leikr/").exists() || !Gdx.files.external("Leikr/ChipSpace/").exists()) {
             groovySystemMethods.initFileSystem();
         }
@@ -44,7 +55,7 @@ public class SystemLoader {
         return groovySystemMethods.getBiosVersion();
     }
 
-    public Object runRegisteredMethod(String[] methodName) {
+    public Object runSystemMethod(String[] methodName) {
         Object result;
 
         switch (methodName[0]) {
@@ -85,27 +96,16 @@ public class SystemLoader {
                     result = groovySystemMethods.lsPath(methodName[1]);
                 } else {
                     result = groovySystemMethods.ls();
-
                 }
-                break;
-            case "exec":
-                try {
-                    GroovyObject tempObject = (GroovyObject) classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "Leikr/OS/Methods.groovy")).newInstance();
-                    String[] args = Arrays.copyOfRange(methodName, 2, methodName.length);
-                    result = tempObject.invokeMethod(methodName[1], args);
-                } catch (IOException | IllegalAccessException | InstantiationException | CompilationFailedException e) {
-                    result = String.format("`%s` is not a known method. ", methodName[1]) + e.getMessage();
-                }
-
                 break;
             case "initFileSystem":
                 result = groovySystemMethods.restartSystem();
                 break;
-                
+
             case "new":
                 result = groovySystemMethods.newGame(methodName[1], methodName[2]);
                 break;
-            default:
+            case "exec":
                 try {
                     if (methodName.length == 1) {
 
@@ -116,8 +116,22 @@ public class SystemLoader {
                         result = systemMethodsClass.invokeMethod(methodName[0], args);
                     }
                 } catch (Exception e) {
-                    result = e.getMessage();
+                    System.out.println(e.getMessage());
+                    result = "Execution of Method `" + methodName[0] + "` failed. The method may not exist.";
                 }
+                break;
+            default:
+
+                // default command and system commands do not exist. Try running groovy shell eval.
+                String inputString = String.join(",", methodName).replaceAll(",", "");
+
+                try {
+                    result = groovyShell.evaluate(inputString).toString();
+                } catch (CompilationFailedException e) {
+                    System.out.println(e.toString());
+                    result = "GroovyShell cannot evaluate input: " + inputString;
+                }
+
                 break;
         }
         return result.toString();
