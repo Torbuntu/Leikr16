@@ -7,14 +7,13 @@ A Java Fantasy Computer.
 
 # Specs
 - Resolution 320x240
-- 256 8x8 Sprites
+- 1024 8x8 Sprites (by means of 4 256 sprite sheets)
 - 640x120 Tiled Map (each tile is 8x8). (4 screens tall and 16 wide)
 
 # Current features
-- Terminal Emulator. Not many commands yet.
-- Groovysh repl by prefixing commands with `gv`.
+- Terminal Emulator. 
+- Groovysh repl in the terminal.
 - Small games can be loaded and played by typing `load [game name] [optional: game type]` then `run` games loaded from the ChipSpace directory.
-- Exit to Terminal with ESC
 - Sprite Editor. (functional, but needs improvement)
 - Github repo downloads using `setUserRepo [github username]` then `lpm install [repo name]`. Then to load the game use `mnt [game name]` which will load the game from the Download directory into ChipSpace. Then you can `load [game name]` and `run`. To set where the repository exists use the `setRepoType [repo website]` command. Options known to work are github and gitlab. To set repository user and type all at once use `repoSettings [repo name] [repo type]`.
 - settings.properties file for customizing the colors of the background and font in terminal as well as the font itself (font name file and size in width and height).
@@ -27,14 +26,4 @@ A Java Fantasy Computer.
 - Music and editor
 - SFX and editor
 - Kotlin, Lua, and Scala support for game coding 
-
-![alt text](boot.png)
-![alt text](help.png)
-![alt text](terminal.png)
-![alt text](runPy.png)
-![alt text](spriteEditor.png)
-![alt text](closerSpriteEditor.png)
-![alt text](exitSpriteEditor.png)
-![alt text](desktopEnvironment.png)
-![alt text](appMenu.png)
-
+- Big Sprite support for 16x16 sprites (using 4 8x8 sprites in a grid. The LeikrEngine API already supports using these in games. but the sprite editor does not)
