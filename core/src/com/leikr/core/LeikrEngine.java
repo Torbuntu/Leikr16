@@ -112,6 +112,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
+        
         font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/" + game.customSettings.fontName));
         fontWidth = (int) game.customSettings.glyphWidth;
         fontHeight = (int) game.customSettings.glyphHeight;
@@ -247,7 +248,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         }
         batch.end();
     }
-
+    
     public void sprite(int id, float x, float y) {
         spriteHandler.drawSprite(id, x, y);
     }

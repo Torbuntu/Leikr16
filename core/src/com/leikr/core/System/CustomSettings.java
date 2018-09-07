@@ -32,21 +32,23 @@ import java.util.logging.Logger;
  */
 public class CustomSettings {
 
-    public float fontRed;
-    public float fontGreen;
-    public float fontBlue;
+    public float fontRed = 1;
+    public float fontGreen = 1;
+    public float fontBlue = 1;
 
-    public float bgRed;
-    public float bgGreen;
-    public float bgBlue;
+    public float bgRed = 0;
+    public float bgGreen = 0;
+    public float bgBlue = 0;
     
-    public String fontName;
+    public String fontName = "LeikrFontA.png";
     
-    public float glyphWidth;
-    public float glyphHeight;
+    public float glyphWidth = 8;
+    public float glyphHeight = 8;
     
-    public String userDesktop;
-    public boolean startx;
+    public String userDesktop = "userDesktop";
+    public boolean startx = false;
+    
+    public String customPalette = "";
     
     
     public CustomSettings(){
@@ -76,6 +78,8 @@ public class CustomSettings {
             startx = (prop.getProperty("startx") != null) ? Boolean.parseBoolean(prop.getProperty("startx")) : false;
             
             userDesktop = (prop.getProperty("userDesktop") != null) ? prop.getProperty("userDesktop") : "userDesktop";
+            
+            customPalette = (prop.getProperty("customPalette") != null) ? prop.getProperty("customPalette") : "";
             
         } catch (FileNotFoundException  ex ) {
             Logger.getLogger(ShellHandler.class.getName()).log(Level.SEVERE, null, ex);

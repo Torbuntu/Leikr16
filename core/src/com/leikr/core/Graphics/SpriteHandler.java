@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.leikr.core.Leikr;
 import java.util.HashMap;
 import java.util.Map;
-//import javafx.scene.paint.Color;
 import static com.leikr.core.Leikr.fileName;
 
 /**
@@ -23,41 +22,66 @@ public class SpriteHandler {
 
     Leikr game;
 
-    public static Texture spriteSheet;
+    public static Texture spriteSheet_0;
+    public static Texture spriteSheet_1;
+    public static Texture spriteSheet_2;
+    public static Texture spriteSheet_3;
+
     TextureRegion[][] regions;
     public Map<Integer, TextureRegion> sprites;
+
+    private Texture selectedSpriteSheet;
 
     public SpriteHandler(Leikr game) {
         this.game = game;
 
         String filePath = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/";//sets game path
         try {
-            spriteSheet = new Texture(filePath + fileName + ".png");
+            spriteSheet_0 = new Texture(filePath + fileName + "_0.png");
+            spriteSheet_1 = new Texture(filePath + fileName + "_1.png");
+            spriteSheet_2 = new Texture(filePath + fileName + "_2.png");
+            spriteSheet_3 = new Texture(filePath + fileName + "_3.png");
+            mapAllSprites();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            spriteSheet = new Texture("Logo.png");
+            spriteSheet_0 = new Texture("Logo.png");
+            spriteSheet_1 = new Texture("Logo.png");
+            spriteSheet_2 = new Texture("Logo.png");
+            spriteSheet_3 = new Texture("Logo.png");
+            mapAllSprites();
         }
-
-        regions = TextureRegion.split(spriteSheet, 8, 8);
-        sprites = new HashMap<>();
-        mapAllSprites();
-    }
-
-    void setSpriteRegion(Texture newRegion) {
-        regions = TextureRegion.split(newRegion, 8, 8);
-        sprites = new HashMap<>();
+        selectedSpriteSheet = spriteSheet_0;
         mapAllSprites();
     }
 
     //adds all of the split textures from regions to the sprites map for easier calling.
     void mapAllSprites() {
         int id = 0;
+        sprites = new HashMap<>();
+        regions = TextureRegion.split(spriteSheet_0, 8, 8);
+        id = addToSprites(regions, id);
+        regions = TextureRegion.split(spriteSheet_1, 8, 8);
+        id = addToSprites(regions, id);
+        regions = TextureRegion.split(spriteSheet_2, 8, 8);
+        id = addToSprites(regions, id);
+        regions = TextureRegion.split(spriteSheet_3, 8, 8);
+        addToSprites(regions, id);
+    }
+
+    int addToSprites(TextureRegion[][] region, int id) {
         for (int row = 0; row < regions.length; row++) {
             for (int col = 0; col < regions[row].length; col++) {
                 sprites.put(id, regions[row][col]);
                 id++;
             }
         }
+        return id;
+    }
+
+    void setSpriteRegion(Texture newRegion) {
+        regions = TextureRegion.split(newRegion, 8, 8);
+        sprites = new HashMap<>();
+        mapAllSprites();
     }
 
     public TextureRegion getSpriteByRegion(int x, int y) {

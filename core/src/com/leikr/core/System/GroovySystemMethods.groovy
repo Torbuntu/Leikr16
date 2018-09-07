@@ -150,14 +150,21 @@ public class GroovySystemMethods {
                 //return "Not imnplemented yet";
                 break;
         }
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate_0.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".png");
+        new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".png", token: "GAME_NAME", value: name);
+        
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate_1.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".png");
+        new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".png", token: "GAME_NAME", value: name);
+        
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate_2.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".png");
+        new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".png", token: "GAME_NAME", value: name);
+        
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate_3.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".png");
         new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".png", token: "GAME_NAME", value: name);
         
         new AntBuilder().copy( file:Gdx.files.classpath("GameModels/tmxTemplate.tmx"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".tmx");
         new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".tmx", token: "GAME_NAME", value: name);
                 
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/tsxTemplate.tsx"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".tsx");
-        new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".tsx", token: "GAME_NAME", value: name);
         
         return "New game project `"+name+"` initialized with type `"+type+"`";
     }

@@ -63,10 +63,16 @@ class SpriteEditor implements InputProcessor {
     Pixmap pixmap;
     Pixmap zoomPixmap;
 
-    Texture texture;
-    Texture zoomTexture;
+    Texture spriteSheet;
+    Texture zoomSpriteSheet;
 
-    String filePath;
+    private final String firstSpriteSheet;
+    private final String secondSpriteSheet;
+    private final String thirdSpriteSheet;
+    private final String fourthSpriteSheet;
+
+    String selectedSpriteSheet;
+
     Color drawColor;
 
     Vector2 coords;
@@ -83,6 +89,9 @@ class SpriteEditor implements InputProcessor {
 
     int mainBoxWidth;
     int mainBoxHeight;
+
+    int zoomBoxWidth;
+    int zoomBoxHeight;
 
     int actualX;
     int actualY;
@@ -105,7 +114,7 @@ class SpriteEditor implements InputProcessor {
 
     private final TextureRegionDrawable undoIconDrawable;
     private final ImageButton undoIconButton;
-    
+
     private final TextureRegionDrawable eraserIconDrawable;
     private final ImageButton eraserIconButton;
     Stage stage;
@@ -118,6 +127,14 @@ class SpriteEditor implements InputProcessor {
     private final Texture noIcon;
     private final TextureRegionDrawable noIconDrawable;
     private final ImageButton noIconButton;
+
+    Texture bigSpriteIcon;
+    TextureRegionDrawable bigSpriteIconDrawable;
+    ImageButton bigSpriteIconButton;
+
+    Texture smallSpriteIcon;
+    TextureRegionDrawable smallSpriteIconDrawable;
+    ImageButton smallSpriteIconButton;
 
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
@@ -133,30 +150,34 @@ class SpriteEditor implements InputProcessor {
         renderer = new ShapeRenderer();
         paintBrush = new PaintBrush(renderer, game);
 
-        if (fileName == null) {
-            filePath = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/LeikrGame/LeikrGame.png";//sets game path
-        } else {
-            filePath = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + fileName + ".png";//sets game path
-        }
+        // gets the sprite sheet from the given fileName (which is the loaded game)
+        firstSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + fileName + "_0.png";
+        secondSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + fileName + "_1.png";
+        thirdSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + fileName + "_2.png";
+        fourthSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + fileName + "_3.png";
 
-        pixmap = new Pixmap(new FileHandle(filePath));
+        selectedSpriteSheet = firstSpriteSheet;
+        pixmap = new Pixmap(new FileHandle(selectedSpriteSheet));
         pixmap.setBlending(Pixmap.Blending.None);
-        texture = new Texture(pixmap);
+        spriteSheet = new Texture(pixmap);
 
         zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
         zoomPixmap.setBlending(Pixmap.Blending.None);
-        zoomTexture = new Texture(zoomPixmap);
+        zoomSpriteSheet = new Texture(zoomPixmap);
 
         zoomPixmap.drawPixmap(pixmap, 0, 0, 8, 8, 0, 0, 8, 8);
-        zoomTexture.draw(zoomPixmap, 0, 0);
+        zoomSpriteSheet.draw(zoomPixmap, 0, 0);
 
         actualX = 0;
         actualY = 0;
         zoomX = 0;
         zoomY = 0;
 
-        mainBoxWidth = texture.getWidth() + 2;
-        mainBoxHeight = texture.getHeight() + 2;
+        mainBoxWidth = spriteSheet.getWidth() + 2;
+        mainBoxHeight = spriteSheet.getHeight() + 2;
+
+        zoomBoxWidth = 64;
+        zoomBoxHeight = 64;
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
@@ -203,10 +224,6 @@ class SpriteEditor implements InputProcessor {
             }
         });
 
-        stage.addActor(saveIconButton);
-        stage.addActor(undoIconButton);
-        stage.addActor(eraserIconButton);
-
         confirmExitStage = new Stage(viewport);
         okIcon = new Texture("ok.png");
         okIconDrawable = new TextureRegionDrawable(new TextureRegion(okIcon));
@@ -239,13 +256,44 @@ class SpriteEditor implements InputProcessor {
             }
         });
 
+        bigSpriteIcon = new Texture("bigSpriteIcon.png");
+        bigSpriteIconDrawable = new TextureRegionDrawable(new TextureRegion(bigSpriteIcon));
+        bigSpriteIconButton = new ImageButton(bigSpriteIconDrawable);
+        bigSpriteIconButton.setPosition(viewport.getWorldWidth() - 38, 0);
+        bigSpriteIconButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Big Sprite selected.");
+                zoomBoxWidth = 128;
+                zoomBoxHeight = 128;
+            }
+        });
+
+        smallSpriteIcon = new Texture("smallSpriteIcon.png");
+        smallSpriteIconDrawable = new TextureRegionDrawable(new TextureRegion(smallSpriteIcon));
+        smallSpriteIconButton = new ImageButton(smallSpriteIconDrawable);
+        smallSpriteIconButton.setPosition(viewport.getWorldWidth() - 48, 0);
+        smallSpriteIconButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Small Sprite selected.");
+                zoomBoxWidth = 64;
+                zoomBoxHeight = 64;
+            }
+        });
+
+        stage.addActor(saveIconButton);
+        stage.addActor(undoIconButton);
+        stage.addActor(eraserIconButton);
+        stage.addActor(bigSpriteIconButton);
+        stage.addActor(smallSpriteIconButton);
+
         confirmExitStage.addActor(okIconButton);
         confirmExitStage.addActor(noIconButton);
 
         Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/OS/HideCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
-//        Gdx.input.setInputProcessor(this);
 
         // input processors
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
@@ -268,7 +316,7 @@ class SpriteEditor implements InputProcessor {
 
         batch.setProjectionMatrix(camera.combined);
 
-        count = 0;
+        count = 8;
         color = 0;
         for (float item : paintBrush.leikrPalette.palette) {
             paintBrush.drawRect(count, (int) viewport.getWorldHeight() - 8, 8, 8, color, "filled");
@@ -280,18 +328,18 @@ class SpriteEditor implements InputProcessor {
         renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setColor(Color.RED);
         renderer.rect(7, 7, mainBoxWidth, mainBoxHeight);
-        renderer.rect(143, 7, 66, 66);
+        renderer.rect(spriteSheet.getWidth() + 11, 7, zoomBoxWidth + 2, zoomBoxHeight + 2);
         renderer.end();
 
         batch.begin();
         batch.setColor(Color.WHITE);
 
         //main sprite sheet
-        if (texture != null) {
-            batch.draw(texture, 8, 8);
+        if (spriteSheet != null) {
+            batch.draw(spriteSheet, 8, 8);
         }
-        if (zoomTexture != null) {
-            batch.draw(zoomTexture, 144, 8, 64, 64);
+        if (zoomSpriteSheet != null) {
+            batch.draw(zoomSpriteSheet, spriteSheet.getWidth() + 12, 8, zoomBoxWidth, zoomBoxHeight);
         }
 
         drawText();
@@ -331,7 +379,7 @@ class SpriteEditor implements InputProcessor {
         int fontX;
         int fontY;
         int x = (int) (viewport.getWorldWidth() / 2 - 98);
-        int y = (int) (viewport.getWorldHeight() / 2+40);
+        int y = (int) (viewport.getWorldHeight() / 2 + 40);
         // Set the variable test for evaluating the x and y position of the ASCII set.
         String text = "Would you like exit (y/n)?";
         for (char C : text.toCharArray()) {
@@ -345,8 +393,8 @@ class SpriteEditor implements InputProcessor {
     public void drawText() {
         int fontX;
         int fontY;
-        int x = 140;
-        int y = 80;
+        int x = 8;
+        int y = spriteSheet.getHeight() + 12;
         // Set the variable test for evaluating the x and y position of the ASCII set.
         String text = "Sprite ID: " + spriteId;
         for (char C : text.toCharArray()) {
@@ -368,20 +416,20 @@ class SpriteEditor implements InputProcessor {
     }
 
     public void savePixmapImage() {
-        PixmapIO.writePNG(new FileHandle(filePath), pixmap);
+        PixmapIO.writePNG(new FileHandle(selectedSpriteSheet), pixmap);
     }
 
     public void undoRecentEdits() {
-        pixmap = new Pixmap(new FileHandle(filePath));
+        pixmap = new Pixmap(new FileHandle(selectedSpriteSheet));
         pixmap.setBlending(Pixmap.Blending.None);
-        texture = new Texture(pixmap);
+        spriteSheet = new Texture(pixmap);
 
         zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
         zoomPixmap.setBlending(Pixmap.Blending.None);
-        zoomTexture = new Texture(zoomPixmap);
+        zoomSpriteSheet = new Texture(zoomPixmap);
 
         zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, 8, 8, 0, 0, 8, 8);
-        zoomTexture.draw(zoomPixmap, 0, 0);
+        zoomSpriteSheet.draw(zoomPixmap, 0, 0);
     }
 
     public void drawSelectedPixmapToMain() {
@@ -389,22 +437,22 @@ class SpriteEditor implements InputProcessor {
 
             zoomPixmap.setColor(drawColor);
             zoomPixmap.drawPixel(zoomX, zoomY);
-            zoomTexture.draw(zoomPixmap, 0, 0);
+            zoomSpriteSheet.draw(zoomPixmap, 0, 0);
 
             pixmap.drawPixmap(zoomPixmap, spriteIdX * 8, spriteIdY * 8, 0, 0, 8, 8);
 
-            texture.draw(pixmap, 0, 0);
+            spriteSheet.draw(pixmap, 0, 0);
         } else {
 
             pixmap.setColor(drawColor);
             pixmap.drawPixel(actualX, actualY);
-            texture.draw(pixmap, 0, 0);
+            spriteSheet.draw(pixmap, 0, 0);
 
             zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
             zoomPixmap.setBlending(Pixmap.Blending.None);
 
             zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, 8, 8, 0, 0, 8, 8);
-            zoomTexture.draw(zoomPixmap, 0, 0);
+            zoomSpriteSheet.draw(zoomPixmap, 0, 0);
         }
 
     }
@@ -426,52 +474,52 @@ class SpriteEditor implements InputProcessor {
                 drawSelectedPixmapToMain();
                 break;
             case 1:
-                if (coords.x >= 1 && coords.x <= 10) {
+                if (coords.x >= 9 && coords.x <= 18) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(0));
                 }
-                if (coords.x >= 11 && coords.x <= 20) {
+                if (coords.x >= 19 && coords.x <= 28) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(1));
                 }
-                if (coords.x >= 21 && coords.x <= 30) {
+                if (coords.x >= 29 && coords.x <= 38) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(2));
                 }
-                if (coords.x >= 31 && coords.x <= 40) {
+                if (coords.x >= 39 && coords.x <= 48) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(3));
                 }
-                if (coords.x >= 41 && coords.x <= 50) {
+                if (coords.x >= 49 && coords.x <= 58) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(4));
                 }
-                if (coords.x >= 51 && coords.x <= 60) {
+                if (coords.x >= 59 && coords.x <= 68) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(5));
                 }
-                if (coords.x >= 61 && coords.x <= 70) {
+                if (coords.x >= 69 && coords.x <= 78) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(6));
                 }
-                if (coords.x >= 71 && coords.x <= 80) {
+                if (coords.x >= 79 && coords.x <= 88) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(7));
                 }
-                if (coords.x >= 81 && coords.x <= 90) {
+                if (coords.x >= 89 && coords.x <= 98) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(8));
                 }
-                if (coords.x >= 91 && coords.x <= 100) {
+                if (coords.x >= 91 && coords.x <= 108) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(9));
                 }
-                if (coords.x >= 101 && coords.x <= 110) {
+                if (coords.x >= 109 && coords.x <= 118) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(10));
                 }
-                if (coords.x >= 111 && coords.x <= 120) {
+                if (coords.x >= 119 && coords.x <= 128) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(11));
                 }
-                if (coords.x >= 121 && coords.x <= 130) {
+                if (coords.x >= 129 && coords.x <= 138) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(12));
                 }
-                if (coords.x >= 131 && coords.x <= 140) {
+                if (coords.x >= 139 && coords.x <= 148) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(13));
                 }
-                if (coords.x >= 141 && coords.x <= 150) {
+                if (coords.x >= 149 && coords.x <= 158) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(14));
                 }
-                if (coords.x >= 151 && coords.x <= 160) {
+                if (coords.x >= 159 && coords.x <= 168) {
                     drawColor.set(paintBrush.leikrPalette.palette.get(15));
                 }
                 break;
@@ -483,7 +531,7 @@ class SpriteEditor implements InputProcessor {
                 zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
                 zoomPixmap.setBlending(Pixmap.Blending.None);
                 zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, 8, 8, 0, 0, 8, 8);
-                zoomTexture.draw(zoomPixmap, 0, 0);
+                zoomSpriteSheet.draw(zoomPixmap, 0, 0);
                 break;
         }
 
