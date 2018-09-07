@@ -341,9 +341,9 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
                 return buttonXisPressed;
             case "y":
                 return buttonYisPressed;
-            case "bumperLeft":
+            case "bumper_left":
                 return bumperLeftPressed;
-            case "bumperRight":
+            case "bumper_right":
                 return bumperRightPressed;
             case "left":
                 return leftButtonPressed;
