@@ -123,7 +123,6 @@ class Pong extends LeikrEngine{
 
 
     def void create(){
-        super.create();// Very important for initializing core engine variables.
         println("Hello, World! From the LeikrGame script.");
     }
    
@@ -131,10 +130,10 @@ class Pong extends LeikrEngine{
 
     def void render(){
     
-        drawRect(0, 0, 2, getScreenHeight(), 1, "Filled");
-        drawRect(getScreenWidth()-2, 0, 2, getScreenHeight(), 1, "Filled");
-        drawRect(0, 0, getScreenWidth(), 2, 1, "Filled");
-        drawRect(0, getScreenHeight()-2, getScreenWidth(), 2, 1, "Filled");
+        rect(0, 0, 2, getScreenHeight(), 1, "Filled");
+        rect(getScreenWidth()-2, 0, 2, getScreenHeight(), 1, "Filled");
+        rect(0, 0, getScreenWidth(), 2, 1, "Filled");
+        rect(0, getScreenHeight()-2, getScreenWidth(), 2, 1, "Filled");
         playerOneMove();
         playerTwoMove();
         if(playing){
@@ -150,7 +149,7 @@ class Pong extends LeikrEngine{
 
             }
         }else{
-            drawRect(centerLineX-1, 0, 2, getScreenHeight(), 1, "Filled");
+            rect(centerLineX-1, 0, 2, getScreenHeight(), 1, "Filled");
         }
         if(spaceKeyPressed()){
             if(notStart){
@@ -168,12 +167,9 @@ class Pong extends LeikrEngine{
         drawText("P1 Score: "+pOneScore, textPosX, textPosY, 0);
         drawText("P2 Score: "+pTwoScore, textPosX+120, textPosY, 0);
         
-        //drawCircle(ballX, ballY, 5, "BLUE", style);
-        
-        
-        drawRect(playerOneX, playerOneY, 5, playerOneHeight, 1, style);
-        drawRect(playerTwoX, playerTwoY, 5, playerTwoHeight, 1, style);
-        drawSprite(0, ballX, ballY);//testing sprite
+        rect(playerOneX, playerOneY, 5, playerOneHeight, 1, style);
+        rect(playerTwoX, playerTwoY, 5, playerTwoHeight, 1, style);
+        sprite(0, ballX, ballY);//testing sprite
         
     }
     

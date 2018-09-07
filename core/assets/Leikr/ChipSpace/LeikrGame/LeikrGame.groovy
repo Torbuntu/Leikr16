@@ -67,13 +67,13 @@ class LeikrGame extends LeikrEngine{
     }
 
     def void render(){
-        drawRect(0,0,320,240,5, "filled");
+        rect(0,0,320,240,5, "filled");
 
         // setMapSection(0, 0);
         drawMap();
         //setCellTile(p.x/8, (p.y-8)/8, 3);
         movep();
-        drawSprite(p.spriteId, p.x, p.y);
+        sprite(p.spriteId, p.x, p.y);
         //setCamera(p.x, p.y);
 
     }

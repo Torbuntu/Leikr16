@@ -248,39 +248,39 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         batch.end();
     }
 
-    public void drawSprite(int id, float x, float y) {
+    public void sprite(int id, float x, float y) {
         spriteHandler.drawSprite(id, x, y);
     }
 
-    public void drawSprite(int id, float x, float y, float scaleX, float scaleY) {
+    public void sprite(int id, float x, float y, float scaleX, float scaleY) {
         spriteHandler.drawSprite(id, x, y, scaleX, scaleY);
     }
 
-    public void drawBigSprite(int idtl, int idtr, int idbl, int idbr, float x, float y) {
+    public void bigSprite(int idtl, int idtr, int idbl, int idbr, float x, float y) {
         spriteHandler.drawBigSprite(idtl, idtr, idbl, idbr, x, y);
     }
 
-    public void drawRect(float x, float y, float width, float height, int color, String type) {
+    public void rect(float x, float y, float width, float height, int color, String type) {
         paintBrush.drawRect(x, y, width, height, color, type);
     }
 
-    public void drawCircle(float x, float y, float radius, int color, String type) {
+    public void circle(float x, float y, float radius, int color, String type) {
         paintBrush.drawCircle(x, y, radius, color, type);
     }
 
-    public void drawArc(float x, float y, float radius, float start, float degrees, int color, String type) {
+    public void arc(float x, float y, float radius, float start, float degrees, int color, String type) {
         paintBrush.drawArc(x, y, radius, start, degrees, color, type);
     }
 
-    public void drawLine(float x, float y, float x2, float y2, int color) {
+    public void line(float x, float y, float x2, float y2, int color) {
         paintBrush.drawLine(x, y, x2, y2, color);
     }
 
-    public void drawColor(int id, float x, float y) {
+    public void color(int id, float x, float y) {
         paintBrush.drawColor(id, x, y);
     }
 
-    public void drawColor(int id, float x, float y, float width, float height) {
+    public void color(int id, float x, float y, float width, float height) {
         paintBrush.drawColor(id, x, y, width, height);
     }
 
@@ -310,75 +310,52 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         font.dispose();
     }
 
-    // Control handling methods
-    public boolean rightKeyPressed() {
-        return rightKeyPressed;
+    public boolean key(String name) {
+        switch (name.toLowerCase()) {
+            case "right":
+                return rightKeyPressed;
+            case "left":
+                return leftKeyPressed;
+            case "up":
+                return upKeyPressed;
+            case "down":
+                return downKeyPressed;
+            case "z":
+                return zKeyPressed;
+            case "x":
+                return xKeyPressed;
+            case "space":
+                return spaceKeyPressed;
+            default:
+                return false;
+        }
     }
 
-    public boolean leftKeyPressed() {
-        return leftKeyPressed;
-    }
-
-    public boolean upKeyPressed() {
-        return upKeyPressed;
-    }
-
-    public boolean downKeyPressed() {
-        return downKeyPressed;
-    }
-
-    public boolean zKeyPressed() {
-        return zKeyPressed;
-    }
-
-    public boolean xKeyPressed() {
-        return xKeyPressed;
-    }
-
-    public boolean spaceKeyPressed() {
-        return spaceKeyPressed;
-    }
-
-    //controller buttons
-    public boolean btnAisPressed() {
-        return buttonAisPressed;
-    }
-
-    public boolean btnBisPressed() {
-        return buttonBisPressed;
-    }
-
-    public boolean btnXisPressed() {
-        return buttonXisPressed;
-    }
-
-    public boolean btnYisPressed() {
-        return buttonYisPressed;
-    }
-
-    public boolean bumperLeftPressed() {
-        return bumperLeftPressed;
-    }
-
-    public boolean bumperRightPressed() {
-        return bumperRightPressed;
-    }
-
-    //d-pad buttons
-    public boolean leftBtnPressed() {
-        return leftButtonPressed;
-    }
-
-    public boolean rightBtnPressed() {
-        return rightButtonPressed;
-    }
-
-    public boolean upBtnPressed() {
-        return upButtonPressed;
-    }
-
-    public boolean downBtnPressed() {
-        return downButtonPressed;
+    public boolean button(String name) {
+        switch (name.toLowerCase()) {
+            case "a":
+                return buttonAisPressed;
+            case "b":
+                return buttonBisPressed;
+            case "x":
+                return buttonXisPressed;
+            case "y":
+                return buttonYisPressed;
+            case "bumperLeft":
+                return bumperLeftPressed;
+            case "bumperRight":
+                return bumperRightPressed;
+            case "left":
+                return leftButtonPressed;
+            case "right":
+                return rightButtonPressed;
+            case "up":
+                return upButtonPressed;
+            case "down":
+                return downButtonPressed;
+            default:
+                return false;
+        }
     }
 
     @Override
@@ -446,25 +423,27 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     @Override
     public boolean povMoved(Controller controller, int povCode, PovDirection value) {
         // This is the dpad
-        if (value == PovDirection.north) {
-            upButtonPressed = true;
+        switch (value) {
+            case north:
+                upButtonPressed = true;
+                break;
+            case south:
+                downButtonPressed = true;
+                break;
+            case east:
+                rightButtonPressed = true;
+                break;
+            case west:
+                leftButtonPressed = true;
+                break;
+            case center:
+                upButtonPressed = false;
+                downButtonPressed = false;
+                rightButtonPressed = false;
+                leftButtonPressed = false;
+                break;
         }
-        if (value == PovDirection.south) {
-            downButtonPressed = true;
-        }
-        if (value == PovDirection.east) {
-            rightButtonPressed = true;
-        }
-        if (value == PovDirection.west) {
-            leftButtonPressed = true;
-        }
-        if (value == PovDirection.center) {
-            upButtonPressed = false;
-            downButtonPressed = false;
-            rightButtonPressed = false;
-            leftButtonPressed = false;
-        }
-        return false;
+        return true;
     }
 
     @Override

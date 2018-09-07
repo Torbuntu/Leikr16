@@ -47,13 +47,13 @@ public class JavaTest extends LeikrEngine{
         
         
         moveBall();
-        drawCircle(ballX, ballY, 15, 4, "FILLED");
-        drawLine(10, 10, 130, 80, 6);
+        circle(ballX, ballY, 15, 4, "FILLED");
+        line(10, 10, 130, 80, 6);
         //drawSprite(0, ballX, ballY, 32, 32);//testing sprite
         //drawSprite(255, 100, 100);
         drawPalette(5, 50, 10, 10);
-        drawColor(0, 10, 10);
-        drawColor(5, 20, 20);
+        color(0, 10, 10);
+        color(5, 20, 20);
         
     }
     
