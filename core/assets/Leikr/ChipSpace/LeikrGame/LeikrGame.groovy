@@ -1,5 +1,4 @@
-
-import com.leikr.core.LeikrEngine; // Required for extending LeikrEngine
+import com.leikr.core.LeikrEngine;
 
 class LeikrGame extends LeikrEngine{
 
@@ -32,10 +31,10 @@ class LeikrGame extends LeikrEngine{
 
     def movep(){
 
-        if(rightKeyPressed() || rightBtnPressed()){
+        if(key("right") || button("right")){
             p.vx = 1;
         }
-        else if(leftKeyPressed() || leftBtnPressed()){
+        else if(key("left") || button("left")){
             p.vx = -1;
         }else{
             p.vx = 0;
@@ -53,7 +52,7 @@ class LeikrGame extends LeikrEngine{
             p.vy=p.vy-0.2;
         }
 
-        if(p.vy == 0 && (upKeyPressed() || upBtnPressed())){
+        if(p.vy == 0 && (key("up") || button("up"))){
             p.vy = 4.5;
             playBeep(0.1, 340.5, 0.5, "triangle");
         }

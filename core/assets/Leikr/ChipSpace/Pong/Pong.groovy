@@ -35,12 +35,12 @@ class Pong extends LeikrEngine{
     
 
     def void playerOneMove(){
-        if(downKeyPressed()){
+        if(key("down")){
             if(playerTwoY > 0){
                 playerTwoY -= 1;
             }              
         }
-        if(upKeyPressed()){
+        if(key("up")){
             if(playerTwoY < getScreenHeight()-playerTwoHeight){
                 playerTwoY += 1;
             }
@@ -48,12 +48,12 @@ class Pong extends LeikrEngine{
     }
     
     def playerTwoMove(){
-        if(zKeyPressed()){
+        if(key("z")){
             if(playerOneY > 0){
                 playerOneY -= 1;
             }              
         }
-        if(xKeyPressed()){
+        if(key("x")){
             if(playerOneY < getScreenHeight()-playerOneHeight){
                 playerOneY += 1;
             }
@@ -151,7 +151,7 @@ class Pong extends LeikrEngine{
         }else{
             rect(centerLineX-1, 0, 2, getScreenHeight(), 1, "Filled");
         }
-        if(spaceKeyPressed()){
+        if(key("space")){
             if(notStart){
                 notStart = false;
                 playing = true;
