@@ -376,7 +376,7 @@ class SpriteEditor implements InputProcessor {
     }
 
     final void setSelectedSpriteSheet(String selected) {
-        
+
         selectedSpriteSheet = selected;
         pixmap = new Pixmap(new FileHandle(selectedSpriteSheet));
         pixmap.setBlending(Pixmap.Blending.None);
@@ -396,6 +396,7 @@ class SpriteEditor implements InputProcessor {
 
         //background color
         renderer.setProjectionMatrix(camera.combined);
+        
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.setColor(.1f, .2f, .2f, 1);
         renderer.rect(0, 0, Leikr.WIDTH, Leikr.HEIGHT);
@@ -410,6 +411,13 @@ class SpriteEditor implements InputProcessor {
             count += 10;
             color++;
         }
+
+        // Sprite sheet background black
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.setColor(0,0,0,1);
+        renderer.rect(8, 8, mainBoxWidth - 2, mainBoxHeight - 2);
+        renderer.rect(spriteSheet.getWidth() + 12, 8, zoomBoxWidth, zoomBoxHeight);
+        renderer.end();
 
         // Outlines
         renderer.begin(ShapeRenderer.ShapeType.Line);
@@ -483,17 +491,17 @@ class SpriteEditor implements InputProcessor {
         int x = 8;
         int y = spriteSheet.getHeight() + 12;
         int sheetOffset = 0;
-        if(selectedSpriteSheet.contains("_0")){
-            sheetOffset = 0+spriteId;
-        }else if(selectedSpriteSheet.contains("_1")){
-            sheetOffset = 256+spriteId;
-        }else if(selectedSpriteSheet.contains("_2")){
-            sheetOffset = 512+spriteId;
-        }else if(selectedSpriteSheet.contains("_3")){
-            sheetOffset = 768+spriteId;
+        if (selectedSpriteSheet.contains("_0")) {
+            sheetOffset = 0 + spriteId;
+        } else if (selectedSpriteSheet.contains("_1")) {
+            sheetOffset = 256 + spriteId;
+        } else if (selectedSpriteSheet.contains("_2")) {
+            sheetOffset = 512 + spriteId;
+        } else if (selectedSpriteSheet.contains("_3")) {
+            sheetOffset = 768 + spriteId;
         }
         // Set the variable test for evaluating the x and y position of the ASCII set.
-        
+
         String text = "Sprite ID: " + sheetOffset;
         for (char C : text.toCharArray()) {
             fontX = ((int) C % 16) * 8;
@@ -511,6 +519,16 @@ class SpriteEditor implements InputProcessor {
     public void disposeSpriteEditor() {
         renderer.dispose();
         game.batch.dispose();
+        spriteSheet.dispose();
+        zoomSpriteSheet.dispose();
+        pixmap.dispose();
+        zoomPixmap.dispose();
+        noIcon.dispose();
+        okIcon.dispose();
+        font.dispose();
+        cursor.dispose();
+        stage.dispose();
+        confirmExitStage.dispose();
     }
 
     public void savePixmapImage() {
@@ -569,8 +587,6 @@ class SpriteEditor implements InputProcessor {
             zoomY = (actualY / 16);
         }
 
-        System.out.println(actualX + " : " + actualY);
-        System.out.println(zoomX + " : " + zoomY);
     }
 
     public void drawPixelsOnTouch(int button) {

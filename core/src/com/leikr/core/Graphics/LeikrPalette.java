@@ -46,7 +46,7 @@ public class LeikrPalette {
         palette_1 = new ArrayList<>();
         palette_2 = new ArrayList<>();
         palette_3 = new ArrayList<>();
-        
+
         if (Gdx.files.external("Leikr/ChipSpace/" + fileName + "/Palette_0.png").exists()) {
             pixmap = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/Palette_0.png"));
 
@@ -54,16 +54,21 @@ public class LeikrPalette {
             pixmap_1 = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/Palette_1.png"));
             pixmap_2 = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/Palette_2.png"));
             pixmap_3 = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/Palette_3.png"));
+
+            for (int i = 0; i <= 15; i++) {
+                palette.add(pixmap.getPixel(i, 0));
+                palette_0.add(pixmap_0.getPixel(i, 0));
+                palette_1.add(pixmap_1.getPixel(i, 0));
+                palette_2.add(pixmap_2.getPixel(i, 0));
+                palette_3.add(pixmap_3.getPixel(i, 0));
+            }
         } else {
             pixmap = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/OS/Palette.png"));
+            for (int i = 0; i <= 15; i++) {
+                palette.add(pixmap.getPixel(i, 0));
+            }
         }
-        for (int i = 0; i <= 15; i++) {
-            palette.add(pixmap.getPixel(i, 0));
-            palette_0.add(pixmap_0.getPixel(i, 0));
-            palette_1.add(pixmap_1.getPixel(i, 0));
-            palette_2.add(pixmap_2.getPixel(i, 0));
-            palette_3.add(pixmap_3.getPixel(i, 0));
-        }
+
     }
 
     // default palette
