@@ -139,6 +139,21 @@ class SpriteEditor implements InputProcessor {
     TextureRegionDrawable smallSpriteIconDrawable;
     ImageButton smallSpriteIconButton;
 
+    Texture tabIcon_0;
+    Texture tabIcon_1;
+    Texture tabIcon_2;
+    Texture tabIcon_3;
+
+    TextureRegionDrawable tabIconDrawable_0;
+    TextureRegionDrawable tabIconDrawable_1;
+    TextureRegionDrawable tabIconDrawable_2;
+    TextureRegionDrawable tabIconDrawable_3;
+
+    ImageButton tabIconButton_0;
+    ImageButton tabIconButton_1;
+    ImageButton tabIconButton_2;
+    ImageButton tabIconButton_3;
+
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
         batch = game.batch;
@@ -160,16 +175,7 @@ class SpriteEditor implements InputProcessor {
         fourthSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + fileName + "_3.png";
 
         selectedSpriteSheet = firstSpriteSheet;
-        pixmap = new Pixmap(new FileHandle(selectedSpriteSheet));
-        pixmap.setBlending(Pixmap.Blending.None);
-        spriteSheet = new Texture(pixmap);
-
-        zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
-        zoomPixmap.setBlending(Pixmap.Blending.None);
-        zoomSpriteSheet = new Texture(zoomPixmap);
-
-        zoomPixmap.drawPixmap(pixmap, 0, 0, 8, 8, 0, 0, 8, 8);
-        zoomSpriteSheet.draw(zoomPixmap, 0, 0);
+        setSelectedSpriteSheet(selectedSpriteSheet);
 
         actualX = 0;
         actualY = 0;
@@ -298,6 +304,56 @@ class SpriteEditor implements InputProcessor {
             }
         });
 
+        tabIcon_0 = new Texture("tab_0.png");
+        tabIconDrawable_0 = new TextureRegionDrawable(new TextureRegion(tabIcon_0));
+        tabIconButton_0 = new ImageButton(tabIconDrawable_0);
+        tabIconButton_0.setPosition(viewport.getWorldWidth() - 48, 10);
+        tabIconButton_0.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Tab 1");
+                setSelectedSpriteSheet(firstSpriteSheet);
+            }
+        });
+        tabIcon_1 = new Texture("tab_1.png");
+        tabIconDrawable_1 = new TextureRegionDrawable(new TextureRegion(tabIcon_1));
+        tabIconButton_1 = new ImageButton(tabIconDrawable_1);
+        tabIconButton_1.setPosition(viewport.getWorldWidth() - 38, 10);
+        tabIconButton_1.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Tab 2");
+                setSelectedSpriteSheet(secondSpriteSheet);
+            }
+        });
+        tabIcon_2 = new Texture("tab_2.png");
+        tabIconDrawable_2 = new TextureRegionDrawable(new TextureRegion(tabIcon_2));
+        tabIconButton_2 = new ImageButton(tabIconDrawable_2);
+        tabIconButton_2.setPosition(viewport.getWorldWidth() - 28, 10);
+        tabIconButton_2.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Tab 3");
+                setSelectedSpriteSheet(thirdSpriteSheet);
+            }
+        });
+        tabIcon_3 = new Texture("tab_3.png");
+        tabIconDrawable_3 = new TextureRegionDrawable(new TextureRegion(tabIcon_3));
+        tabIconButton_3 = new ImageButton(tabIconDrawable_3);
+        tabIconButton_3.setPosition(viewport.getWorldWidth() - 18, 10);
+        tabIconButton_3.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Tab 4");
+                setSelectedSpriteSheet(fourthSpriteSheet);
+            }
+        });
+
+        stage.addActor(tabIconButton_0);
+        stage.addActor(tabIconButton_1);
+        stage.addActor(tabIconButton_2);
+        stage.addActor(tabIconButton_3);
+
         stage.addActor(saveIconButton);
         stage.addActor(undoIconButton);
         stage.addActor(eraserIconButton);
@@ -317,6 +373,21 @@ class SpriteEditor implements InputProcessor {
         inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(confirmExitStage);
         Gdx.input.setInputProcessor(inputMultiplexer);
+    }
+
+    final void setSelectedSpriteSheet(String selected) {
+        
+        selectedSpriteSheet = selected;
+        pixmap = new Pixmap(new FileHandle(selectedSpriteSheet));
+        pixmap.setBlending(Pixmap.Blending.None);
+        spriteSheet = new Texture(pixmap);
+
+        zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+        zoomPixmap.setBlending(Pixmap.Blending.None);
+        zoomSpriteSheet = new Texture(zoomPixmap);
+
+        zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, 8, 8, 0, 0, 8, 8);
+        zoomSpriteSheet.draw(zoomPixmap, 0, 0);
     }
 
     public void renderSpriteEditor(float delta) {
@@ -411,8 +482,19 @@ class SpriteEditor implements InputProcessor {
         int fontY;
         int x = 8;
         int y = spriteSheet.getHeight() + 12;
+        int sheetOffset = 0;
+        if(selectedSpriteSheet.contains("_0")){
+            sheetOffset = 0+spriteId;
+        }else if(selectedSpriteSheet.contains("_1")){
+            sheetOffset = 256+spriteId;
+        }else if(selectedSpriteSheet.contains("_2")){
+            sheetOffset = 512+spriteId;
+        }else if(selectedSpriteSheet.contains("_3")){
+            sheetOffset = 768+spriteId;
+        }
         // Set the variable test for evaluating the x and y position of the ASCII set.
-        String text = "Sprite ID: " + spriteId;
+        
+        String text = "Sprite ID: " + sheetOffset;
         for (char C : text.toCharArray()) {
             fontX = ((int) C % 16) * 8;
             fontY = ((int) C / 16) * 8;
