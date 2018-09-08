@@ -1,7 +1,17 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2018 .
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.leikr.core.Graphics;
 
@@ -30,8 +40,6 @@ public class SpriteHandler {
     TextureRegion[][] regions;
     public Map<Integer, TextureRegion> sprites;
 
-    private Texture selectedSpriteSheet;
-
     public SpriteHandler(Leikr game) {
         this.game = game;
 
@@ -41,16 +49,13 @@ public class SpriteHandler {
             spriteSheet_1 = new Texture(filePath + fileName + "_1.png");
             spriteSheet_2 = new Texture(filePath + fileName + "_2.png");
             spriteSheet_3 = new Texture(filePath + fileName + "_3.png");
-            mapAllSprites();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             spriteSheet_0 = new Texture("Logo.png");
             spriteSheet_1 = new Texture("Logo.png");
             spriteSheet_2 = new Texture("Logo.png");
             spriteSheet_3 = new Texture("Logo.png");
-            mapAllSprites();
         }
-        selectedSpriteSheet = spriteSheet_0;
         mapAllSprites();
     }
 
@@ -69,25 +74,15 @@ public class SpriteHandler {
     }
 
     int addToSprites(TextureRegion[][] region, int id) {
-        for (int row = 0; row < regions.length; row++) {
-            for (int col = 0; col < regions[row].length; col++) {
-                sprites.put(id, regions[row][col]);
+        for (TextureRegion[] region2 : regions) {
+            for (TextureRegion region1 : region2) {
+                sprites.put(id, region1);
                 id++;
             }
         }
         return id;
     }
-
-    void setSpriteRegion(Texture newRegion) {
-        regions = TextureRegion.split(newRegion, 8, 8);
-        sprites = new HashMap<>();
-        mapAllSprites();
-    }
-
-    public TextureRegion getSpriteByRegion(int x, int y) {
-        return regions[y][x];
-    }
-
+    
     public void drawSprite(int id, float x, float y) {
         game.batch.begin();
         game.batch.setColor(Color.WHITE);
