@@ -93,6 +93,9 @@ class SpriteEditor implements InputProcessor {
     int zoomBoxWidth;
     int zoomBoxHeight;
 
+    int spriteWidth = 8;
+    int spriteHeight = 8;
+
     int actualX;
     int actualY;
 
@@ -176,8 +179,8 @@ class SpriteEditor implements InputProcessor {
         mainBoxWidth = spriteSheet.getWidth() + 2;
         mainBoxHeight = spriteSheet.getHeight() + 2;
 
-        zoomBoxWidth = 64;
-        zoomBoxHeight = 64;
+        zoomBoxWidth = 128;
+        zoomBoxHeight = 128;
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
@@ -264,8 +267,15 @@ class SpriteEditor implements InputProcessor {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Big Sprite selected.");
-                zoomBoxWidth = 128;
-                zoomBoxHeight = 128;
+                spriteWidth = 16;
+                spriteHeight = 16;
+
+                zoomPixmap = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
+                zoomPixmap.setBlending(Pixmap.Blending.None);
+                zoomSpriteSheet = new Texture(zoomPixmap);
+                zoomPixmap.drawPixmap(pixmap, 0, 0, 16, 16, 0, 0, 16, 16);
+
+                zoomSpriteSheet.draw(zoomPixmap, 0, 0);
             }
         });
 
@@ -277,8 +287,14 @@ class SpriteEditor implements InputProcessor {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Small Sprite selected.");
-                zoomBoxWidth = 64;
-                zoomBoxHeight = 64;
+                spriteWidth = 8;
+                spriteHeight = 8;
+
+                zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+                zoomPixmap.setBlending(Pixmap.Blending.None);
+                zoomSpriteSheet = new Texture(zoomPixmap);
+                zoomPixmap.drawPixmap(pixmap, 0, 0, 8, 8, 0, 0, 8, 8);
+                zoomSpriteSheet.draw(zoomPixmap, 0, 0);
             }
         });
 
@@ -424,11 +440,11 @@ class SpriteEditor implements InputProcessor {
         pixmap.setBlending(Pixmap.Blending.None);
         spriteSheet = new Texture(pixmap);
 
-        zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+        zoomPixmap = new Pixmap(spriteWidth, spriteHeight, Pixmap.Format.RGBA8888);
         zoomPixmap.setBlending(Pixmap.Blending.None);
         zoomSpriteSheet = new Texture(zoomPixmap);
 
-        zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, 8, 8, 0, 0, 8, 8);
+        zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
         zoomSpriteSheet.draw(zoomPixmap, 0, 0);
     }
 
@@ -439,7 +455,7 @@ class SpriteEditor implements InputProcessor {
             zoomPixmap.drawPixel(zoomX, zoomY);
             zoomSpriteSheet.draw(zoomPixmap, 0, 0);
 
-            pixmap.drawPixmap(zoomPixmap, spriteIdX * 8, spriteIdY * 8, 0, 0, 8, 8);
+            pixmap.drawPixmap(zoomPixmap, spriteIdX * 8, spriteIdY * 8, 0, 0, spriteWidth, spriteHeight);
 
             spriteSheet.draw(pixmap, 0, 0);
         } else {
@@ -448,10 +464,10 @@ class SpriteEditor implements InputProcessor {
             pixmap.drawPixel(actualX, actualY);
             spriteSheet.draw(pixmap, 0, 0);
 
-            zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+            zoomPixmap = new Pixmap(spriteWidth, spriteHeight, Pixmap.Format.RGBA8888);
             zoomPixmap.setBlending(Pixmap.Blending.None);
 
-            zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, 8, 8, 0, 0, 8, 8);
+            zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
             zoomSpriteSheet.draw(zoomPixmap, 0, 0);
         }
 
@@ -460,11 +476,19 @@ class SpriteEditor implements InputProcessor {
     public void setDrawingCoords() {
         graphicsY = (int) (camera.viewportHeight - (coords.y));
 
-        actualX = (int) (coords.x - 8);
+        actualX = (int) (coords.x - 9);
         actualY = (int) (graphicsY - 104);
 
-        zoomX = (actualX / 8) - 17;
-        zoomY = (actualY / 8) - 8;
+        if (spriteWidth == 16) {
+            zoomX = (actualX / 8) - 16;
+            zoomY = (actualY / 8);
+        } else {
+            zoomX = (actualX / 16) - 8;
+            zoomY = (actualY / 16);
+        }
+
+        System.out.println(actualX + " : " + actualY);
+        System.out.println(zoomX + " : " + zoomY);
     }
 
     public void drawPixelsOnTouch(int button) {
@@ -524,13 +548,13 @@ class SpriteEditor implements InputProcessor {
                 }
                 break;
             case 2:
-                spriteIdX = (int) (actualX) / 8;
+                spriteIdX = (actualX) / 8;
                 spriteIdY = (actualY) / 8;
                 spriteId = ((spriteIdY * 16) + (spriteIdX));
 
-                zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+                zoomPixmap = new Pixmap(spriteWidth, spriteHeight, Pixmap.Format.RGBA8888);
                 zoomPixmap.setBlending(Pixmap.Blending.None);
-                zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, 8, 8, 0, 0, 8, 8);
+                zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
                 zoomSpriteSheet.draw(zoomPixmap, 0, 0);
                 break;
         }
