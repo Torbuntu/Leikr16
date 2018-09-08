@@ -5,6 +5,9 @@ A Java Fantasy Computer.
 - Written in Java using libgdx and Groovy.
 - Supports games written in Java, Groovy, and Jython (using the Leikr Engine)
 
+# Note
+- best used with Java 10. Java 11 currently breaks.
+
 # Specs
 - Resolution 320x240
 - 1024 8x8 Sprites (by means of 4 256 sprite sheets)
@@ -27,3 +30,10 @@ A Java Fantasy Computer.
 - SFX and editor
 - Kotlin, Lua, and Scala support for game coding 
 - Big Sprite support for 16x16 sprites (using 4 8x8 sprites in a grid. The LeikrEngine API already supports using these in games. but the sprite editor does not)
+
+# Build instructions
+- git clone repo.
+- run gradle distZip.
+- go to desktop/build/distribution and copy the contents of the zip to desired location (LeikrSystem)
+- run desktop.jar with java -jar desktop.jar
+
