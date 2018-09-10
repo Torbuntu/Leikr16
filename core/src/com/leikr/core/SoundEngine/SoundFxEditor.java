@@ -15,52 +15,43 @@
  */
 package com.leikr.core.SoundEngine;
 
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.Leikr;
 
 /**
  *
  * @author tor
  */
-public class SoundFxEditorScreen implements Screen {
+public class SoundFxEditor {
 
     Leikr game;
-    SoundFxEditor sfxEditor;
+    Viewport viewport;
+    Camera camera;
 
-    public SoundFxEditorScreen(Leikr game) {
+    SoundFxEditor(Leikr game) {
         this.game = game;
-        sfxEditor = new SoundFxEditor(game);
+
+        viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
+        camera = viewport.getCamera();
     }
 
-    @Override
-    public void show() {
+    void renderSfxEditor() {
+        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
     }
 
-    @Override
-    public void render(float delta) {
-        sfxEditor.renderSfxEditor();
+    void updateViewport(int width, int height) {
+        viewport.update(width, height, true);
+        camera.update();
     }
 
-    @Override
-    public void resize(int width, int height) {
-        sfxEditor.updateViewport(width, height);
-    }
+    void disposeSfx() {
 
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void dispose() {
-        sfxEditor.disposeSfx();
     }
 
 }
