@@ -29,14 +29,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
@@ -48,7 +42,7 @@ import static com.leikr.core.Leikr.fileName;
  *
  * @author tor TODO: Rework this whole file once it is 'feature complete '
  */
-class SpriteEditor implements InputProcessor {
+final class SpriteEditor implements InputProcessor {
 
     Leikr game;
     SpriteEditorScreen sriteEditorScreen;
@@ -66,10 +60,10 @@ class SpriteEditor implements InputProcessor {
     Texture spriteSheet;
     Texture zoomSpriteSheet;
 
-    private final String firstSpriteSheet;
-    private final String secondSpriteSheet;
-    private final String thirdSpriteSheet;
-    private final String fourthSpriteSheet;
+    String firstSpriteSheet;
+    String secondSpriteSheet;
+    String thirdSpriteSheet;
+    String fourthSpriteSheet;
 
     String selectedSpriteSheet;
 
@@ -78,10 +72,6 @@ class SpriteEditor implements InputProcessor {
     Vector2 coords;
     Vector2 cursorCoords;
     int graphicsY;
-
-    int saveIconXPos;
-    int undoIconXPos;
-    int eraserIconPos;
 
     int spriteId = 0;
     int spriteIdX = 0;
@@ -108,51 +98,7 @@ class SpriteEditor implements InputProcessor {
     int cursorY = 0;
 
     boolean exitDialog = false;
-
-    Texture saveIcon;
-    Texture undoIcon;
-    Texture eraserIcon;
-    private final TextureRegionDrawable saveIconDrawable;
-    private final ImageButton saveIconButton;
-
-    private final TextureRegionDrawable undoIconDrawable;
-    private final ImageButton undoIconButton;
-
-    private final TextureRegionDrawable eraserIconDrawable;
-    private final ImageButton eraserIconButton;
-    Stage stage;
-
-    Texture okIcon;
-    TextureRegionDrawable okIconDrawable;
-    ImageButton okIconButton;
-
-    Stage confirmExitStage;
-    private final Texture noIcon;
-    private final TextureRegionDrawable noIconDrawable;
-    private final ImageButton noIconButton;
-
-    Texture bigSpriteIcon;
-    TextureRegionDrawable bigSpriteIconDrawable;
-    ImageButton bigSpriteIconButton;
-
-    Texture smallSpriteIcon;
-    TextureRegionDrawable smallSpriteIconDrawable;
-    ImageButton smallSpriteIconButton;
-
-    Texture tabIcon_0;
-    Texture tabIcon_1;
-    Texture tabIcon_2;
-    Texture tabIcon_3;
-
-    TextureRegionDrawable tabIconDrawable_0;
-    TextureRegionDrawable tabIconDrawable_1;
-    TextureRegionDrawable tabIconDrawable_2;
-    TextureRegionDrawable tabIconDrawable_3;
-
-    ImageButton tabIconButton_0;
-    ImageButton tabIconButton_1;
-    ImageButton tabIconButton_2;
-    ImageButton tabIconButton_3;
+    SpriteEditorButtons speButtons;
 
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
@@ -191,191 +137,21 @@ class SpriteEditor implements InputProcessor {
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
 
-        stage = new Stage(viewport);
+        speButtons = new SpriteEditorButtons(viewport, this, paintBrush);
 
-        eraserIconPos = (int) viewport.getWorldWidth() - 28;
-        saveIconXPos = (int) viewport.getWorldWidth() - 18;
-        undoIconXPos = (int) viewport.getWorldWidth() - 8;
-
-        saveIcon = new Texture("saveIcon.png");
-        saveIconDrawable = new TextureRegionDrawable(new TextureRegion(saveIcon));
-        saveIconButton = new ImageButton(saveIconDrawable);
-        saveIconButton.setPosition(saveIconXPos, 0);
-        saveIconButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                savePixmapImage();
-                System.out.println("Save clicked!");
-            }
-        });
-
-        undoIcon = new Texture("undoIcon.png");
-        undoIconDrawable = new TextureRegionDrawable(new TextureRegion(undoIcon));
-        undoIconButton = new ImageButton(undoIconDrawable);
-        undoIconButton.setPosition(undoIconXPos, 0);
-        undoIconButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                undoRecentEdits();
-                System.out.println("Undo clicked!");
-            }
-        });
-
-        eraserIcon = new Texture("eraserIcon.png");
-        eraserIconDrawable = new TextureRegionDrawable(new TextureRegion(eraserIcon));
-        eraserIconButton = new ImageButton(eraserIconDrawable);
-        eraserIconButton.setPosition(eraserIconPos, 0);
-        eraserIconButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                drawColor.set(0, 0, 0, -1);
-                System.out.println("Eraser clicked!");
-            }
-        });
-
-        confirmExitStage = new Stage(viewport);
-        okIcon = new Texture("ok.png");
-        okIconDrawable = new TextureRegionDrawable(new TextureRegion(okIcon));
-        okIconButton = new ImageButton(okIconDrawable);
-        okIconButton.setPosition(viewport.getWorldWidth() / 2 - 48, viewport.getWorldHeight() / 2 + 16);
-        okIconButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (exitDialog) {
-                    savePixmapImage();
-                    game.setScreen(new ConsoleScreen(game));
-                    Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-                    System.out.println("Exit clicked!");
-                }
-
-            }
-        });
-
-        noIcon = new Texture("no.png");
-        noIconDrawable = new TextureRegionDrawable(new TextureRegion(noIcon));
-        noIconButton = new ImageButton(noIconDrawable);
-        noIconButton.setPosition(viewport.getWorldWidth() / 2 - 24, viewport.getWorldHeight() / 2 + 16);
-        noIconButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (exitDialog) {
-                    exitDialog = false;
-                    System.out.println("Stay clicked!");
-                }
-            }
-        });
-
-        bigSpriteIcon = new Texture("bigSpriteIcon.png");
-        bigSpriteIconDrawable = new TextureRegionDrawable(new TextureRegion(bigSpriteIcon));
-        bigSpriteIconButton = new ImageButton(bigSpriteIconDrawable);
-        bigSpriteIconButton.setPosition(viewport.getWorldWidth() - 38, 0);
-        bigSpriteIconButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Big Sprite selected.");
-                spriteWidth = 16;
-                spriteHeight = 16;
-
-                zoomPixmap = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
-                zoomPixmap.setBlending(Pixmap.Blending.None);
-                zoomSpriteSheet = new Texture(zoomPixmap);
-                zoomPixmap.drawPixmap(pixmap, 0, 0, 16, 16, 0, 0, 16, 16);
-
-                zoomSpriteSheet.draw(zoomPixmap, 0, 0);
-            }
-        });
-
-        smallSpriteIcon = new Texture("smallSpriteIcon.png");
-        smallSpriteIconDrawable = new TextureRegionDrawable(new TextureRegion(smallSpriteIcon));
-        smallSpriteIconButton = new ImageButton(smallSpriteIconDrawable);
-        smallSpriteIconButton.setPosition(viewport.getWorldWidth() - 48, 0);
-        smallSpriteIconButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Small Sprite selected.");
-                spriteWidth = 8;
-                spriteHeight = 8;
-
-                zoomPixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
-                zoomPixmap.setBlending(Pixmap.Blending.None);
-                zoomSpriteSheet = new Texture(zoomPixmap);
-                zoomPixmap.drawPixmap(pixmap, 0, 0, 8, 8, 0, 0, 8, 8);
-                zoomSpriteSheet.draw(zoomPixmap, 0, 0);
-            }
-        });
-
-        tabIcon_0 = new Texture("tab_0.png");
-        tabIconDrawable_0 = new TextureRegionDrawable(new TextureRegion(tabIcon_0));
-        tabIconButton_0 = new ImageButton(tabIconDrawable_0);
-        tabIconButton_0.setPosition(viewport.getWorldWidth() - 48, 10);
-        tabIconButton_0.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Tab 1");
-                setSelectedSpriteSheet(firstSpriteSheet);
-            }
-        });
-        tabIcon_1 = new Texture("tab_1.png");
-        tabIconDrawable_1 = new TextureRegionDrawable(new TextureRegion(tabIcon_1));
-        tabIconButton_1 = new ImageButton(tabIconDrawable_1);
-        tabIconButton_1.setPosition(viewport.getWorldWidth() - 38, 10);
-        tabIconButton_1.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Tab 2");
-                setSelectedSpriteSheet(secondSpriteSheet);
-            }
-        });
-        tabIcon_2 = new Texture("tab_2.png");
-        tabIconDrawable_2 = new TextureRegionDrawable(new TextureRegion(tabIcon_2));
-        tabIconButton_2 = new ImageButton(tabIconDrawable_2);
-        tabIconButton_2.setPosition(viewport.getWorldWidth() - 28, 10);
-        tabIconButton_2.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Tab 3");
-                setSelectedSpriteSheet(thirdSpriteSheet);
-            }
-        });
-        tabIcon_3 = new Texture("tab_3.png");
-        tabIconDrawable_3 = new TextureRegionDrawable(new TextureRegion(tabIcon_3));
-        tabIconButton_3 = new ImageButton(tabIconDrawable_3);
-        tabIconButton_3.setPosition(viewport.getWorldWidth() - 18, 10);
-        tabIconButton_3.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Tab 4");
-                setSelectedSpriteSheet(fourthSpriteSheet);
-            }
-        });
-
-        stage.addActor(tabIconButton_0);
-        stage.addActor(tabIconButton_1);
-        stage.addActor(tabIconButton_2);
-        stage.addActor(tabIconButton_3);
-
-        stage.addActor(saveIconButton);
-        stage.addActor(undoIconButton);
-        stage.addActor(eraserIconButton);
-        stage.addActor(bigSpriteIconButton);
-        stage.addActor(smallSpriteIconButton);
-
-        confirmExitStage.addActor(okIconButton);
-        confirmExitStage.addActor(noIconButton);
-
-        Pixmap pm = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/OS/HideCursor.png"));
+        Pixmap pm = new Pixmap(Gdx.files.internal("HideCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
 
         // input processors
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(this);
-        inputMultiplexer.addProcessor(stage);
-        inputMultiplexer.addProcessor(confirmExitStage);
+        inputMultiplexer.addProcessor(speButtons.stage);
+        inputMultiplexer.addProcessor(speButtons.confirmExitStage);
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
-    final void setSelectedSpriteSheet(String selected) {
+    public void setSelectedSpriteSheet(String selected) {
 
         selectedSpriteSheet = selected;
         pixmap = new Pixmap(new FileHandle(selectedSpriteSheet));
@@ -396,7 +172,7 @@ class SpriteEditor implements InputProcessor {
 
         //background color
         renderer.setProjectionMatrix(camera.combined);
-        
+
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.setColor(.1f, .2f, .2f, 1);
         renderer.rect(0, 0, Leikr.WIDTH, Leikr.HEIGHT);
@@ -404,17 +180,9 @@ class SpriteEditor implements InputProcessor {
 
         batch.setProjectionMatrix(camera.combined);
 
-        count = 8;
-        color = 0;
-        for (float item : paintBrush.leikrPalette.palette) {
-            paintBrush.drawRect(count, (int) viewport.getWorldHeight() - 8, 8, 8, color, "filled");
-            count += 10;
-            color++;
-        }
-
         // Sprite sheet background black
         renderer.begin(ShapeRenderer.ShapeType.Filled);
-        renderer.setColor(0,0,0,1);
+        renderer.setColor(0, 0, 0, 1);
         renderer.rect(8, 8, mainBoxWidth - 2, mainBoxHeight - 2);
         renderer.rect(spriteSheet.getWidth() + 12, 8, zoomBoxWidth, zoomBoxHeight);
         renderer.end();
@@ -442,8 +210,8 @@ class SpriteEditor implements InputProcessor {
         batch.end();
 
         // draw gui buttons
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
+        speButtons.stage.act(Gdx.graphics.getDeltaTime());
+        speButtons.stage.draw();
 
         if (exitDialog) {
             //background gray
@@ -455,8 +223,8 @@ class SpriteEditor implements InputProcessor {
             batch.begin();
             drawExitText();
             batch.end();
-            confirmExitStage.act(Gdx.graphics.getDeltaTime());
-            confirmExitStage.draw();
+            speButtons.confirmExitStage.act(Gdx.graphics.getDeltaTime());
+            speButtons.confirmExitStage.draw();
         }
 
         // Draw custom cursor
@@ -523,12 +291,9 @@ class SpriteEditor implements InputProcessor {
         zoomSpriteSheet.dispose();
         pixmap.dispose();
         zoomPixmap.dispose();
-        noIcon.dispose();
-        okIcon.dispose();
         font.dispose();
         cursor.dispose();
-        stage.dispose();
-        confirmExitStage.dispose();
+        speButtons.disposeButtons();
     }
 
     public void savePixmapImage() {
@@ -543,7 +308,6 @@ class SpriteEditor implements InputProcessor {
         zoomPixmap = new Pixmap(spriteWidth, spriteHeight, Pixmap.Format.RGBA8888);
         zoomPixmap.setBlending(Pixmap.Blending.None);
         zoomSpriteSheet = new Texture(zoomPixmap);
-
         zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
         zoomSpriteSheet.draw(zoomPixmap, 0, 0);
     }
@@ -566,8 +330,7 @@ class SpriteEditor implements InputProcessor {
 
             zoomPixmap = new Pixmap(spriteWidth, spriteHeight, Pixmap.Format.RGBA8888);
             zoomPixmap.setBlending(Pixmap.Blending.None);
-
-            zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
+            zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);            
             zoomSpriteSheet.draw(zoomPixmap, 0, 0);
         }
 
@@ -595,56 +358,6 @@ class SpriteEditor implements InputProcessor {
             case 0:
                 drawSelectedPixmapToMain();
                 break;
-            case 1:
-                if (coords.x >= 9 && coords.x <= 18) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(0));
-                }
-                if (coords.x >= 19 && coords.x <= 28) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(1));
-                }
-                if (coords.x >= 29 && coords.x <= 38) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(2));
-                }
-                if (coords.x >= 39 && coords.x <= 48) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(3));
-                }
-                if (coords.x >= 49 && coords.x <= 58) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(4));
-                }
-                if (coords.x >= 59 && coords.x <= 68) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(5));
-                }
-                if (coords.x >= 69 && coords.x <= 78) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(6));
-                }
-                if (coords.x >= 79 && coords.x <= 88) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(7));
-                }
-                if (coords.x >= 89 && coords.x <= 98) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(8));
-                }
-                if (coords.x >= 91 && coords.x <= 108) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(9));
-                }
-                if (coords.x >= 109 && coords.x <= 118) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(10));
-                }
-                if (coords.x >= 119 && coords.x <= 128) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(11));
-                }
-                if (coords.x >= 129 && coords.x <= 138) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(12));
-                }
-                if (coords.x >= 139 && coords.x <= 148) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(13));
-                }
-                if (coords.x >= 149 && coords.x <= 158) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(14));
-                }
-                if (coords.x >= 159 && coords.x <= 168) {
-                    drawColor.set(paintBrush.leikrPalette.palette.get(15));
-                }
-                break;
             case 2:
                 spriteIdX = (actualX) / 8;
                 spriteIdY = (actualY) / 8;
@@ -652,7 +365,7 @@ class SpriteEditor implements InputProcessor {
 
                 zoomPixmap = new Pixmap(spriteWidth, spriteHeight, Pixmap.Format.RGBA8888);
                 zoomPixmap.setBlending(Pixmap.Blending.None);
-                zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
+                zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);                
                 zoomSpriteSheet.draw(zoomPixmap, 0, 0);
                 break;
         }
@@ -685,7 +398,7 @@ class SpriteEditor implements InputProcessor {
             }
 
             exitDialog = true;
-            return false;
+            return true;
         }
         if (exitDialog) {
             switch (keycode) {
@@ -699,47 +412,7 @@ class SpriteEditor implements InputProcessor {
                     return true;
             }
         }
-        if (keycode == Input.Keys.RIGHT && spriteId < 15) {
-            spriteId++;
-            if (spriteIdX < 15) {
-                spriteIdX++;
-
-            }
-        }
-        if (keycode == Input.Keys.LEFT && spriteId > 0) {
-            spriteId--;
-            spriteIdX--;
-        }
-
-        if (keycode == Input.Keys.UP) {
-            if (spriteId >= 16) {
-                spriteId -= 16;
-                spriteIdY--;
-            } else {
-                spriteId = 0;
-                if (spriteIdY > 0) {
-                    spriteIdY--;
-
-                }
-            }
-        }
-        if (keycode == Input.Keys.DOWN) {
-
-            if (spriteId < 230) {
-                spriteId += 16;
-
-            }
-            if (spriteIdY < 15) {
-                spriteIdY++;
-            }
-        }
-
-        if (spriteId == 0) {
-            spriteIdX = 0;
-            spriteIdY = 0;
-        }
-
-        System.out.println("X: " + spriteIdX + " Y: " + spriteIdY + " ID:" + spriteId);
+        
         return false;
     }
 
