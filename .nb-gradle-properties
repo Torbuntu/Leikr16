@@ -10,6 +10,6 @@
   </script-platform>
   <license-header>
     <name>apache20</name>
-    <property name="organization"/>
+    <property name="organization">torbuntu</property>
   </license-header>
 </gradle-project-properties>

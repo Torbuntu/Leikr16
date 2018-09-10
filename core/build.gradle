@@ -10,10 +10,6 @@ sourceSets {
         groovy { srcDirs += ['src/' ] }
         
     }
-    test{
-        java { srcDirs = [] }
-        groovy { srcDirs += ['tests/' ] }
-    }
 }
 
 eclipse.project {

@@ -47,6 +47,9 @@ import com.leikr.core.SoundEngine.SoundEngine;
 import java.util.Random;
 import static com.leikr.core.Leikr.fileName;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.LineUnavailableException;
 
 /**
  *
@@ -113,7 +116,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
-        
+
         font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/" + game.customSettings.fontName));
         fontWidth = (int) game.customSettings.glyphWidth;
         fontHeight = (int) game.customSettings.glyphHeight;
@@ -249,7 +252,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         }
         batch.end();
     }
-    
+
     public void sprite(int id, float x, float y) {
         spriteHandler.drawSprite(id, x, y);
     }
@@ -297,19 +300,20 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     }
 
     // Sound Section
-    public void playBeep(float dur, float freq, float amp, String oscType) {
-        new Thread() {
-            @Override
-            public void run() {
-                soundEngine.soundEnginePlayBeep(dur, freq, amp, oscType);
-            }
-        }.start();
+    public void playBeep(float dur, float freq) {
+        try {
+            soundEngine.soundEnginePlayBeep();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // disposals
     public void dispose() {
         shapeRenderer.dispose();
         font.dispose();
+        soundEngine.disposeSoundEngine();
     }
 
     public boolean key(String name) {
