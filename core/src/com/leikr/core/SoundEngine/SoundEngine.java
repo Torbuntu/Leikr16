@@ -17,7 +17,19 @@ package com.leikr.core.SoundEngine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.AudioDevice;
+import com.badlogic.gdx.audio.Sound;
 import com.leikr.core.Leikr;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 
 /**
  *
@@ -34,21 +46,29 @@ public class SoundEngine {
 
     }
 
-    public void soundEnginePlayBeep() {
+    public void playSineTone(float tone, float dur) {
 
-        float[] buffer = new float[10000];
-        for (int i = 0; i < 10000; i++) {
-            buffer[i] = (float) Math.sin(1000 * (2 * Math.PI) * i / 44100);
+        float[] pcm_data = new float[44100 * 2];
+        double L1 = 44100.0 / tone;
+        for (int i = 0; i < pcm_data.length; i++) {
+            pcm_data[i] = (float) (55 * Math.sin((i / L1) * Math.PI * 2));
         }
 
-        new Thread() {
-            @Override
-            public void run() {
-                device.writeSamples(buffer, 0, (int) buffer.length);
-                
-            }
-        }.start();
+        //AudioFormat frmt = new AudioFormat(44100, 8, 1, true, true);
+        //AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(pcm_data), frmt, pcm_data.length / frmt.getFrameSize());
 
+        try {
+            //AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File("/home/tor/Desktop/test.wav"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //new Thread() {
+        //@Override
+        //public void run() {
+         device.writeSamples(pcm_data, 0, (int) dur);
+        //}
+        //}.start();
     }
 
     public void disposeSoundEngine() {

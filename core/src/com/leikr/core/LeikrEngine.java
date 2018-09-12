@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 .
+ * Copyright 2018 torbuntu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -300,9 +300,9 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     }
 
     // Sound Section
-    public void playBeep(float dur, float freq) {
+    public void playBeep(float tone, float dur) {
         try {
-            soundEngine.soundEnginePlayBeep();
+            soundEngine.playSineTone(tone, dur);
 
         } catch (Exception e) {
             e.printStackTrace();
