@@ -19,6 +19,7 @@ import com.leikr.core.Graphics.LeikrPalette;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -46,28 +47,24 @@ import com.leikr.core.Graphics.SpriteHandler;
 import com.leikr.core.SoundEngine.SoundEngine;
 import java.util.Random;
 import static com.leikr.core.Leikr.fileName;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.sound.sampled.LineUnavailableException;
 
 /**
  *
  * @author tor
  */
 public class LeikrEngine implements InputProcessor, ControllerListener {
-
+    
     public static Leikr game;
     SpriteBatch batch;
     ShapeRenderer shapeRenderer;
     Camera camera;
     Viewport viewport;
     Texture font;
-
+    
     TiledMap tiledMap;
     TiledMapRenderer tiledMapRenderer;
     TiledMapTileLayer tiledMapLayer;
-
+    
     boolean useMap;
 
     //keyboard buttons
@@ -92,58 +89,58 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     boolean rightButtonPressed = false;
     boolean upButtonPressed = false;
     boolean downButtonPressed = false;
-
+    
     public int screenWidth = (int) Leikr.WIDTH;
     public int screenHeight = (int) Leikr.HEIGHT;
-
+    
     LeikrPalette leikrPalette;
     SpriteHandler spriteHandler;
     PaintBrush paintBrush;
     SoundEngine soundEngine;
-
+    
     int fontWidth;
     int fontHeight;
-
+    
     void preCreate() {
         game = LeikrGameScreen.game;
         batch = game.batch;
         shapeRenderer = new ShapeRenderer();
-
+        
         spriteHandler = new SpriteHandler(game);
         paintBrush = new PaintBrush(shapeRenderer, game);
         leikrPalette = new LeikrPalette();
         soundEngine = new SoundEngine(game);
-
+        
         viewport = new FitViewport(screenWidth, screenHeight);
         camera = viewport.getCamera();
-
+        
         font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/" + game.customSettings.fontName));
         fontWidth = (int) game.customSettings.glyphWidth;
         fontHeight = (int) game.customSettings.glyphHeight;
         Controllers.addListener(this);
     }
-
+    
     public void create() {
-
+        
     }
-
+    
     public void preRender() {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
-
+    
     public void renderCamera() {
         //camera.update();
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
-
+        
         camera.update();
     }
 
     // Render methods used by the game scripts. 
     public void render() {
     }
-
+    
     public void render(float delta) {
     }
 
@@ -151,7 +148,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public void updateViewport(int width, int height) {
         viewport.update(width, height, true);
     }
-
+    
     public void setFont(String fontName, int width, int height) {
         font = new Texture(new FileHandle(Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/" + fontName + ".png"));
         fontWidth = width;
@@ -165,7 +162,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         tiledMapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
     }
-
+    
     public void drawMap() {
         if (tiledMapRenderer != null && useMap) {
             tiledMapRenderer.setView((OrthographicCamera) camera);
@@ -173,7 +170,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
 //            TextureRegion mpl = tiledMap.getTileSets().getTileSet("tileset").getTile(0).getTextureRegion();
         }
     }
-
+    
     public void setMapSection(int row, int column) {
         //row is the row id, column is the column id.
         int width = row * 320;
@@ -181,35 +178,35 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         camera.position.x = width + 160;
         camera.position.y = height + 120;
     }
-
+    
     public int getCameraX() {
         return (int) camera.position.x;
     }
-
+    
     public int getCameraY() {
         return (int) camera.position.y;
     }
-
+    
     public void setCamera(float x, float y) {
         camera.position.set(x, y, 0);
     }
-
+    
     public int getScreenWidth() {
         return screenWidth;
     }
-
+    
     public int getScreenHeight() {
         return screenHeight;
     }
-
+    
     public int getMapWidth() {
         return tiledMap.getProperties().get("width", Integer.class);
     }
-
+    
     public int getMapHeight() {
         return tiledMap.getProperties().get("height", Integer.class);
     }
-
+    
     public int getCellTileId(float x, float y) {
 //        System.out.println("X: " + x + " Y: " + y);
         try {
@@ -221,7 +218,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         }
         return -1;
     }
-
+    
     public void setCellTile(float x, float y, int newId) {
         if (tiledMapLayer.getCell((int) x, (int) y) != null) {
             tiledMapLayer.getCell((int) x, (int) y).setTile(tiledMap.getTileSets().getTile(newId));
@@ -230,7 +227,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
             tiledMapLayer.setCell(Math.round(x), Math.round(y), newCell.setTile(tiledMap.getTileSets().getTile(newId)));
         }
     }
-
+    
     public int getRandom(int range) {
         return new Random().nextInt(range);
     }
@@ -243,7 +240,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         batch.begin();
         int id = leikrPalette.palette.get(color);
         batch.setColor(new Color(id));
-
+        
         for (char C : text.toCharArray()) {
             fontX = ((int) C % 16) * fontWidth;
             fontY = ((int) C / 16) * fontHeight;
@@ -252,43 +249,43 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         }
         batch.end();
     }
-
+    
     public void sprite(int id, float x, float y) {
         spriteHandler.drawSprite(id, x, y);
     }
-
+    
     public void sprite(int id, float x, float y, float scaleX, float scaleY) {
         spriteHandler.drawSprite(id, x, y, scaleX, scaleY);
     }
-
+    
     public void bigSprite(int idtl, int idtr, int idbl, int idbr, float x, float y) {
         spriteHandler.drawBigSprite(idtl, idtr, idbl, idbr, x, y);
     }
-
+    
     public void rect(float x, float y, float width, float height, int color, String type) {
         paintBrush.drawRect(x, y, width, height, color, type);
     }
-
+    
     public void circle(float x, float y, float radius, int color, String type) {
         paintBrush.drawCircle(x, y, radius, color, type);
     }
-
+    
     public void arc(float x, float y, float radius, float start, float degrees, int color, String type) {
         paintBrush.drawArc(x, y, radius, start, degrees, color, type);
     }
-
+    
     public void line(float x, float y, float x2, float y2, int color) {
         paintBrush.drawLine(x, y, x2, y2, color);
     }
-
+    
     public void color(int id, float x, float y) {
         paintBrush.drawColor(id, x, y);
     }
-
+    
     public void color(int id, float x, float y, float width, float height) {
         paintBrush.drawColor(id, x, y, width, height);
     }
-
+    
     public void drawPalette(float x, float y, float w, float h) {
         shapeRenderer.begin(ShapeType.Filled);
         for (int c : leikrPalette.palette) {
@@ -303,10 +300,26 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     public void playBeep(float tone, float dur) {
         try {
             soundEngine.playSineTone(tone, dur);
-
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    public Sound getSfx(int id) {
+        return soundEngine.getSfx(id);
+    }
+    
+    public void playSfx(Sound snd) {
+        soundEngine.playSfx(snd);
+    }
+
+    public void playSfx(Sound snd, float vol) {
+        soundEngine.playSfx(snd, vol);
+    }
+
+    public void playSfx(Sound snd, float vol, float pit, float pan) {
+        soundEngine.playSfx(snd, vol, pit, pan);
     }
 
     // disposals
@@ -315,7 +328,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         font.dispose();
         soundEngine.disposeSoundEngine();
     }
-
+    
     public boolean key(String name) {
         switch (name.toLowerCase()) {
             case "right":
@@ -336,7 +349,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
                 return false;
         }
     }
-
+    
     public boolean button(String name) {
         switch (name.toLowerCase()) {
             case "a":
@@ -363,7 +376,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
                 return false;
         }
     }
-
+    
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
@@ -389,10 +402,10 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
                 spaceKeyPressed = true;
                 return true;
         }
-
+        
         return false;
     }
-
+    
     @Override
     public boolean keyUp(int keycode) {
         if (keycode == Keys.ESCAPE) {
@@ -425,7 +438,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         }
         return false;
     }
-
+    
     @Override
     public boolean povMoved(Controller controller, int povCode, PovDirection value) {
         // This is the dpad
@@ -451,7 +464,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         }
         return true;
     }
-
+    
     @Override
     public boolean buttonDown(Controller controller, int buttonCode) {
         System.out.println(controller.getName() + " : " + buttonCode);
@@ -477,7 +490,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         }
         return false;
     }
-
+    
     @Override
     public boolean buttonUp(Controller controller, int buttonCode) {
         System.out.println(controller.getName() + " : " + buttonCode);
@@ -503,13 +516,13 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
         }
         return false;
     }
-
+    
     @Override
     public boolean axisMoved(Controller controller, int axisCode, float value) {
         //axis 0 = x axis -1 = left 1 = right
         //axis 1 = y axis -1 = up 1 = down
         System.out.println("Axis moved: " + axisCode + " : " + (int) value);
-
+        
         if ((int) value == 0) {
             leftButtonPressed = false;
             rightButtonPressed = false;
@@ -532,61 +545,61 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
             return true;
         }
     }
-
+    
     @Override
     public boolean keyTyped(char character) {
-
+        
         return false;
     }
-
+    
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         return false;
     }
-
+    
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         return false;
     }
-
+    
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         return false;
     }
-
+    
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }
-
+    
     @Override
     public boolean scrolled(int amount) {
         return false;
     }
-
+    
     @Override
     public void connected(Controller controller) {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void disconnected(Controller controller) {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {
         return false;
     }
-
+    
     @Override
     public boolean ySliderMoved(Controller controller, int sliderCode, boolean value) {
         return false;
     }
-
+    
     @Override
     public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
         return false;
     }
-
+    
 }

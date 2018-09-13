@@ -24,6 +24,8 @@ import static com.leikr.core.Leikr.gameType;
 import com.leikr.core.LeikrGameScreen;
 import com.leikr.core.MapEditor.MapEditorScreen;
 import com.leikr.core.RepoDirectory.RepoHandler;
+import com.leikr.core.SoundEngine.SoundEngine;
+import com.leikr.core.SoundEngine.SoundFxEditorScreen;
 import com.leikr.core.SpriteEditor.SpriteEditorScreen;
 import groovy.lang.GroovyClassLoader;
 import java.io.IOException;
@@ -53,13 +55,14 @@ public class ShellHandler {
     float bgRed;
     float bgGreen;
     float bgBlue;
+    SoundEngine soundEngine;
 
     public ShellHandler(Leikr game, ConsoleScreen consoleScreen, FontHandler fontHandler) {
         this.game = game;
         this.consoleScreen = consoleScreen;
         this.fontHandler = fontHandler;
         repoHandler = new RepoHandler();
-
+        soundEngine = new SoundEngine(this.game);
         try {
             systemLoader = new SystemBios();
         } catch (IOException | InstantiationException | IllegalAccessException ex) {
@@ -162,6 +165,29 @@ public class ShellHandler {
             case "SpriteEditor":
                 game.setScreen(new SpriteEditorScreen(game));
                 consoleScreen.dispose();
+                break;
+            case "./SFX":
+            case "SoundFXEditor":
+                game.setScreen(new SoundFxEditorScreen(game));
+                consoleScreen.dispose();
+                break;
+            case "sfx":
+                try {
+                    historyBuffer.add(soundEngine.exportAudioWav(Float.parseFloat(inputList[1]), Float.parseFloat(inputList[2]), inputList[3], Integer.parseInt(inputList[4])));
+
+                } catch (Exception e) {
+                    historyBuffer.add(e.getMessage());
+                    e.printStackTrace();
+                }
+                break;
+            case "playsfx":
+                try {
+                    historyBuffer.add(soundEngine.playSound(Integer.parseInt(inputList[1]), Float.parseFloat(inputList[2])));
+
+                } catch (Exception e) {
+                    historyBuffer.add(e.getMessage());
+                    e.printStackTrace();
+                }
                 break;
             case "./ME":
             case "MapEditor":

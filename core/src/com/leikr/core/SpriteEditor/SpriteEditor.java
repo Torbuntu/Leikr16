@@ -94,9 +94,6 @@ final class SpriteEditor implements InputProcessor {
     int count = 0;
     int color = 0;
 
-    int cursorX = 0;
-    int cursorY = 0;
-
     boolean exitDialog = false;
     SpriteEditorButtons speButtons;
 
@@ -232,9 +229,7 @@ final class SpriteEditor implements InputProcessor {
         viewport.unproject(cursorCoords.set(Gdx.input.getX(), Gdx.input.getY()));
 //        int tmpY = (int) (camera.viewportHeight - (cursorCoords.y));
 
-        cursorX = (int) (cursorCoords.x);
-        cursorY = (int) (cursorCoords.y - 8);
-        batch.draw(cursor, cursorX, cursorY);
+        batch.draw(cursor, cursorCoords.x, cursorCoords.y - 8);
         batch.end();
     }
 
