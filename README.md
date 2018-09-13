@@ -30,7 +30,6 @@ A Java Fantasy Computer.
 - Music and editor
 - SFX and editor
 - Kotlin, Lua, and Scala support for game coding 
-- Big Sprite support for 16x16 sprites (using 4 8x8 sprites in a grid. The LeikrEngine API already supports using these in games. but the sprite editor does not)
 
 # Build instructions
 - git clone repo.
