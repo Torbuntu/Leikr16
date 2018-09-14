@@ -44,25 +44,31 @@ public class SoundEngine {
 
     }
 
-    public void playSineTone(float tone, float dur) {
+    public float generateSine(int pos, int tone) {
+        int sampleFreq = 44100 / tone;
+        return (float) Math.sin(pos / (sampleFreq / (Math.PI * 2)));
+    }
 
-        float freq = tone;
-        float sample = 44100f;
-        float[] buffer = new float[(int)sample];
-        
-        for(int i = 0; i < sample; i++){
-            buffer[i] = (float)55*(float)Math.sin(2*Math.PI*freq/sample*i);
+    public void playSineTone(float freq, int dur) {
+        device = Gdx.audio.newAudioDevice(44100, true);
+//        float freq = tone;
+//        float sample = 44100f;
+//        float[] buffer = new float[(int) sample];
+//
+//        for (int i = 0; i < sample; i++) {
+//            buffer[i] = (float) 55 * (float) Math.sin(2 * Math.PI * freq / sample * i);
+//        }
+        float[] buffer = new float[44100 * dur];
+        for (int i = 0; i < 44100 * dur; i++) {
+            buffer[i] = generateSine(i, (int) freq) * 127;
         }
-       
-        
-        
+
 //        double length = 44100.0 / tone;
 //        float[] pcm_data = new float[(int)length];
 //
 //        for (int i = 0; i < pcm_data.length; i++) {
 //            pcm_data[i] = (float) (55 * Math.sin((i / length) * Math.PI * 2));
 //        }
-
         //AudioFormat frmt = new AudioFormat(44100, 8, 1, true, true);
         //AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(pcm_data), frmt, pcm_data.length / frmt.getFrameSize());
         try {
@@ -71,24 +77,24 @@ public class SoundEngine {
             e.printStackTrace();
         }
 
-        device.writeSamples(buffer, 0, (int) dur);
+        device.writeSamples(buffer, 0, buffer.length);
+        device.dispose();
+
     }
 
-    public String exportAudioWav(float tone, float dur, String type, int id) {
+    public String exportAudioWav(int freq, int dur, String type, int id) {
 
-        byte[] pcm_data = new byte[44100 * 2];
+        byte[] buffer;
+
         switch (type.toLowerCase()) {
             case "sine":
             default:
-                double L1 = 44100.0 / tone;
-                for (int i = 0; i < pcm_data.length; i++) {
-                    pcm_data[i] = (byte) (55 * Math.sin((i / L1) * Math.PI * 2));
-                }
+                //buffer = generateSine(freq, dur);
                 break;
         }
 
         AudioFormat frmt = new AudioFormat(44100, 16, 1, true, true);
-        AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(pcm_data), frmt, (long) dur);
+        //AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(buffer), frmt, buffer.length);
         String file;
         if (id < 128) {
             file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + "audio/" + fileName + "_" + id + ".wav";
@@ -97,8 +103,8 @@ public class SoundEngine {
             return "id is too large.";
         }
         try {
-            AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File(file));
-            return "Success";
+            // AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File(file));
+            return "New sound file successfully generated in " + fileName + "/audio/";
         } catch (Exception e) {
             e.printStackTrace();
             return "Failed to create sound. " + e.getMessage();

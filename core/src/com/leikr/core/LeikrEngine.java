@@ -297,7 +297,7 @@ public class LeikrEngine implements InputProcessor, ControllerListener {
     }
 
     // Sound Section
-    public void playBeep(float tone, float dur) {
+    public void playBeep(float tone, int dur) {
         try {
             soundEngine.playSineTone(tone, dur);
             
