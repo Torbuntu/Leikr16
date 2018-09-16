@@ -1,6 +1,5 @@
 # Leikr16
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-- trello board with progress and updates on what is being worked on vs. complete and not started.
 
 A Java Fantasy Computer.
 - Written in Java using libgdx and Groovy.
@@ -38,3 +37,6 @@ A Java Fantasy Computer.
 - go to desktop/build/distribution and copy the contents of the zip to desired location (LeikrSystem)
 - run desktop.jar with java -jar desktop.jar
 
+# Progress
+The trello board for tracking this project.
+https://trello.com/b/EHNvZGzC/leikr16
