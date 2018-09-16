@@ -96,6 +96,7 @@ com_crashlytics_export_strings.xml
 nbactions.xml
 nb-configuration.xml
 aux-config
+.nb-gradle/profiles/private/aux-config
 
 ## Gradle
 
