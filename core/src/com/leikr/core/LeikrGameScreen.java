@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 .
+ * Copyright 2018 torbuntu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,6 @@ public class LeikrGameScreen implements Screen, InputProcessor {
                     break;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
         }
@@ -107,7 +106,6 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             //New instance
             leikrGame = (LeikrEngine) urlCl.loadClass(fileName).newInstance();
         } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            ex.printStackTrace();
             game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
         }
@@ -139,7 +137,6 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             Class JavaInterface = Class.forName(interfaceName);
             javaInt = interpreter.get(instanceName).__tojava__(JavaInterface);
         } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
             game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
         }
@@ -153,7 +150,6 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + fileName + ".groovy"));//loads the game code        
             leikrGame = (LeikrEngine) groovyGameLoader.newInstance();
         } catch (InstantiationException | CompilationFailedException | IOException | IllegalAccessException ex) {
-            ex.printStackTrace();
             game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
         }
@@ -164,9 +160,8 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         try {
             leikrGame.preCreate();
             leikrGame.create();
-            Gdx.input.setInputProcessor(leikrGame);
+            Gdx.input.setInputProcessor(leikrGame.leikrControls);
         } catch (Exception e) {
-            e.printStackTrace();
             game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
         }
@@ -184,7 +179,6 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             leikrGame.render();
             
         } catch (Exception e) {
-            e.printStackTrace();
             game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
         }

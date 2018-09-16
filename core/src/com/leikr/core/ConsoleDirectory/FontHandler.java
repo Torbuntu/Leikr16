@@ -138,7 +138,7 @@ public class FontHandler {
 
     public void setHistory(String history) {
         if (textBuffer.history.size() > 60) {
-            for (int i = 0; i < 10; i++) { 
+            for (int i = 0; i < 10; i++) {
                 textBuffer.history.remove(0);
             }
             System.out.println(textBuffer.history);

@@ -152,8 +152,8 @@ public class ShellHandler {
                 break;
             case "cls":
             case "clear":
-                fontHandler.clearCommandBuffer();
                 fontHandler.clearHistoryBuffer();
+                fontHandler.clearCommandBuffer();
                 break;
             case "start":
             case "run":
@@ -171,8 +171,6 @@ public class ShellHandler {
                 game.setScreen(new SoundFxEditorScreen(game));
                 consoleScreen.dispose();
                 break;
-                
-                
             case "sine":
                 soundEngine.playSineTone(Float.parseFloat(inputList[1]), Integer.parseInt(inputList[2]));
                 break;
@@ -180,18 +178,16 @@ public class ShellHandler {
                 try {
                     historyBuffer.add(soundEngine.exportAudioWav(Integer.parseInt(inputList[1]), Integer.parseInt(inputList[2]), inputList[3], Integer.parseInt(inputList[4])));
 
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     historyBuffer.add(e.getMessage());
-                    e.printStackTrace();
                 }
                 break;
             case "playsfx":
                 try {
                     historyBuffer.add(soundEngine.playSound(Integer.parseInt(inputList[1]), Float.parseFloat(inputList[2])));
 
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     historyBuffer.add(e.getMessage());
-                    e.printStackTrace();
                 }
                 break;
             case "./ME":
@@ -239,7 +235,10 @@ public class ShellHandler {
                 }
                 break;
         }
-        historyBuffer.add(result);
+        if (result.length() > 0) {
+            historyBuffer.add(result);
+
+        }
 
     }
 }
