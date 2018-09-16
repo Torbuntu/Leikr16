@@ -20,7 +20,6 @@ import groovy.lang.GroovyObject;
 import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
-import com.leikr.core.System.GroovySystemMethods;
 import groovy.lang.GroovyShell;
 import java.io.File;
 import java.util.Arrays;
@@ -37,7 +36,6 @@ public class SystemBios {
     GroovyObject systemMethodsClass;
     GroovyShell groovyShell;
     
-    //
     GroovySystemMethods groovySystemMethods; 
 
     public SystemBios() throws IOException, InstantiationException, IllegalAccessException {
