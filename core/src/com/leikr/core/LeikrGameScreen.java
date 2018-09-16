@@ -90,7 +90,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
 //        run.compile(JavaConversions.asScalaBuffer(fileNames).toList);
     }
 
-    public void loadJavaGame(String filePath) {
+    private void loadJavaGame(String filePath) {
 
         File f = new File(filePath);// Create file of Java game.
         try {
@@ -112,7 +112,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
 
     }
 
-    public void loadJythonGame(String filePath) {
+    private void loadJythonGame(String filePath) {
         leikrGame = (LeikrEngine) getJythonObject("com.leikr.core.LeikrEngine", filePath + fileName + ".py");
     }
 
@@ -144,7 +144,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         return javaInt;
     }
 
-    public void loadGroovyGame(String filePath) {
+    private void loadGroovyGame(String filePath) {
         groovyClassLoader = new GroovyClassLoader();
         try {
             groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + fileName + ".groovy"));//loads the game code        
