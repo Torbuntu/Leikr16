@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 .
+ * Copyright 2018 torbuntu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.leikr.core.Graphics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.leikr.core.Leikr;
 import static com.leikr.core.Leikr.fileName;
 import java.util.ArrayList;
 

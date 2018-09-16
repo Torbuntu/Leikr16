@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 .
+ * Copyright 2018 torbuntu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,6 @@ import com.leikr.core.Leikr;
  */
 public class LeikrDesktopEngine {
 
-    private Leikr game;
     Texture appMenuTexture;
 
     ImageButton appMenuButton;
@@ -65,8 +64,6 @@ public class LeikrDesktopEngine {
     public FitViewport viewport;
 
     public void preCreate(Leikr game) {
-        this.game = game;
-
         cursorCoords = new Vector2();
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
@@ -106,7 +103,6 @@ public class LeikrDesktopEngine {
     }
 
     public void create() {
-
     }
 
     public void preRender() {
@@ -115,7 +111,6 @@ public class LeikrDesktopEngine {
     }
 
     public void render() {
-
     }
 
     public void renderStageAndCursor() {

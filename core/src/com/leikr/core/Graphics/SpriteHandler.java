@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 .
+ * Copyright 2018 torbuntu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class SpriteHandler {
     }
 
     //adds all of the split textures from regions to the sprites map for easier calling.
-    void mapAllSprites() {
+    private void mapAllSprites() {
         int id = 0;
         sprites = new HashMap<>();
         regions = TextureRegion.split(spriteSheet_0, 8, 8);

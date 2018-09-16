@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 .
+ * Copyright 2018 torbuntu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,10 +42,8 @@ public class ConsoleScreen implements Screen{
 
     @Override
     public void render(float delta) {
-        
         //Update the console items
         console.renderConsole(delta);
-        
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 .
+ * Copyright 2018 torbuntu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,13 +40,12 @@ public class DesktopEnvironmentScreen implements Screen {
         loadUserDesktop(filePath);
     }
 
-    public void loadUserDesktop(String filePath) {
+    private void loadUserDesktop(String filePath) {
         groovyClassLoader = new GroovyClassLoader();
         try {
             groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + ".groovy"));//loads the game code        
             leikrDesktopEngine = (LeikrDesktopEngine) groovyGameLoader.newInstance();
         } catch (InstantiationException | CompilationFailedException | IOException | IllegalAccessException ex) {
-            ex.printStackTrace();
             game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
         }
