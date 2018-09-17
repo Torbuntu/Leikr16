@@ -37,3 +37,6 @@ A Java Fantasy Computer.
 - go to desktop/build/distribution and copy the contents of the zip to desired location (LeikrSystem)
 - run desktop.jar with java -jar desktop.jar
 
+# Progress
+The trello board for tracking this project.
+https://trello.com/b/EHNvZGzC/leikr16
