@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 .
+ * Copyright 2018 torbuntu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.leikr.core.TitleScreen.TitleScreen;
-import com.leikr.core.System.GroovySystemMethods;
+import com.leikr.core.System.SystemMethods;
 
 public class Leikr extends Game {
 
@@ -44,7 +44,7 @@ public class Leikr extends Game {
         font = new BitmapFont();
         
         if (!Gdx.files.external("Leikr/").exists() || !Gdx.files.external("Leikr/ChipSpace/").exists() || !Gdx.files.external("Leikr/OS/").exists()) {
-            GroovySystemMethods groovySystemMethods = new GroovySystemMethods();
+            SystemMethods groovySystemMethods = new SystemMethods();            
             groovySystemMethods.initFileSystem();
         }
         

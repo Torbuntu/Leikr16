@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 .
+ * Copyright 2018 torbuntu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,12 +36,12 @@ public class SystemBios {
     GroovyObject systemMethodsClass;
     GroovyShell groovyShell;
     
-    GroovySystemMethods groovySystemMethods; 
+    SystemMethods groovySystemMethods; 
 
     public SystemBios() throws IOException, InstantiationException, IllegalAccessException {
         classLoader = new GroovyClassLoader();
         groovyShell = new GroovyShell();
-        groovySystemMethods = new GroovySystemMethods();
+        groovySystemMethods = new SystemMethods();
 
         if (!Gdx.files.external("Leikr/").exists() || !Gdx.files.external("Leikr/ChipSpace/").exists()) {
             groovySystemMethods.initFileSystem();

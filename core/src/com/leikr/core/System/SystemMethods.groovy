@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 .
+ * Copyright 2018 torbuntu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 package com.leikr.core.System;
 
 import groovy.io.FileType;
@@ -24,7 +25,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 
-public class GroovySystemMethods {
+public class SystemMethods {
     String BiosVersion = "V0.0.1";
     String SystemName = "Leikr 16";
     String RootFileSystem = Gdx.files.getExternalStoragePath()+"Leikr";
@@ -131,24 +132,24 @@ public class GroovySystemMethods {
     String newGame(String name, String type){
         new File(RootFileSystem+"/ChipSpace/"+name).mkdir();
         switch(type.toLowerCase()){
-            case "python":
-            case "jython":
-            case "py":
-            case "jy":
-                new AntBuilder().copy( file:Gdx.files.classpath("GameModels/JythonTemplate.py"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".py");
-                new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".py", token: "GAME_NAME", value: name);        
-                break;
-            case "java":
-                new AntBuilder().copy( file:Gdx.files.classpath("GameModels/JavaTemplate.java"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".java");
-                new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".java", token: "GAME_NAME", value: name);
-                break;
-            case "groovy":
-            default:
-                //new File( RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy")
-                new AntBuilder().copy( file:Gdx.files.classpath("GameModels/GroovyTemplate.groovy"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy");
-                new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy", token: "GAME_NAME", value: name);
-                //return "Not imnplemented yet";
-                break;
+        case "python":
+        case "jython":
+        case "py":
+        case "jy":
+            new AntBuilder().copy( file:Gdx.files.classpath("GameModels/JythonTemplate.py"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".py");
+            new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".py", token: "GAME_NAME", value: name);        
+            break;
+        case "java":
+            new AntBuilder().copy( file:Gdx.files.classpath("GameModels/JavaTemplate.java"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".java");
+            new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".java", token: "GAME_NAME", value: name);
+            break;
+        case "groovy":
+        default:
+            //new File( RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy")
+            new AntBuilder().copy( file:Gdx.files.classpath("GameModels/GroovyTemplate.groovy"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy");
+            new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy", token: "GAME_NAME", value: name);
+            //return "Not imnplemented yet";
+            break;
         }
         new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate_0.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".png");
         new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".png", token: "GAME_NAME", value: name);
@@ -171,7 +172,7 @@ public class GroovySystemMethods {
    
     
     String initFileSystem(){        
-       new AntBuilder().copy( todir: RootFileSystem) {
+        new AntBuilder().copy( todir: RootFileSystem) {
             fileset( dir: Gdx.files.classpath("Leikr"));
         } 
         return "File system init.";
