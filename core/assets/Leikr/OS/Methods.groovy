@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-class Bios {
+class CustomMethods {
     String BiosVersion = "V0.0.1";
     String SystemName = "Leikr 16";    
     
@@ -18,3 +18,5 @@ class Bios {
     
     
 }
+
+new CustomMethods();

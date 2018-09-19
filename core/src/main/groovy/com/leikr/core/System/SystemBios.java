@@ -20,23 +20,37 @@ import groovy.lang.GroovyObject;
 import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
+import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
+import groovy.util.GroovyScriptEngine;
+import groovy.util.ResourceException;
+import groovy.util.ScriptException;
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.codehaus.groovy.control.CompilationFailedException;
 
 /**
  *
- * @author tor
- * This class is responsible for handling system level operations. Such as File system management. It also manages the GroovyShell.
+ * @author tor This class is responsible for handling system level operations.
+ * Such as File system management. It also manages the GroovyShell.
  */
 public class SystemBios {
 
     final GroovyClassLoader classLoader;
-    GroovyObject systemMethodsClass;
     GroovyShell groovyShell;
-    
-    SystemMethods groovySystemMethods; 
+
+    SystemMethods groovySystemMethods;
+
+    Class cmClass;
+    Constructor[] cmConstruct;
+    GroovyObject customMethods;
+
+    Binding binding;
+    GroovyScriptEngine engine;
 
     public SystemBios() throws IOException, InstantiationException, IllegalAccessException {
         classLoader = new GroovyClassLoader();
@@ -46,7 +60,24 @@ public class SystemBios {
         if (!Gdx.files.external("Leikr/").exists() || !Gdx.files.external("Leikr/ChipSpace/").exists()) {
             groovySystemMethods.initFileSystem();
         }
-        systemMethodsClass = (GroovyObject) classLoader.parseClass(new File(Gdx.files.getExternalStoragePath() + "Leikr/OS/Methods.groovy")).newInstance();
+
+        binding = new Binding();
+        engine = new GroovyScriptEngine(Gdx.files.getExternalStoragePath() + "Leikr/OS/");
+        try {
+            customMethods = (GroovyObject) engine.run("Methods.groovy", binding);
+        } catch (ResourceException | ScriptException ex) {
+            Logger.getLogger(SystemBios.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public String reloadCustomMethods() {
+        try {
+            customMethods = (GroovyObject) engine.run("Methods.groovy", binding);
+            return "Custom methods reloaded.";
+        } catch (ResourceException | ScriptException ex) {
+            return "Custom Methods failed to reload... " + ex.getMessage();
+        }
     }
 
     public String getBiosVersion() {
@@ -100,18 +131,22 @@ public class SystemBios {
                 result = groovySystemMethods.restartSystem();
                 break;
 
+            case "./RCM":
+                result = reloadCustomMethods();
+                break;
+
             case "new":
                 result = groovySystemMethods.newGame(methodName[1], methodName[2]);
                 break;
             case "exec":
                 try {
-                    if (methodName.length == 1) {
+                    if (methodName.length == 2) {
 
-                        result = systemMethodsClass.invokeMethod(methodName[0], null);
+                        result = customMethods.invokeMethod(methodName[1], null);
 
                     } else {
-                        String[] args = Arrays.copyOfRange(methodName, 0, methodName.length);
-                        result = systemMethodsClass.invokeMethod(methodName[0], args);
+                        String[] args = Arrays.copyOfRange(methodName, 2, methodName.length);
+                        result = customMethods.invokeMethod(methodName[1], args);
                     }
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
