@@ -1,7 +1,7 @@
 apply plugin: "java"
 apply plugin: "groovy"
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.10
 sourceSets {
     main {
         java { srcDirs = ['src/'] }
@@ -29,8 +29,7 @@ task debug(dependsOn: classes, type: JavaExec) {
 }
 
 task dist(type: Jar) {
-    from files(sourceSets.main.output.classesDir)
-    from files(sourceSets.main.output.resourcesDir)
+    from files(sourceSets.main.output)
     from {configurations.compile.collect {zipTree(it)}}
     from files(project.assetsDir);
  
@@ -54,21 +53,3 @@ task distZip(type: Zip, dependsOn: dist){
 }
 
 dist.dependsOn classes
-
-eclipse {
-    project {
-        name = appName + "-desktop"
-        linkedResource name: 'assets', type: '2', location: 'PARENT-1-PROJECT_LOC/core/assets'
-    }
-}
-
-task afterEclipseImport(description: "Post processing after project generation", group: "IDE") {
-  doLast {
-    def classpath = new XmlParser().parse(file(".classpath"))
-    new Node(classpath, "classpathentry", [ kind: 'src', path: 'assets' ]);
-    def writer = new FileWriter(file(".classpath"))
-    def printer = new XmlNodePrinter(new PrintWriter(writer))
-    printer.setPreserveWhitespace(true)
-    printer.print(classpath)
-  }
-}

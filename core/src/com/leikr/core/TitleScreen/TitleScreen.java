@@ -96,12 +96,10 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         len = ((halfX / 2) - 20) + (introText.length() * glyphWidth);
 
         blink = 0;
-
+        Gdx.input.setInputProcessor(this);
     }
 
     void BeginLeikr() {
-        Gdx.input.setInputProcessor(this);
-
         if (game.customSettings.startx) {
             game.setScreen(new DesktopEnvironmentScreen(game));
         } else {

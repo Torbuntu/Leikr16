@@ -82,7 +82,3 @@ project(":core") {
         //        compile 'org.luaj:luaj-jse:3.0.1'
     }
 }
-
-tasks.eclipse.doLast {
-    delete ".project"
-}

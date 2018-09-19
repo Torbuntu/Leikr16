@@ -56,7 +56,7 @@ class LeikrGame extends LeikrEngine{
             p.vy = 4.5;
             
             //Since this writes live to the Audio Device, it blocks the program until finished.
-            playBeep(165, 1000);
+            //playBeep(165, 1000);
         }
 
         if (p.vy > 0 && (solid(p.x+p.vx,p.y+p.vy+8) || solid(p.x+7+p.vx,p.y+p.vy+8))){
