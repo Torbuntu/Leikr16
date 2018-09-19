@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
@@ -51,8 +52,8 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     Viewport viewport;
 
     Texture animTexture;
-    TextureRegion[] animationFrames;
-    Animation animation;
+    Array<TextureRegion> animationFrames;
+    Animation<TextureRegion> animation;
     float elapsedTime;
 
     TextureRegion[][] tmpFrames;
@@ -70,14 +71,14 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         animTexture = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/TitleAnimation/TitleAnimation.png"));
         tmpFrames = TextureRegion.split(animTexture, 64, 24);
 
-        animationFrames = new TextureRegion[27];
+        animationFrames = new Array<>();
         int index = 0;
         for (int j = 0; j < 27; j++) {
-            animationFrames[index] = tmpFrames[j][0];
+            animationFrames.add(tmpFrames[j][0]);
             index++;
         }
         float tmp = 1f / 27f;
-        animation = new Animation(tmp, (Object[]) animationFrames);
+        animation = new Animation<>(tmp, animationFrames);
         animation.setPlayMode(Animation.PlayMode.NORMAL);
 
         font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/" + game.customSettings.fontName));

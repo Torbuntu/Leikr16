@@ -190,6 +190,9 @@ public class ShellHandler {
                     historyBuffer.add(e.getMessage());
                 }
                 break;
+            case "testsound":
+                soundEngine.playNewAudio();
+                break;
             case "./ME":
             case "MapEditor":
                 game.setScreen(new MapEditorScreen(game));

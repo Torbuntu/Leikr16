@@ -158,5 +158,33 @@ public class SoundEngine {
         device.dispose();
 
     }
+    
+    
+    
+    public void playNewAudio(){
+        BasicOscillator osc = new BasicOscillator();
+        
+        osc.setFrequency(500);
+        
+        osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SAW);
+        
+        SamplePlayer player = new SamplePlayer();
+        
+        player.setSampleProvider(osc);
+        
+        player.startPlayer();
+        
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SoundEngine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        player.stopPlayer();
+        
+        
+        
+    }
+    
 
 }
