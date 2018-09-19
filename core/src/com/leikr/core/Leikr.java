@@ -19,6 +19,7 @@ package com.leikr.core;
 import com.leikr.core.System.CustomSettings;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.leikr.core.TitleScreen.TitleScreen;
@@ -53,7 +54,9 @@ public class Leikr extends Game {
         customSettings = new CustomSettings();
 
 //        this.setScreen(new ConsoleScreen(this));
-        this.setScreen(new TitleScreen(this));
+        TitleScreen title = new TitleScreen(this);
+        title.setInput();
+        this.setScreen(title);
 
     }
 

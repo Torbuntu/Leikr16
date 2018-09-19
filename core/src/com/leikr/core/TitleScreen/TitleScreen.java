@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 .
+ * Copyright 2018 torbuntu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,6 +96,9 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         len = ((halfX / 2) - 20) + (introText.length() * glyphWidth);
 
         blink = 0;
+    }
+
+    public void setInput() {
         Gdx.input.setInputProcessor(this);
     }
 
