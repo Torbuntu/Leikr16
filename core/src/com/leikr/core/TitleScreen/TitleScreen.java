@@ -97,10 +97,11 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
         blink = 0;
 
-        Gdx.input.setInputProcessor(this);
     }
 
     void BeginLeikr() {
+        Gdx.input.setInputProcessor(this);
+
         if (game.customSettings.startx) {
             game.setScreen(new DesktopEnvironmentScreen(game));
         } else {
