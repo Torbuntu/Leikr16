@@ -191,7 +191,7 @@ public class ShellHandler {
                 }
                 break;
             case "testsound":
-                soundEngine.playNewAudio(Integer.parseInt(inputList[1]), Integer.parseInt(inputList[2]));
+                soundEngine.playNewAudio(Integer.parseInt(inputList[1]), Integer.parseInt(inputList[2]), inputList[3]);
                 break;
             case "./ME":
             case "MapEditor":

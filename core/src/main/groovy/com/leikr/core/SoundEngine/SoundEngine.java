@@ -58,7 +58,7 @@ public class SoundEngine {
         }
         return buffer;
     }
-    
+
     public byte[] generateSineTwo(int freq, int dur) {
         int sampleFreq = 44100 / freq;
         byte[] buffer = new byte[44100 * dur];
@@ -91,7 +91,7 @@ public class SoundEngine {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         float[] buffer = generateSine((int) freq, dur);
         device.writeSamples(buffer, 0, buffer.length);
         device.dispose();
@@ -110,7 +110,7 @@ public class SoundEngine {
                 //buffer = generateSine(freq, dur);
                 break;
         }
-        
+
         AudioFormat frmt = new AudioFormat(44100, 16, 1, true, true);
         AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(buffer), frmt, buffer.length);
         String file;
@@ -158,33 +158,40 @@ public class SoundEngine {
         device.dispose();
 
     }
-    
-    
-    
-    public void playNewAudio(int frequency, int seconds){
+
+    public void playNewAudio(int frequency, int seconds, String wave) {
         BasicOscillator osc = new BasicOscillator();
-        
+
         osc.setFrequency(frequency);
-        
-        osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SAW);
-        
+        switch (wave.toLowerCase()) {
+            case "saw":
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SAW);
+
+                break;
+            case "sin":
+
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SIN);
+                break;
+            case "square":
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SQU);
+                break;
+
+        }
+
         SamplePlayer player = new SamplePlayer();
-        
+
         player.setSampleProvider(osc);
-        
+
         player.startPlayer();
-        
+
         try {
             Thread.sleep(seconds);
         } catch (InterruptedException ex) {
             Logger.getLogger(SoundEngine.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         player.stopPlayer();
-        
-        
-        
+
     }
-    
 
 }
