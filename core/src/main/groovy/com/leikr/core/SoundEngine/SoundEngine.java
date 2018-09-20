@@ -161,10 +161,10 @@ public class SoundEngine {
     
     
     
-    public void playNewAudio(){
+    public void playNewAudio(int frequency, int seconds){
         BasicOscillator osc = new BasicOscillator();
         
-        osc.setFrequency(500);
+        osc.setFrequency(frequency);
         
         osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SAW);
         
@@ -175,7 +175,7 @@ public class SoundEngine {
         player.startPlayer();
         
         try {
-            Thread.sleep(4000);
+            Thread.sleep(seconds);
         } catch (InterruptedException ex) {
             Logger.getLogger(SoundEngine.class.getName()).log(Level.SEVERE, null, ex);
         }

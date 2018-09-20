@@ -27,7 +27,7 @@ import javax.sound.sampled.SourceDataLine;
 public class SamplePlayer extends Thread {
     // AudioFormat parameters
 
-    public static final int SAMPLE_RATE = 22050;
+    public static final int SAMPLE_RATE = 44100;
     private static final int SAMPLE_SIZE = 16;
     private static final int CHANNELS = 1;
     private static final boolean SIGNED = true;
