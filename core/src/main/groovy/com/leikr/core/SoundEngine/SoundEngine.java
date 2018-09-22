@@ -159,23 +159,28 @@ public class SoundEngine {
 
     }
 
-    public void playNewAudio(int frequency, int seconds, String wave) {
+    public void playNewAudio(int frequency, int milsecs, String wave) {
         BasicOscillator osc = new BasicOscillator();
 
         osc.setFrequency(frequency);
         switch (wave.toLowerCase()) {
+            default:
+            case "sine":
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SIN);
+                break;
             case "saw":
                 osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SAW);
-
-                break;
-            case "sin":
-
-                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SIN);
                 break;
             case "square":
                 osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SQU);
                 break;
-
+            case "tri":
+            case "triangle":
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.TRI);
+                break;
+            case "noise":
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.NOI);
+                break;
         }
 
         SamplePlayer player = new SamplePlayer();
@@ -185,7 +190,7 @@ public class SoundEngine {
         player.startPlayer();
 
         try {
-            Thread.sleep(seconds);
+            Thread.sleep(milsecs);
         } catch (InterruptedException ex) {
             Logger.getLogger(SoundEngine.class.getName()).log(Level.SEVERE, null, ex);
         }

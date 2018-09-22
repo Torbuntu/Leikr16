@@ -25,12 +25,12 @@ public class BasicOscillator implements SampleProviderIntfc {
     private WAVESHAPE waveshape;
     private long periodSamples;
     private long sampleNumber;
-    
+
     /**
      * Waveshape enumeration
      */
     public enum WAVESHAPE {
-        SIN, SQU, SAW
+        SIN, SQU, SAW, NOI, TRI
     }
 
     /**
@@ -40,7 +40,7 @@ public class BasicOscillator implements SampleProviderIntfc {
      */
     public BasicOscillator() {
         this.waveshape = WAVESHAPE.SIN;
-        periodSamples = (long) (SamplePlayer.SAMPLE_RATE / 1000.0);
+        periodSamples = (long) (SamplePlayer.SAMPLE_RATE / 440.0);
     }
 
     /**
@@ -79,7 +79,6 @@ public class BasicOscillator implements SampleProviderIntfc {
             case SIN:
                 value = Math.sin(2.0 * Math.PI * x);
                 break;
-
             case SQU:
                 if (sampleNumber < (periodSamples / 2)) {
                     value = 1.0;
@@ -87,9 +86,17 @@ public class BasicOscillator implements SampleProviderIntfc {
                     value = -1.0;
                 }
                 break;
-
             case SAW:
                 value = 2.0 * (x - Math.floor(x + 0.5));
+                break;
+            case NOI:
+                value = Math.random();
+                break;
+            case TRI:
+//                value = 1 - Math.abs(x % (2) - 1); 
+//                value = Math.abs((x++ % periodSamples) - 2);
+//                value = Math.abs(2 - x % (4));
+                value = (Math.abs(x-2)-1);
                 break;
         }
         sampleNumber = (sampleNumber + 1) % periodSamples;
@@ -115,5 +122,4 @@ public class BasicOscillator implements SampleProviderIntfc {
         return SamplePlayer.BUFFER_SIZE;
     }
 
-    
 }
