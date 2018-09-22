@@ -27,8 +27,14 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.midi.Instrument;
+import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Synthesizer;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -43,18 +49,84 @@ public class SoundEngine {
 
     Leikr game;
     AudioDevice device;
-
+    Synthesizer synth;
+    final MidiChannel[] midiChan;
+    Instrument[] instr;
+    
     public SoundEngine(Leikr game) {
         this.game = game;
         device = Gdx.audio.newAudioDevice(44100, true);
 
+        try {
+            synth = MidiSystem.getSynthesizer();
+            synth.open();
+        } catch (MidiUnavailableException ex) {
+            Logger.getLogger(SoundEngine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        midiChan = synth.getChannels();
+        
+        instr = synth.getDefaultSoundbank().getInstruments();
+        System.out.println(synth.getDefaultSoundbank().getDescription());
+        System.out.println(synth.getDeviceInfo());
+        System.out.println(synth.getDefaultSoundbank().getName());
+        
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     public float[] generateSine(int freq, int dur) {
         int sampleFreq = 44100 / freq;
         float[] buffer = new float[44100 * dur];
-        for (int i = 0; i < 44100 * dur; i++) {
-            buffer[i] = (float) Math.sin(i / (sampleFreq / (Math.PI * 2))) * 127;
+        for (int i = 0; i < buffer.length; i++) {
+            buffer[i] = (float) (Math.sin(i / (sampleFreq / (Math.PI * 2)))*127)/4;
+
         }
         return buffer;
     }
@@ -62,7 +134,7 @@ public class SoundEngine {
     public byte[] generateSineTwo(int freq, int dur) {
         int sampleFreq = 44100 / freq;
         byte[] buffer = new byte[44100 * dur];
-        for (int i = 0; i < 44100 * dur; i++) {
+        for (int i = 0; i < buffer.length; i++) {
             buffer[i] = (byte) (Math.sin(i / (sampleFreq / (Math.PI * 2))) * 127);
         }
         return buffer;
@@ -70,28 +142,7 @@ public class SoundEngine {
 
     public void playSineTone(float freq, int dur) {
         device = Gdx.audio.newAudioDevice(44100, true);
-//        float freq = tone;
-//        float sample = 44100f;
-//        float[] buffer = new float[(int) sample];
-//
-//        for (int i = 0; i < sample; i++) {
-//            buffer[i] = (float) 55 * (float) Math.sin(2 * Math.PI * freq / sample * i);
-//        }
-
-//        double length = 44100.0 / tone;
-//        float[] pcm_data = new float[(int)length];
-//
-//        for (int i = 0; i < pcm_data.length; i++) {
-//            pcm_data[i] = (float) (55 * Math.sin((i / length) * Math.PI * 2));
-//        }
-        //AudioFormat frmt = new AudioFormat(44100, 8, 1, true, true);
-        //AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(pcm_data), frmt, pcm_data.length / frmt.getFrameSize());
-        try {
-            //AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File("/home/tor/Desktop/test.wav"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        
         float[] buffer = generateSine((int) freq, dur);
         device.writeSamples(buffer, 0, buffer.length);
         device.dispose();
@@ -132,8 +183,9 @@ public class SoundEngine {
     public String playSound(int id, float dur) {
         String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + "audio/" + fileName + "_" + id + ".wav";
         Sound tmp = Gdx.audio.newSound(new FileHandle(file));
-        tmp.play(1.0f);
+        tmp.loop();
         Time.sleep(dur);
+        tmp.stop();
         tmp.dispose();
         return "success";
     }

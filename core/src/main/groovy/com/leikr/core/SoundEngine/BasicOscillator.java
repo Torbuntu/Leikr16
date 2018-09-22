@@ -72,7 +72,8 @@ public class BasicOscillator implements SampleProviderIntfc {
 
         double value;
         double x = sampleNumber / (double) periodSamples;
-
+        
+        
         switch (waveshape) {
 
             default:

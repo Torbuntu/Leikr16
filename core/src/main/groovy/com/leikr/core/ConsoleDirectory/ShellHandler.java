@@ -178,7 +178,7 @@ public class ShellHandler {
                 try {
                     historyBuffer.add(soundEngine.exportAudioWav(Integer.parseInt(inputList[1]), Integer.parseInt(inputList[2]), inputList[3], Integer.parseInt(inputList[4])));
 
-                } catch (NumberFormatException e) {
+                } catch (Exception e) {
                     historyBuffer.add(e.getMessage());
                 }
                 break;
