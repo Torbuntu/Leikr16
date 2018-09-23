@@ -171,8 +171,26 @@ public class ShellHandler {
                 game.setScreen(new SoundFxEditorScreen(game));
                 consoleScreen.dispose();
                 break;
+            case "setInstrument":
+            case "setinst":
+                soundEngine.setInstrument(Integer.parseInt(inputList[1]));
+                break;
             case "sine":
-                soundEngine.playSineTone(Float.parseFloat(inputList[1]), Integer.parseInt(inputList[2]));
+                try {
+                    soundEngine.playSineTone(Float.parseFloat(inputList[1]), Integer.parseInt(inputList[2]));
+
+                } catch (Exception e) {
+                    historyBuffer.add(e.getMessage());
+                }
+                break;
+            case "playinst":
+            case "note":
+                try {
+                    soundEngine.playNote(Integer.parseInt(inputList[1]), Integer.parseInt(inputList[2]), Integer.parseInt(inputList[3]));
+
+                } catch (Exception e) {
+                    historyBuffer.add(e.getMessage());
+                }
                 break;
             case "sfx":
                 try {

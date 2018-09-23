@@ -21,6 +21,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.leikr.core.Leikr;
 import static com.leikr.core.Leikr.fileName;
+import ddf.minim.signals.TriangleWave;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -32,8 +33,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.midi.Instrument;
 import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiFileFormat;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequence;
 import javax.sound.midi.Synthesizer;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -52,7 +55,7 @@ public class SoundEngine {
     Synthesizer synth;
     final MidiChannel[] midiChan;
     Instrument[] instr;
-    
+
     public SoundEngine(Leikr game) {
         this.game = game;
         device = Gdx.audio.newAudioDevice(44100, true);
@@ -64,68 +67,39 @@ public class SoundEngine {
             Logger.getLogger(SoundEngine.class.getName()).log(Level.SEVERE, null, ex);
         }
         midiChan = synth.getChannels();
-        
+        midiChan[0].setMono(true);
+
         instr = synth.getDefaultSoundbank().getInstruments();
-        System.out.println(synth.getDefaultSoundbank().getDescription());
-        System.out.println(synth.getDeviceInfo());
-        System.out.println(synth.getDefaultSoundbank().getName());
-        
+//        Systeom.out.println(synth.getDefaultSoundbank().getDescription());
+//        System.out.println(synth.getDeviceInfo());
+//        System.out.println(synth.getDefaultSoundbank().getName());
+        System.out.println(Arrays.toString(synth.getLoadedInstruments()));
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+    public void setInstrument(int id) {
+        try {
+            midiChan[0].programChange(0, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void playNote(int note, int velocity, int duration) {
+        midiChan[0].noteOn(note, velocity);
+        try {
+            Time.sleep(duration);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        midiChan[0].allNotesOff();
+    }
 
     public float[] generateSine(int freq, int dur) {
+
         int sampleFreq = 44100 / freq;
         float[] buffer = new float[44100 * dur];
         for (int i = 0; i < buffer.length; i++) {
-            buffer[i] = (float) (Math.sin(i / (sampleFreq / (Math.PI * 2)))*127)/4;
+            buffer[i] = (float) (Math.sin(i / (sampleFreq / (Math.PI * 2))) * 127) / 4;
 
         }
         return buffer;
@@ -142,7 +116,7 @@ public class SoundEngine {
 
     public void playSineTone(float freq, int dur) {
         device = Gdx.audio.newAudioDevice(44100, true);
-        
+
         float[] buffer = generateSine((int) freq, dur);
         device.writeSamples(buffer, 0, buffer.length);
         device.dispose();
@@ -218,12 +192,14 @@ public class SoundEngine {
         switch (wave.toLowerCase()) {
             default:
             case "sine":
+            case "sin":
                 osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SIN);
                 break;
             case "saw":
                 osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SAW);
                 break;
             case "square":
+            case "squ":
                 osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SQU);
                 break;
             case "tri":
@@ -231,7 +207,12 @@ public class SoundEngine {
                 osc.setOscWaveshape(BasicOscillator.WAVESHAPE.TRI);
                 break;
             case "noise":
+            case "noi":
                 osc.setOscWaveshape(BasicOscillator.WAVESHAPE.NOI);
+                break;
+            case "pha":
+            case "phase":
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.PHA);
                 break;
         }
 
