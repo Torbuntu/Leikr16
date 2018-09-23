@@ -12,6 +12,7 @@ A Java Fantasy Computer.
 - Resolution 320x240
 - 1024 8x8 Sprites (by means of 4 256 sprite sheets)
 - 640x120 Tiled Map (each tile is 8x8). (4 screens tall and 16 wide)
+- 128 WAV sound files per game [wip]
 
 # Current features
 - Terminal Emulator. 
@@ -21,7 +22,7 @@ A Java Fantasy Computer.
 - Github repo downloads using `setUserRepo [github username]` then `lpm install [repo name]`. Then to load the game use `mnt [game name]` which will load the game from the Download directory into ChipSpace. Then you can `load [game name]` and `run`. To set where the repository exists use the `setRepoType [repo website]` command. Options known to work are github and gitlab. To set repository user and type all at once use `repoSettings [repo name] [repo type]`.
 - settings.properties file for customizing the colors of the background and font in terminal as well as the font itself (font name file and size in width and height).
 - [WIP] Desktop Environment screen that is customizable through settings.properties and a programmed groovy file.
-- Sound fix are now possible using the terminal command sfx to generate wav files into a projects audio directory. 
+- Sound fx are now possible using the terminal command sfx to generate wav files into a projects audio directory. 
 
 # Potential/Planned Features
 - More advanced terminal/console commands (update games, upload games to repo, etc...)
