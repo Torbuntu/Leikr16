@@ -194,7 +194,7 @@ public class ShellHandler {
                 break;
             case "sfx":
                 try {
-                    historyBuffer.add(soundEngine.exportAudioWav(Integer.parseInt(inputList[1]), Integer.parseInt(inputList[2]), inputList[3], Integer.parseInt(inputList[4])));
+                    historyBuffer.add(soundEngine.writeAudioToDisk(inputList[1], Integer.parseInt(inputList[2]), Integer.parseInt(inputList[3]), Integer.parseInt(inputList[4])));
 
                 } catch (Exception e) {
                     historyBuffer.add(e.getMessage());
@@ -208,8 +208,8 @@ public class ShellHandler {
                     historyBuffer.add(e.getMessage());
                 }
                 break;
-            case "testsound":
-                soundEngine.playNewAudio(Integer.parseInt(inputList[1]), Integer.parseInt(inputList[2]), inputList[3]);
+            case "testsfx":
+                soundEngine.playNewAudio(inputList[1], Integer.parseInt(inputList[2]), Integer.parseInt(inputList[3]));
                 break;
             case "./ME":
             case "MapEditor":

@@ -163,7 +163,6 @@ public class SoundEngine {
             AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File(file));
             return "New sound file successfully generated in " + fileName + "/audio/";
         } catch (Exception e) {
-            e.printStackTrace();
             return "Failed to create sound. " + e.getMessage();
         }
 
@@ -197,10 +196,9 @@ public class SoundEngine {
 
     public void disposeSoundEngine() {
         device.dispose();
-
     }
 
-    public void playNewAudio(int frequency, int milsecs, String wave) {
+    public void playNewAudio(String wave, int frequency, int seconds) {
         BasicOscillator osc = new BasicOscillator();
 
         osc.setFrequency(frequency);
@@ -231,38 +229,66 @@ public class SoundEngine {
                 break;
         }
 
-        try {
-            byte[] test = new byte[44100 * 2];
-            osc.getWriteableSamples(test);
-            System.out.println(Arrays.toString(test));
-            AudioFormat tfrmt = new AudioFormat(44100, 16, 1, true, true);
-            AudioInputStream tais = new AudioInputStream(new ByteArrayInputStream(test), tfrmt, test.length);
-            String tfile;
-            tfile = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + "audio/" + fileName + "_" + 200 + ".wav";
-            try {
-                AudioSystem.write(tais, AudioFileFormat.Type.WAVE, new File(tfile));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            System.out.println("CST ERROR: " + e.getMessage());
-            e.printStackTrace();
-        }
-
         SamplePlayer player = new SamplePlayer();
 
         player.setSampleProvider(osc);
 
         player.startPlayer();
 
-        try {
-            Thread.sleep(milsecs);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(SoundEngine.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Time.sleep(seconds);
 
         player.stopPlayer();
 
+    }
+
+    public String writeAudioToDisk(String wave, int frequency, int seconds, int id) {
+        BasicOscillator osc = new BasicOscillator();
+
+        osc.setFrequency(frequency);
+        switch (wave.toLowerCase()) {
+            default:
+            case "sine":
+            case "sin":
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SIN);
+                break;
+            case "saw":
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SAW);
+                break;
+            case "square":
+            case "squ":
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.SQU);
+                break;
+            case "tri":
+            case "triangle":
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.TRI);
+                break;
+            case "noise":
+            case "noi":
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.NOI);
+                break;
+            case "pha":
+            case "phase":
+                osc.setOscWaveshape(BasicOscillator.WAVESHAPE.PHA);
+                break;
+        }
+        if(id > 127){
+            return "ID is too large. Must be between 0 and 127";
+        }
+        try {
+            byte[] sampleArray = new byte[44100 * seconds];
+            osc.getWriteableSamples(sampleArray);
+            AudioFormat audioFormat = new AudioFormat(44100, 16, 1, true, true);
+            AudioInputStream audioInStream = new AudioInputStream(new ByteArrayInputStream(sampleArray), audioFormat, sampleArray.length);
+            String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + "audio/" + fileName + "_" + id + ".wav";
+            try {
+                AudioSystem.write(audioInStream, AudioFileFormat.Type.WAVE, new File(file));
+            } catch (Exception e) {
+                return "Failed to write to file with id: "+id + " Error: "+e.getMessage();
+            }
+            return "Audio sample saved successfully with id: "+id;
+        } catch (Exception e) {
+            return "System error: "+e.getMessage();
+        }
     }
 
 }
