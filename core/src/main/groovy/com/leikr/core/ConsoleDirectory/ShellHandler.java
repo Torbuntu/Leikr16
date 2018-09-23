@@ -175,14 +175,6 @@ public class ShellHandler {
             case "setinst":
                 soundEngine.setInstrument(Integer.parseInt(inputList[1]));
                 break;
-            case "sine":
-                try {
-                    soundEngine.playSineTone(Float.parseFloat(inputList[1]), Integer.parseInt(inputList[2]));
-
-                } catch (Exception e) {
-                    historyBuffer.add(e.getMessage());
-                }
-                break;
             case "playinst":
             case "note":
                 try {
