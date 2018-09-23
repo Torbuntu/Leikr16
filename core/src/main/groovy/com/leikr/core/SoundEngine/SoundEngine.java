@@ -20,7 +20,6 @@ import com.badlogic.gdx.audio.AudioDevice;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.leikr.core.Leikr;
-import static com.leikr.core.Leikr.fileName;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -36,6 +35,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import org.python.modules.time.Time;
+import static com.leikr.core.Leikr.gameName;
 
 /**
  *
@@ -48,10 +48,12 @@ public class SoundEngine {
     Synthesizer synth;
     final MidiChannel[] midiChan;
     Instrument[] instr;
+    AudioFormat audioFormat;
 
     public SoundEngine(Leikr game) {
         this.game = game;
         device = Gdx.audio.newAudioDevice(44100, true);
+        audioFormat = new AudioFormat(44100, 16, 1, true, true);
 
         try {
             synth = MidiSystem.getSynthesizer();
@@ -84,7 +86,7 @@ public class SoundEngine {
     }
 
     public String playSound(int id, float dur) {
-        String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + "audio/" + fileName + "_" + id + ".wav";
+        String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + "audio/" + gameName + "_" + id + ".wav";
         Sound tmp = Gdx.audio.newSound(new FileHandle(file));
         tmp.loop();
         Time.sleep(dur);
@@ -94,7 +96,7 @@ public class SoundEngine {
     }
 
     public Sound getSfx(int id) {
-        return Gdx.audio.newSound(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + "audio/" + fileName + "_" + id + ".wav"));
+        return Gdx.audio.newSound(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + "audio/" + gameName + "_" + id + ".wav"));
     }
 
     public void playSfx(Sound snd) {
@@ -186,23 +188,22 @@ public class SoundEngine {
                 osc.setOscWaveshape(BasicOscillator.WAVESHAPE.PHA);
                 break;
         }
-        if(id > 127){
+        if (id > 127) {
             return "ID is too large. Must be between 0 and 127";
         }
         try {
             byte[] sampleArray = new byte[44100 * seconds];
             osc.getWriteableSamples(sampleArray);
-            AudioFormat audioFormat = new AudioFormat(44100, 16, 1, true, true);
             AudioInputStream audioInStream = new AudioInputStream(new ByteArrayInputStream(sampleArray), audioFormat, sampleArray.length);
-            String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + "audio/" + fileName + "_" + id + ".wav";
+            String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + "audio/" + gameName + "_" + id + ".wav";
             try {
                 AudioSystem.write(audioInStream, AudioFileFormat.Type.WAVE, new File(file));
             } catch (Exception e) {
-                return "Failed to write to file with id: "+id + " Error: "+e.getMessage();
+                return "Failed to write to file with id: " + id + " Error: " + e.getMessage();
             }
-            return "Audio sample saved successfully with id: "+id;
+            return "Audio sample saved successfully with id: " + id;
         } catch (Exception e) {
-            return "System error: "+e.getMessage();
+            return "System error: " + e.getMessage();
         }
     }
 

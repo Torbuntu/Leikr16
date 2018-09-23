@@ -19,7 +19,6 @@ import com.leikr.core.System.SystemBios;
 import com.leikr.core.System.CustomSettings;
 import com.leikr.core.DesktopEnvironment.DesktopEnvironmentScreen;
 import com.leikr.core.Leikr;
-import static com.leikr.core.Leikr.fileName;
 import static com.leikr.core.Leikr.gameType;
 import com.leikr.core.LeikrGameScreen;
 import com.leikr.core.MapEditor.MapEditorScreen;
@@ -32,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static com.leikr.core.Leikr.gameName;
 
 /**
  *
@@ -119,7 +119,7 @@ public class ShellHandler {
                 //do nothing
                 break;
             case "load":
-                fileName = inputList[1];
+                gameName = inputList[1];
                 String out = "File " + inputList[1] + " has been loaded";
                 if (inputList.length > 2) {
                     gameType = inputList[2];
@@ -158,18 +158,21 @@ public class ShellHandler {
             case "start":
             case "run":
                 game.setScreen(new LeikrGameScreen(game));
-
                 consoleScreen.dispose();
                 break;
-            case "./SPE":
-            case "SpriteEditor":
-                game.setScreen(new SpriteEditorScreen(game));
-                consoleScreen.dispose();
+            case "getLoadedGame":
+            case "gameName":
+            case "loadedGame":
+                historyBuffer.add(gameName);
                 break;
-            case "./SFX":
-            case "SoundFXEditor":
-                game.setScreen(new SoundFxEditorScreen(game));
-                consoleScreen.dispose();
+            case "getLoadedType":
+            case "gameType":
+            case "loadedType":
+                historyBuffer.add(gameType);
+                break;
+            case "loadInfo":
+            case "gameInfo":
+                historyBuffer.add("Name: "+gameName+" Type: "+gameName);
                 break;
             case "setInstrument":
             case "setinst":
@@ -212,6 +215,16 @@ public class ShellHandler {
             case "DesktopEnvironment":
             case "startx":
                 game.setScreen(new DesktopEnvironmentScreen(game));
+                consoleScreen.dispose();
+                break;
+            case "./SPE":
+            case "SpriteEditor":
+                game.setScreen(new SpriteEditorScreen(game));
+                consoleScreen.dispose();
+                break;
+            case "./SFX":
+            case "SoundFXEditor":
+                game.setScreen(new SoundFxEditorScreen(game));
                 consoleScreen.dispose();
                 break;
             case "setUserRepo":

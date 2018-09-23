@@ -36,7 +36,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Leikr;
-import static com.leikr.core.Leikr.fileName;
+import static com.leikr.core.Leikr.gameName;
 
 /**
  *
@@ -112,10 +112,10 @@ final class SpriteEditor implements InputProcessor {
         paintBrush = new PaintBrush(renderer, game);
 
         // gets the sprite sheet from the given fileName (which is the loaded game)
-        firstSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + fileName + "_0.png";
-        secondSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + fileName + "_1.png";
-        thirdSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + fileName + "_2.png";
-        fourthSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + fileName + "_3.png";
+        firstSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + gameName + "_0.png";
+        secondSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + gameName + "_1.png";
+        thirdSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + gameName + "_2.png";
+        fourthSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + gameName + "_3.png";
 
         selectedSpriteSheet = firstSpriteSheet;
         setSelectedSpriteSheet(selectedSpriteSheet);

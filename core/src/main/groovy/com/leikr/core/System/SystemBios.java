@@ -84,17 +84,16 @@ public class SystemBios {
         return groovySystemMethods.getBiosVersion();
     }
 
-    public Object runSystemMethod(String[] methodName) {
+    public Object runSystemMethod(String[] inputList) {
         Object result;
 
-        switch (methodName[0]) {
+        switch (inputList[0]) {
             case "cd":
-                if (methodName.length < 2) {
+                if (inputList.length < 2) {
                     result = "~";
                     groovySystemMethods.setLocPath("");
                 } else {
-                    result = groovySystemMethods.cd(methodName[1]);
-
+                    result = groovySystemMethods.cd(inputList[1]);
                 }
                 break;
             case "pwd":
@@ -106,23 +105,23 @@ public class SystemBios {
                 break;
 
             case "mkdir":
-                result = groovySystemMethods.mkdir(methodName[1]);
+                result = groovySystemMethods.mkdir(inputList[1]);
                 break;
             case "mnt":
-                result = groovySystemMethods.mnt(methodName[1]);
+                result = groovySystemMethods.mnt(inputList[1]);
                 break;
             case "del":
             case "rm":
-                if (methodName[1].equals("-rf")) {
-                    result = groovySystemMethods.rmdir(methodName[2]);
+                if (inputList[1].equals("-rf")) {
+                    result = groovySystemMethods.rmdir(inputList[2]);
                 } else {
-                    result = groovySystemMethods.rm(methodName[1]);
+                    result = groovySystemMethods.rm(inputList[1]);
                 }
                 break;
             case "dir":
             case "ls":
-                if (methodName.length > 1) {
-                    result = groovySystemMethods.lsPath(methodName[1]);
+                if (inputList.length > 1) {
+                    result = groovySystemMethods.lsPath(inputList[1]);
                 } else {
                     result = groovySystemMethods.ls();
                 }
@@ -132,31 +131,32 @@ public class SystemBios {
                 break;
 
             case "./RCM":
+            case "reloadMethods":
                 result = reloadCustomMethods();
                 break;
 
             case "new":
-                result = groovySystemMethods.newGame(methodName[1], methodName[2]);
+                result = groovySystemMethods.newGame(inputList[1], inputList[2]);
                 break;
             case "exec":
                 try {
-                    if (methodName.length == 2) {
+                    if (inputList.length == 2) {
 
-                        result = customMethods.invokeMethod(methodName[1], null);
+                        result = customMethods.invokeMethod(inputList[1], null);
 
                     } else {
-                        String[] args = Arrays.copyOfRange(methodName, 2, methodName.length);
-                        result = customMethods.invokeMethod(methodName[1], args);
+                        String[] args = Arrays.copyOfRange(inputList, 2, inputList.length);
+                        result = customMethods.invokeMethod(inputList[1], args);
                     }
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
-                    result = "Execution of Method `" + methodName[0] + "` failed. The method may not exist.";
+                    result = "Execution of Method `" + inputList[0] + "` failed. The method may not exist.";
                 }
                 break;
             default:
 
                 // default command and system commands do not exist. Try running groovy shell eval.
-                String inputString = String.join(",", methodName).replaceAll(",", "");
+                String inputString = String.join(",", inputList).replaceAll(",", "");
 
                 try {
                     result = groovyShell.evaluate(inputString).toString();

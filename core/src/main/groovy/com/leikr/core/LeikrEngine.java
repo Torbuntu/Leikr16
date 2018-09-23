@@ -40,8 +40,8 @@ import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Graphics.SpriteHandler;
 import com.leikr.core.SoundEngine.SoundEngine;
 import java.util.Random;
-import static com.leikr.core.Leikr.fileName;
 import com.leikr.core.LeikrControls.LeikrControls;
+import static com.leikr.core.Leikr.gameName;
 
 /**
  *
@@ -124,7 +124,7 @@ public class LeikrEngine {
     }
     
     public void setFont(String fontName, int width, int height) {
-        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/" + fontName + ".png"));
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "ChipSpace/" + gameName + "/" + fontName + ".png"));
         fontWidth = width;
         fontHeight = height;
     }
@@ -132,7 +132,7 @@ public class LeikrEngine {
     // Map and Camera section
     public void loadMap() {
         useMap = true;
-        tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + fileName + "/" + fileName + ".tmx");
+        tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + gameName + "/" + gameName + ".tmx");
         tiledMapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
     }
@@ -270,16 +270,6 @@ public class LeikrEngine {
         shapeRenderer.end();
     }
 
-    // Sound Section
-    public void playBeep(float tone, int dur) {
-        try {
-            soundEngine.playSineTone(tone, dur);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
     public Sound getSfx(int id) {
         return soundEngine.getSfx(id);
     }
