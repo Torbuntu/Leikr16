@@ -132,5 +132,16 @@ public class BasicOscillator implements SampleProviderIntfc {
         }
         return SamplePlayer.BUFFER_SIZE;
     }
+    
+    // writes the sampled audio to disk.
+    public void getWriteableSamples(byte[] buffer) {
+        int index = 0;
+        for (int i = 0; i < (buffer.length/2); i++) {
+            double ds = getSample() * Short.MAX_VALUE;
+            short ss = (short) Math.round(ds);
+            buffer[index++] = (byte) (ss >> 8);
+            buffer[index++] = (byte) (ss & 0xFF);
+        }
+    }
 
 }

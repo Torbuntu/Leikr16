@@ -22,15 +22,20 @@ import com.badlogic.gdx.files.FileHandle;
 import com.leikr.core.Leikr;
 import static com.leikr.core.Leikr.fileName;
 import ddf.minim.signals.TriangleWave;
+import ddf.minim.ugens.Oscil;
+import ddf.minim.ugens.Waves;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 import javax.sound.midi.Instrument;
 import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiFileFormat;
@@ -70,10 +75,6 @@ public class SoundEngine {
         midiChan[0].setMono(true);
 
         instr = synth.getDefaultSoundbank().getInstruments();
-//        Systeom.out.println(synth.getDefaultSoundbank().getDescription());
-//        System.out.println(synth.getDeviceInfo());
-//        System.out.println(synth.getDefaultSoundbank().getName());
-        System.out.println(Arrays.toString(synth.getLoadedInstruments()));
     }
 
     public void setInstrument(int id) {
@@ -99,7 +100,7 @@ public class SoundEngine {
         int sampleFreq = 44100 / freq;
         float[] buffer = new float[44100 * dur];
         for (int i = 0; i < buffer.length; i++) {
-            buffer[i] = (float) (Math.sin(i / (sampleFreq / (Math.PI * 2))) * 127) / 4;
+            buffer[i] = (float) (Math.sin(i / (sampleFreq / (Math.PI * 2))) * 127);
 
         }
         return buffer;
@@ -125,8 +126,6 @@ public class SoundEngine {
 
     public String exportAudioWav(int freq, int dur, String type, int id) {
 
-        ByteArrayOutputStream bas = new ByteArrayOutputStream();
-        DataOutputStream ds = new DataOutputStream(bas);
         byte[] buffer;
         switch (type.toLowerCase()) {
             case "sine":
@@ -138,6 +137,21 @@ public class SoundEngine {
 
         AudioFormat frmt = new AudioFormat(44100, 16, 1, true, true);
         AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(buffer), frmt, buffer.length);
+
+        try {
+            float[] tmp = generateSine((int) 220, 200);
+            ByteBuffer bfr = ByteBuffer.allocate(tmp.length * 4);
+            for (float f : tmp) {
+                bfr.put(ByteBuffer.allocate(4).putFloat(f).array());
+            }
+            AudioInputStream tais = new AudioInputStream(new ByteArrayInputStream(bfr.array()), frmt, bfr.array().length);
+            String tfile = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + "audio/" + fileName + "_" + 200 + ".wav";
+            AudioSystem.write(tais, AudioFileFormat.Type.WAVE, new File(tfile));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "failed to generate byte array: " + e.getMessage();
+        }
+
         String file;
         if (id < 128) {
             file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + "audio/" + fileName + "_" + id + ".wav";
@@ -152,6 +166,7 @@ public class SoundEngine {
             e.printStackTrace();
             return "Failed to create sound. " + e.getMessage();
         }
+
     }
 
     public String playSound(int id, float dur) {
@@ -214,6 +229,24 @@ public class SoundEngine {
             case "phase":
                 osc.setOscWaveshape(BasicOscillator.WAVESHAPE.PHA);
                 break;
+        }
+
+        try {
+            byte[] test = new byte[44100 * 2];
+            osc.getWriteableSamples(test);
+            System.out.println(Arrays.toString(test));
+            AudioFormat tfrmt = new AudioFormat(44100, 16, 1, true, true);
+            AudioInputStream tais = new AudioInputStream(new ByteArrayInputStream(test), tfrmt, test.length);
+            String tfile;
+            tfile = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + fileName + "/" + "audio/" + fileName + "_" + 200 + ".wav";
+            try {
+                AudioSystem.write(tais, AudioFileFormat.Type.WAVE, new File(tfile));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.out.println("CST ERROR: " + e.getMessage());
+            e.printStackTrace();
         }
 
         SamplePlayer player = new SamplePlayer();
