@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// This class was modified from: http://www.drdobbs.com/jvm/music-components-in-java-creating-oscill/230500178?pgno=1
+
 package com.leikr.core.SoundEngine;
 
 import ddf.minim.ugens.Oscil;
@@ -89,7 +92,6 @@ public class BasicOscillator implements SampleProviderIntfc {
         double x = sampleNumber / (double) periodSamples;
 
         switch (waveshape) {
-
             default:
             case SIN:
                 value = sinWave.getWaveform().value((float) x);
