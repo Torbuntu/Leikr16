@@ -34,6 +34,8 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import org.python.util.PythonInterpreter;
 import static com.leikr.core.Leikr.gameType;
 import static com.leikr.core.Leikr.gameName;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  *
@@ -144,12 +146,14 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     private void loadGroovyGame(String filePath) {
         groovyClassLoader = new GroovyClassLoader();
         try {
-            groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + gameName + ".groovy"));//loads the game code        
-            leikrGame = (LeikrEngine) groovyGameLoader.newInstance();
-        } catch (InstantiationException | CompilationFailedException | IOException | IllegalAccessException ex) {
+            groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + gameName + ".groovy"));//loads the game code  
+            Constructor[] cnst = groovyGameLoader.getConstructors();
+            leikrGame = (LeikrEngine) cnst[0].newInstance();
+        } catch (SecurityException | IllegalArgumentException | InvocationTargetException | InstantiationException | CompilationFailedException | IOException | IllegalAccessException ex) {
+            ex.printStackTrace();
             game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
-        }
+        } 
     }
 
     @Override
