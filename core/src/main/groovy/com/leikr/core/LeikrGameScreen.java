@@ -76,6 +76,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
                     break;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
         }
@@ -83,11 +84,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     }
 
     public void loadScalaGame(String filePath) {
-//        Global g = new Global(new Settings());
 
-//        Global.Run run = new g.Run();
-        // assumes you have a Java list of file names
-//        run.compile(JavaConversions.asScalaBuffer(fileNames).toList);
     }
 
     private void loadJavaGame(String filePath) {
@@ -177,7 +174,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             leikrGame.render(delta);
 
             leikrGame.render();
-            
+
         } catch (Exception e) {
             game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
@@ -204,7 +201,10 @@ public class LeikrGameScreen implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
-        leikrGame.dispose();
+        if (leikrGame != null) {
+            leikrGame.dispose();
+
+        }
     }
 
     @Override
