@@ -19,7 +19,6 @@ import com.leikr.core.ConsoleDirectory.ShellHandler;
 import com.leikr.core.Leikr;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -55,7 +54,7 @@ public class CustomSettings {
         loadCustomSettings();
     }
         
-    public void loadCustomSettings() {
+    private void loadCustomSettings() {
 
         Properties prop = new Properties();
         try {
@@ -81,11 +80,9 @@ public class CustomSettings {
             
             customPalette = (prop.getProperty("customPalette") != null) ? prop.getProperty("customPalette") : "";
             
-        } catch (FileNotFoundException  ex ) {
+        } catch (IOException | NumberFormatException  ex ) {
             Logger.getLogger(ShellHandler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ShellHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
 
     }
     
