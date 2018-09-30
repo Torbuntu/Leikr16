@@ -39,7 +39,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Graphics.SpriteHandler;
 import com.leikr.core.SoundEngine.SoundEngine;
-import java.util.Random;
 import com.leikr.core.LeikrControls.LeikrControls;
 import static com.leikr.core.Leikr.gameName;
 
@@ -62,9 +61,6 @@ public class LeikrEngine {
     
     boolean useMap;
     
-    public int screenWidth = (int) Leikr.WIDTH;
-    public int screenHeight = (int) Leikr.HEIGHT;
-    
     LeikrPalette leikrPalette;
     SpriteHandler spriteHandler;
     PaintBrush paintBrush;
@@ -85,7 +81,7 @@ public class LeikrEngine {
         soundEngine = new SoundEngine(game);
         leikrControls = new LeikrControls(game, this);
         
-        viewport = new FitViewport(screenWidth, screenHeight);
+        viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
         
         font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/" + game.customSettings.fontName));
@@ -95,8 +91,8 @@ public class LeikrEngine {
         Controllers.addListener(leikrControls);
     }
     
-    public void create() {        
-    }
+    // Create method used in subclassed game scripts.
+    public void create() {}
     
     public void preRender() {
         Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -112,11 +108,8 @@ public class LeikrEngine {
     }
 
     // Render methods used by the game scripts. 
-    public void render() {
-    }
-    
-    public void render(float delta) {
-    }
+    public void render() {}    
+    public void render(float delta) {}
 
     //Updates the view on resize in the Leikr main.
     public void updateViewport(int width, int height) {
@@ -166,11 +159,11 @@ public class LeikrEngine {
     }
     
     public int getScreenWidth() {
-        return screenWidth;
+        return (int)Leikr.WIDTH;
     }
     
     public int getScreenHeight() {
-        return screenHeight;
+        return (int)Leikr.HEIGHT;
     }
     
     public int getMapWidth() {
@@ -201,11 +194,7 @@ public class LeikrEngine {
             tiledMapLayer.setCell(Math.round(x), Math.round(y), newCell.setTile(tiledMap.getTileSets().getTile(newId)));
         }
     }
-    
-    public int getRandom(int range) {
-        return new Random().nextInt(range);
-    }
-
+  
     // Drawing section
     public void drawText(String text, float x, float y, int color) {
         int fontX;

@@ -78,7 +78,6 @@ public class LeikrGameScreen implements Screen, InputProcessor {
                     break;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
         }
@@ -150,7 +149,6 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             Constructor[] cnst = groovyGameLoader.getConstructors();
             leikrGame = (LeikrEngine) cnst[0].newInstance();
         } catch (SecurityException | IllegalArgumentException | InvocationTargetException | InstantiationException | CompilationFailedException | IOException | IllegalAccessException ex) {
-            ex.printStackTrace();
             game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
         } 
