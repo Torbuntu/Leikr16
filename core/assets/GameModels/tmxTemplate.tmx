@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="left-down" width="640" height="100" tilewidth="8" tileheight="8" infinite="0" nextobjectid="9">
   <tileset firstgid="1" name="LeikrGame_0" tilewidth="8" tileheight="8" tilecount="256" columns="16">
-  <image source="/graphics/GAME_NAME_0.png" width="128" height="128"/>
+  <image source="/Graphics/GAME_NAME_0.png" width="128" height="128"/>
  </tileset>
  <tileset firstgid="257" name="LeikrGame_1" tilewidth="8" tileheight="8" tilecount="256" columns="16">
-  <image source="/graphics/GAME_NAME_1.png" width="128" height="128"/>
+  <image source="/Graphics/GAME_NAME_1.png" width="128" height="128"/>
  </tileset>
  <tileset firstgid="513" name="LeikrGame_2" tilewidth="8" tileheight="8" tilecount="256" columns="16">
-  <image source="/graphics/GAME_NAME_2.png" width="128" height="128"/>
+  <image source="/Graphics/GAME_NAME_2.png" width="128" height="128"/>
  </tileset>
  <tileset firstgid="769" name="LeikrGame_3" tilewidth="8" tileheight="8" tilecount="256" columns="16">
-  <image source="/graphics/GAME_NAME_3.png" width="128" height="128"/>
+  <image source="/Graphics/GAME_NAME_3.png" width="128" height="128"/>
  </tileset>
  <layer name="Tile Layer 1" width="640" height="100">
   <data encoding="csv">
