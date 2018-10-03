@@ -1,0 +1,3 @@
+grant codeBase "file:/some/root/path/sandbox/-" {
+    permission java.io.FilePermission "${user.home}${/}Leikr", "read,write";
+};

@@ -14,6 +14,6 @@ class GAME_NAME(LeikrEngine):
     #
         
     def render(self, delta=None):
-        self.drawRect(0,0,320,240,5, "filled");     
+        self.rect(0,0,320,240,5, "filled");     
       
     #

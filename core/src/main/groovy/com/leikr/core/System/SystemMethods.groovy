@@ -151,21 +151,23 @@ public class SystemMethods {
             //return "Not imnplemented yet";
             break;
         }
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate_0.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".png");
-        new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".png", token: "GAME_NAME", value: name);
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/graphics/"+name+"_0.png");
         
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate_1.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".png");
-        new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".png", token: "GAME_NAME", value: name);
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/graphics/"+name+"_1.png");
         
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate_2.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".png");
-        new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".png", token: "GAME_NAME", value: name);
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/graphics/"+name+"_2.png");
         
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate_3.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".png");
-        new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".png", token: "GAME_NAME", value: name);
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/graphics/"+name+"_3.png");
         
         new AntBuilder().copy( file:Gdx.files.classpath("GameModels/tmxTemplate.tmx"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".tmx");
         new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".tmx", token: "GAME_NAME", value: name);
-                
+        
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/graphics/Palette_0.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/graphics/Palette_1.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/graphics/Palette_2.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/graphics/Palette_3.png");
+        
+        new File(RootFileSystem+"/ChipSpace/"+name+"/audio").mkdir();
         
         return "New game project `"+name+"` initialized with type `"+type+"`";
     }

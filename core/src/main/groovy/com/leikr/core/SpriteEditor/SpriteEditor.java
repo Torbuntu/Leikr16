@@ -112,10 +112,10 @@ final class SpriteEditor implements InputProcessor {
         paintBrush = new PaintBrush(renderer, game);
 
         // gets the sprite sheet from the given fileName (which is the loaded game)
-        firstSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + gameName + "_0.png";
-        secondSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + gameName + "_1.png";
-        thirdSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + gameName + "_2.png";
-        fourthSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + gameName + "_3.png";
+        firstSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/graphics/" + gameName + "_0.png";
+        secondSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/graphics/" + gameName + "_1.png";
+        thirdSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/graphics/" + gameName + "_2.png";
+        fourthSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/graphics/" + gameName + "_3.png";
 
         selectedSpriteSheet = firstSpriteSheet;
         setSelectedSpriteSheet(selectedSpriteSheet);

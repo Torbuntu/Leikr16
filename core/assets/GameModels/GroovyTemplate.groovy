@@ -9,6 +9,6 @@ class GAME_NAME extends LeikrEngine{
     }
   
     def void render(){
-        drawRect(0,0,320,240,5, "filled");
+        rect(0,0,320,240,5, "filled");
     }
 }

@@ -19,7 +19,6 @@ package com.leikr.core;
 import com.leikr.core.System.CustomSettings;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.leikr.core.TitleScreen.TitleScreen;
