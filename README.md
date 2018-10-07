@@ -1,7 +1,7 @@
 # Leikr16
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-# warning: Potentially broken changes have been made. Consider master to be in testing.
+# Notice: Potentially broken changes have been made. Consider master to be in testing.
 
 A Java Fantasy Computer.
 - Written in Java using libgdx and Groovy.
