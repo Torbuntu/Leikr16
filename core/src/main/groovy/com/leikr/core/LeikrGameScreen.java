@@ -32,8 +32,6 @@ import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.python.util.PythonInterpreter;
-import static com.leikr.core.Leikr.gameType;
-import static com.leikr.core.Leikr.gameName;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -55,10 +53,10 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         LeikrGameScreen.game = game;
         scriptManager = new ScriptEngineManager();
 
-        String filePath = Leikr.ROOT_PATH + "ChipSpace/" + gameName + "/";//sets game path
+        String filePath = Leikr.ROOT_PATH + "ChipSpace/" + Leikr.gameName + "/";//sets game path
 
         try {
-            switch (gameType.toLowerCase()) {
+            switch (Leikr.gameType.toLowerCase()) {
                 case "groovy":
                 case "gv":
                     loadGroovyGame(filePath);
@@ -98,11 +96,11 @@ public class LeikrGameScreen implements Screen, InputProcessor {
 
             //Compile the Java source code.
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            String toCompile = java.io.File.separator + filePath + gameName + ".java";
+            String toCompile = java.io.File.separator + filePath + Leikr.gameName + ".java";
             compiler.run(null, null, null, toCompile);
 
             //New instance
-            leikrGame = (LeikrEngine) urlCl.loadClass(gameName).newInstance();
+            leikrGame = (LeikrEngine) urlCl.loadClass(Leikr.gameName).newInstance();
         } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
@@ -111,7 +109,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     }
 
     private void loadJythonGame(String filePath) {
-        leikrGame = (LeikrEngine) getJythonObject("com.leikr.core.LeikrEngine", filePath + gameName + ".py");
+        leikrGame = (LeikrEngine) getJythonObject("com.leikr.core.LeikrEngine", filePath + Leikr.gameName + ".py");
     }
 
     public Object getJythonObject(String interfaceName, String pathToJythonModule) {
@@ -145,7 +143,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     private void loadGroovyGame(String filePath) {
         groovyClassLoader = new GroovyClassLoader();
         try {
-            groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + gameName + ".groovy"));//loads the game code  
+            groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + Leikr.gameName + ".groovy"));//loads the game code  
             Constructor[] cnst = groovyGameLoader.getConstructors();
             leikrGame = (LeikrEngine) cnst[0].newInstance();
         } catch (SecurityException | IllegalArgumentException | InvocationTargetException | InstantiationException | CompilationFailedException | IOException | IllegalAccessException ex) {

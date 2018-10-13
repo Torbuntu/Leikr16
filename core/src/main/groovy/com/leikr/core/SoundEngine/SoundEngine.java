@@ -22,7 +22,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.leikr.core.Leikr;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.midi.Instrument;
@@ -35,7 +34,6 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import org.python.modules.time.Time;
-import static com.leikr.core.Leikr.gameName;
 
 /**
  *
@@ -86,7 +84,7 @@ public class SoundEngine {
     }
 
     public String playSound(int id, float dur) {
-        String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + "audio/" + gameName + "_" + id + ".wav";
+        String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/" + "audio/" + Leikr.gameName + "_" + id + ".wav";
         Sound tmp = Gdx.audio.newSound(new FileHandle(file));
         tmp.loop();
         Time.sleep(dur);
@@ -96,7 +94,7 @@ public class SoundEngine {
     }
 
     public Sound getSfx(int id) {
-        return Gdx.audio.newSound(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + "audio/" + gameName + "_" + id + ".wav"));
+        return Gdx.audio.newSound(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/" + "audio/" + Leikr.gameName + "_" + id + ".wav"));
     }
 
     public void playSfx(Sound snd) {
@@ -195,7 +193,7 @@ public class SoundEngine {
             byte[] sampleArray = new byte[44100 * seconds];
             osc.getWriteableSamples(sampleArray);
             AudioInputStream audioInStream = new AudioInputStream(new ByteArrayInputStream(sampleArray), audioFormat, sampleArray.length);
-            String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/" + "audio/" + gameName + "_" + id + ".wav";
+            String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/" + "audio/" + Leikr.gameName + "_" + id + ".wav";
             try {
                 AudioSystem.write(audioInStream, AudioFileFormat.Type.WAVE, new File(file));
             } catch (Exception e) {

@@ -54,15 +54,7 @@ public class FontHandler {
         glyphHeight = (int) game.customSettings.glyphHeight;
     }
 
-    private void drawFont(String characters) {
-        //String[] inputList = characters.split(" ");
-        //TODO: Finish experimental line wrapping logic
-//        for (String words : inputList) {
-//            words = words + " ";
-//            if((words.length() + carriage) >= viewport.getWorldWidth() - 8f){
-//                carriage = 0;
-//                line -=8f;
-//            }
+    private void drawFont(String characters) {    
         for (char C : characters.toCharArray()) {
             if (carriage >= viewport.getWorldWidth() - glyphWidth) {
                 carriage = 0;
@@ -73,7 +65,6 @@ public class FontHandler {
             batch.draw(font, carriage, line, X, Y, glyphWidth, glyphHeight);
             carriage += glyphWidth;
         }
-//        }
     }
 
     //Runs through the history buffer and sets the items to the screen. Returns the line position to correctly set the command buffer input.

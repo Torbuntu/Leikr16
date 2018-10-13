@@ -22,7 +22,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.leikr.core.Leikr;
 import java.util.HashMap;
 import java.util.Map;
-import static com.leikr.core.Leikr.gameName;
 
 /**
  *
@@ -43,12 +42,12 @@ public class SpriteHandler {
     public SpriteHandler(Leikr game) {
         this.game = game;
 
-        String filePath = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/Graphics/";//sets game path
+        String filePath = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/Graphics/";//sets game path
         try {
-            spriteSheet_0 = new Texture(filePath + gameName + "_0.png");
-            spriteSheet_1 = new Texture(filePath + gameName + "_1.png");
-            spriteSheet_2 = new Texture(filePath + gameName + "_2.png");
-            spriteSheet_3 = new Texture(filePath + gameName + "_3.png");
+            spriteSheet_0 = new Texture(filePath + Leikr.gameName + "_0.png");
+            spriteSheet_1 = new Texture(filePath + Leikr.gameName + "_1.png");
+            spriteSheet_2 = new Texture(filePath + Leikr.gameName + "_2.png");
+            spriteSheet_3 = new Texture(filePath + Leikr.gameName + "_3.png");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             spriteSheet_0 = new Texture("Logo.png");

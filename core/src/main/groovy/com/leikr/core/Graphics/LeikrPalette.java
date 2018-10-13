@@ -18,8 +18,8 @@ package com.leikr.core.Graphics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.leikr.core.Leikr;
 import java.util.ArrayList;
-import static com.leikr.core.Leikr.gameName;
 
 /**
  *
@@ -46,13 +46,13 @@ public class LeikrPalette {
         palette_2 = new ArrayList<>();
         palette_3 = new ArrayList<>();
 
-        if (Gdx.files.external("Leikr/ChipSpace/" + gameName + "/Graphics/Palette_0.png").exists()) {
-            pixmap = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/Graphics/Palette_0.png"));
+        if (Gdx.files.external("Leikr/ChipSpace/" + Leikr.gameName + "/Graphics/Palette_0.png").exists()) {
+            pixmap = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/Graphics/Palette_0.png"));
 
-            pixmap_0 = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/Graphics/Palette_0.png"));
-            pixmap_1 = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/Graphics/Palette_1.png"));
-            pixmap_2 = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/Graphics/Palette_2.png"));
-            pixmap_3 = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + gameName + "/Graphics/Palette_3.png"));
+            pixmap_0 = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/Graphics/Palette_0.png"));
+            pixmap_1 = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/Graphics/Palette_1.png"));
+            pixmap_2 = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/Graphics/Palette_2.png"));
+            pixmap_3 = new Pixmap(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/Graphics/Palette_3.png"));
 
             for (int i = 0; i <= 15; i++) {
                 palette.add(pixmap.getPixel(i, 0));

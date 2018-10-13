@@ -51,8 +51,7 @@ public class Leikr extends Game {
         ROOT_PATH = Gdx.files.getExternalStoragePath() + "Leikr/";
         
         customSettings = new CustomSettings();
-
-//        this.setScreen(new ConsoleScreen(this));
+        
         TitleScreen title = new TitleScreen(this);
         title.setInput();
         this.setScreen(title);

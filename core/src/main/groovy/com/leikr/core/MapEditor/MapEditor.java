@@ -30,7 +30,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Leikr;
-import static com.leikr.core.Leikr.gameName;
 
 /**
  *
@@ -52,7 +51,7 @@ public class MapEditor implements InputProcessor {
     public MapEditor(Leikr game) {
         this.game = game;
 
-        tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + gameName + "/" + gameName + ".tmx");
+        tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + Leikr.gameName + "/" + Leikr.gameName + ".tmx");
         tiledMapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
 
