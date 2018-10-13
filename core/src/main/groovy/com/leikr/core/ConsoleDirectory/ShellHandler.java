@@ -219,13 +219,15 @@ public class ShellHandler {
                     result = "User repository set to " + inputList[1] + ". Repository type set to " + inputList[2];
                     break;
                 case "lpm":
-                    if (!inputList[1].equals("install") || !inputList[1].equals("update")) {
-                        result = "lpm command `" + inputList[1] + "` not found.";
-                        break;
-                    }
                     switch (inputList[1]) {
                         case "install":
-                            result = (inputList.length > 3) ? repoHandler.lpmInstall(inputList[2], inputList[3]) : repoHandler.lpmInstall(inputList[2]);
+                            result = repoHandler.lpmInstall(inputList[2]);
+                            break;
+                        case "update":
+                            result = repoHandler.lpmUpdate(inputList[2]);
+                            break;
+                        default:
+                            result = "lpm command `" + inputList[1] + "` not found.";
                             break;
                     }
                     break;
