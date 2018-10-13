@@ -7,7 +7,7 @@ A Java Fantasy Computer.
 - Supports games written in Java, Groovy, and Jython (using the Leikr Engine)
 
 # Note
-- best used with Java 10. Java 11 currently breaks.
+- best built with Java 10. Java 11 currently breaks.
 
 # Specs
 - Resolution 320x240
