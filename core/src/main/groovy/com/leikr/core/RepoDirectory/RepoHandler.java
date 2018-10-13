@@ -58,18 +58,19 @@ public class RepoHandler {
    
     
     public String lpmUpdate(String repoName) {
-        if (userRepo.length() < 2) {
-            return "No user repository set. Set it with `setUserRepo [name]`";
-        }
-        if (repoType.length() < 2){
-            return "No repository type set. Set it with `setRepoType [type]`. Known options currently are: `github` , `gitlab` ";
-        }
-        try {
-            Git.cloneRepository().setURI("https://"+repoType+".com/" + userRepo + "/" + repoName + ".git").setDirectory(new File(Gdx.files.getExternalStoragePath() + "Leikr/Download/" + repoName)).call();
-            return repoName + " installed";
-        } catch (GitAPIException ex) {
-            return ex.getMessage();
-        }
+        return "Update currently unsupported";
+//        if (userRepo.length() < 2) {
+//            return "No user repository set. Set it with `setUserRepo [name]`";
+//        }
+//        if (repoType.length() < 2){
+//            return "No repository type set. Set it with `setRepoType [type]`. Known options currently are: `github` , `gitlab` ";
+//        }
+//        try {
+//            Git.cloneRepository().setURI("https://"+repoType+".com/" + userRepo + "/" + repoName + ".git").setDirectory(new File(Gdx.files.getExternalStoragePath() + "Leikr/Download/" + repoName)).call();
+//            return repoName + " installed";
+//        } catch (GitAPIException ex) {
+//            return ex.getMessage();
+//        }
     }
     
     

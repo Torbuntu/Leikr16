@@ -34,8 +34,6 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import org.python.util.PythonInterpreter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -45,7 +43,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
 
     public static Leikr game;
     GroovyClassLoader groovyClassLoader;
-    Class groovyGameLoader;
+    Class groovyGameClass;
     LeikrEngine leikrGame;
 
     ScriptEngineManager scriptManager;
@@ -148,9 +146,9 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     private void loadGroovyGame(String filePath) {
         groovyClassLoader = new GroovyClassLoader();
         try {
-            groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + Leikr.gameName + ".groovy"));//loads the game code  
-            Constructor[] cnst = groovyGameLoader.getConstructors();
-            leikrGame = (LeikrEngine) cnst[0].newInstance();
+            groovyGameClass = groovyClassLoader.parseClass(new File(filePath + Leikr.gameName + ".groovy"));//loads the game code  
+            Constructor[] cnst = groovyGameClass.getConstructors();//gets the constructos
+            leikrGame = (LeikrEngine) cnst[0].newInstance();//instantiates based on first constructor
         } catch (SecurityException | IllegalArgumentException | InvocationTargetException | InstantiationException | CompilationFailedException | IOException | IllegalAccessException ex) {
             game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
@@ -205,7 +203,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     }
 
     @Override
-    public void dispose() {
+    public final void dispose() {
         if (leikrGame != null) {
             leikrGame.dispose();
 

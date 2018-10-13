@@ -22,12 +22,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.leikr.core.Leikr;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.sound.midi.Instrument;
-import javax.sound.midi.MidiChannel;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Synthesizer;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -43,44 +37,12 @@ public class SoundEngine {
 
     Leikr game;
     AudioDevice device;
-    Synthesizer synth;
-    final MidiChannel[] midiChan;
-    Instrument[] instr;
     AudioFormat audioFormat;
 
     public SoundEngine(Leikr game) {
         this.game = game;
         device = Gdx.audio.newAudioDevice(44100, true);
         audioFormat = new AudioFormat(44100, 16, 1, true, true);
-
-        try {
-            synth = MidiSystem.getSynthesizer();
-            synth.open();
-        } catch (MidiUnavailableException ex) {
-            Logger.getLogger(SoundEngine.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        midiChan = synth.getChannels();
-        midiChan[0].setMono(true);
-
-        instr = synth.getDefaultSoundbank().getInstruments();
-    }
-
-    public void setInstrument(int id) {
-        try {
-            midiChan[0].programChange(0, id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void playNote(int note, int velocity, int duration) {
-        midiChan[0].noteOn(note, velocity);
-        try {
-            Time.sleep(duration);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        midiChan[0].allNotesOff();
     }
 
     public String playSound(int id, float dur) {

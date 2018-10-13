@@ -164,16 +164,6 @@ public class ShellHandler {
                 case "gameInfo":
                     result = "Name: " + Leikr.gameName + " Type: " + Leikr.gameType;
                     break;
-                case "setInstrument":
-                case "setinst":
-                    soundEngine.setInstrument(Integer.parseInt(inputList[1]));
-                    break;
-                case "playinst":
-                case "note":
-
-                    soundEngine.playNote(Integer.parseInt(inputList[1]), Integer.parseInt(inputList[2]), Integer.parseInt(inputList[3]));
-
-                    break;
                 case "sfx":
                     result = soundEngine.writeAudioToDisk(inputList[1], Integer.parseInt(inputList[2]), Integer.parseInt(inputList[3]), Integer.parseInt(inputList[4]));
 

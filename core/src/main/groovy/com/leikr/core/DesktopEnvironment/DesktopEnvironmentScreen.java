@@ -23,8 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.codehaus.groovy.control.CompilationFailedException;
 
 /**
@@ -36,7 +34,7 @@ public class DesktopEnvironmentScreen implements Screen {
     LeikrDesktopEngine leikrDesktopEngine;
     Leikr game;
     private GroovyClassLoader groovyClassLoader;
-    private Class groovyGameLoader;
+    private Class groovyGameClass;
 
     public DesktopEnvironmentScreen(Leikr game) {
         this.game = game;
@@ -47,8 +45,8 @@ public class DesktopEnvironmentScreen implements Screen {
     private void loadUserDesktop(String filePath) {
         groovyClassLoader = new GroovyClassLoader();
         try {
-            groovyGameLoader = groovyClassLoader.parseClass(new File(filePath + ".groovy"));//loads the game code   
-            Constructor[] cnst = groovyGameLoader.getConstructors();
+            groovyGameClass = groovyClassLoader.parseClass(new File(filePath + ".groovy"));//loads the game code   
+            Constructor[] cnst = groovyGameClass.getConstructors();
             leikrDesktopEngine = (LeikrDesktopEngine) cnst[0].newInstance();
         } catch (InstantiationException | CompilationFailedException | IOException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
