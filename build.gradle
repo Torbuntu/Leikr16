@@ -31,6 +31,12 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         jcenter()
     }
+    
+//    gradle.projectsEvaluated {
+//        tasks.withType(GroovyCompile) {
+//            options.compilerArgs << "-Xlint:deprecation"
+//        }
+//    }  
 }
 
 project(":desktop") {

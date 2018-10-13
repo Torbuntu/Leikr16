@@ -34,6 +34,8 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import org.python.util.PythonInterpreter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -100,8 +102,11 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             compiler.run(null, null, null, toCompile);
 
             //New instance
-            leikrGame = (LeikrEngine) urlCl.loadClass(Leikr.gameName).newInstance();
-        } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+            Class jvGame = urlCl.loadClass(Leikr.gameName);
+            Constructor[]  cnst = jvGame.getConstructors();
+            leikrGame = (LeikrEngine) cnst[0].newInstance();
+            
+        } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
             this.dispose();
         }
