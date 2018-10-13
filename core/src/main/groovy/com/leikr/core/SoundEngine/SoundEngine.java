@@ -22,7 +22,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.leikr.core.Leikr;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import javax.sound.midi.Synthesizer;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
