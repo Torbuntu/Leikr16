@@ -1,7 +1,3 @@
-apply plugin: "java"
-apply plugin: "groovy"
-
-sourceCompatibility = 1.10
 
 project.ext.mainClassName = "com.leikr.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../core/assets");
