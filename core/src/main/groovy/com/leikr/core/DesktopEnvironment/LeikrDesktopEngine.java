@@ -32,7 +32,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Leikr;
 
 /**
@@ -77,7 +76,7 @@ public class LeikrDesktopEngine {
         consoleButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new ConsoleScreen(game));
+                Leikr.beginConsole(game);
                 dispose();
                 System.out.println("App Menu clicked!");
             }
