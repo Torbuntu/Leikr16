@@ -25,32 +25,30 @@ import groovy.lang.GroovyShell;
 import groovy.util.GroovyScriptEngine;
 import groovy.util.ResourceException;
 import groovy.util.ScriptException;
-import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.codehaus.groovy.control.CompilationFailedException;
 
 /**
  *
  * @author tor This class is responsible for handling system level operations.
  * Such as File system management. It also manages the GroovyShell.
  */
-public class SystemBios {
+public class LeikrSystem {
 
     final GroovyClassLoader classLoader;
     GroovyShell groovyShell;
 
     SystemMethods groovySystemMethods;
 
-    Class cmClass;
-    Constructor[] cmConstruct;
     GroovyObject customMethods;
+    GroovyObject systemMethods;
 
     Binding binding;
     GroovyScriptEngine engine;
+    GroovyScriptEngine sysEngine;
 
-    public SystemBios() throws IOException, InstantiationException, IllegalAccessException {
+    public LeikrSystem() throws IOException, InstantiationException, IllegalAccessException {
         classLoader = new GroovyClassLoader();
         groovyShell = new GroovyShell();
         groovySystemMethods = new SystemMethods();
@@ -60,11 +58,13 @@ public class SystemBios {
         }
 
         binding = new Binding();
-        engine = new GroovyScriptEngine(Gdx.files.getExternalStoragePath() + "Leikr/OS/");
+        engine = new GroovyScriptEngine(Gdx.files.getExternalStoragePath() + "Leikr/Programs");
+        sysEngine = new GroovyScriptEngine(Gdx.files.getExternalStoragePath() + "Leikr/Programs");
         try {
             customMethods = (GroovyObject) engine.run("Methods.groovy", binding);
+            systemMethods = (GroovyObject) sysEngine.run("SystemMethods.groovy", binding);
         } catch (ResourceException | ScriptException ex) {
-            Logger.getLogger(SystemBios.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LeikrSystem.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -72,69 +72,20 @@ public class SystemBios {
     public String reloadCustomMethods() {
         try {
             customMethods = (GroovyObject) engine.run("Methods.groovy", binding);
-            return "Custom methods reloaded.";
+            systemMethods = (GroovyObject) sysEngine.run("SystemMethods.groovy", binding);
+            return "Custom and System methods reloaded.";
         } catch (ResourceException | ScriptException ex) {
-            return "Custom Methods failed to reload... " + ex.getMessage();
+            return "Custom and System Methods failed to reload... " + ex.getMessage();
         }
     }
-
-    public String getBiosVersion() {
-        return groovySystemMethods.getBiosVersion();
-    }
+    
 
     public Object runSystemMethod(String[] inputList) {
         Object result;
 
-        switch (inputList[0]) {
-            case "cd":
-                if (inputList.length < 2) {
-                    result = "~";
-                    groovySystemMethods.setLocPath("");
-                } else {
-                    result = groovySystemMethods.cd(inputList[1]);
-                }
-                break;
-            case "pwd":
-                if (groovySystemMethods.getLocPath().length() < 1) {
-                    result = "~";
-                } else {
-                    result = groovySystemMethods.getLocPath();
-                }
-                break;
-
-            case "mkdir":
-                result = groovySystemMethods.mkdir(inputList[1]);
-                break;
-            case "mnt":
-                result = groovySystemMethods.mnt(inputList[1]);
-                break;
-            case "del":
-            case "rm":
-                if (inputList[1].equals("-rf")) {
-                    result = groovySystemMethods.rmdir(inputList[2]);
-                } else {
-                    result = groovySystemMethods.rm(inputList[1]);
-                }
-                break;
-            case "dir":
-            case "ls":
-                if (inputList.length > 1) {
-                    result = groovySystemMethods.lsPath(inputList[1]);
-                } else {
-                    result = groovySystemMethods.ls();
-                }
-                break;
-            case "initFileSystem":
-                result = groovySystemMethods.restartSystem();
-                break;
-
-            case "./RCM":
+        switch (inputList[0]) {         
             case "reloadMethods":
                 result = reloadCustomMethods();
-                break;
-
-            case "new":
-                result = groovySystemMethods.newGame(inputList[1], inputList[2]);
                 break;
             case "exec":
                 try {
@@ -153,15 +104,28 @@ public class SystemBios {
                 break;
             default:
 
-                // default command and system commands do not exist. Try running groovy shell eval.
-                String inputString = String.join(",", inputList).replaceAll(",", "");
-
                 try {
-                    result = groovyShell.evaluate(inputString).toString();
-                } catch (CompilationFailedException e) {
-                    System.out.println(e.toString());
-                    result = "GroovyShell cannot evaluate input: " + inputString;
+                    if (inputList.length == 1) {
+
+                        result = systemMethods.invokeMethod(inputList[0], null);
+
+                    } else {
+                        String[] args = Arrays.copyOfRange(inputList, 1, inputList.length);
+                        result = systemMethods.invokeMethod(inputList[0], args);
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    result = "Execution of Method `" + inputList[0] + "` failed. The method may not exist. " + e.getMessage();
                 }
+
+                // default command and system commands do not exist. Try running groovy shell eval.
+//                try {
+//                    String inputString = String.join(",", inputList).replaceAll(",", "");
+//                    result = groovyShell.evaluate(inputString).toString();
+//                } catch (CompilationFailedException e) {
+//                    System.out.println(e.toString());
+//                    result = "GroovyShell cannot evaluate input: " + inputString;
+//                }
 
                 break;
         }

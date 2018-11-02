@@ -15,7 +15,7 @@
  */
 package com.leikr.core.ConsoleDirectory;
 
-import com.leikr.core.System.SystemBios;
+import com.leikr.core.System.LeikrSystem;
 import com.leikr.core.System.CustomSettings;
 import com.leikr.core.DesktopEnvironment.DesktopEnvironmentScreen;
 import com.leikr.core.Leikr;
@@ -40,7 +40,7 @@ public class ShellHandler {
     final Leikr game;
     ConsoleScreen consoleScreen;
     FontHandler fontHandler;
-    SystemBios systemLoader;
+    LeikrSystem leikrSystem;
     RepoHandler repoHandler;
     GroovyClassLoader groovyClassLoader;
     Class groovyGameLoader;
@@ -62,7 +62,7 @@ public class ShellHandler {
         repoHandler = new RepoHandler();
         soundEngine = new SoundEngine(this.game);
         try {
-            systemLoader = new SystemBios();
+            leikrSystem = new LeikrSystem();
         } catch (IOException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -127,14 +127,12 @@ public class ShellHandler {
 
                 case "setFontColor":
                     setFontColor(inputList[1], inputList[2], inputList[3]);
-
                     break;
                 case "setBgColor":
                     setBgColor(inputList[1], inputList[2], inputList[3]);
-
                     break;
                 case "help":
-                    result = "Type `load` followed by the game you wish to load. Then type `run` to play. Type Exit to quit Leikr.";
+                    result = "Type `load` followed by the game you wish to load. Then type `run` to play. Type Exit to quit Leikr. More help coming soon...";
                     break;
                 case "close":
                 case "exit": //close on exit command.
@@ -196,7 +194,7 @@ public class ShellHandler {
                     game.setScreen(new SoundFxEditorScreen(game));
                     consoleScreen.dispose();
                     break;
-                case "setUserRepo":
+                case "setUserRepo":                    
                     repoHandler.setUserRepo(inputList[1]);
                     result = "User repository set to " + inputList[1];
                     break;
@@ -224,7 +222,7 @@ public class ShellHandler {
                 default: //Default, command not recognized.
 
                     try {
-                        result = (String) systemLoader.runSystemMethod(inputList);
+                        result = (String) leikrSystem.runSystemMethod(inputList);
                     } catch (Exception e) {
                         result = "System commands failed: " + e.getMessage();
                     }

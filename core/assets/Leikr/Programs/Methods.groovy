@@ -5,11 +5,11 @@
  */
 
 class CustomMethods {
-    String BiosVersion = "V0.0.1";
+    
     String SystemName = "Leikr 16";    
     
     String printSystemInfo(){
-        "System Name: $SystemName, Bios Version: $BiosVersion ";
+        "System Name: $SystemName";
     }
     
     String testMethods(){

@@ -35,6 +35,7 @@ public class Leikr extends Game {
     public static String gameName = "LeikrGame";
     public static String gameType = "groovy";
 
+    // Environment Variables
     public static String ROOT_PATH;
     
     public CustomSettings customSettings;
