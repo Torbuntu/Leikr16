@@ -19,8 +19,10 @@ package com.leikr.core;
 import com.leikr.core.System.CustomSettings;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.TitleScreen.TitleScreen;
 import com.leikr.core.System.SystemMethods;
 
@@ -73,5 +75,12 @@ public class Leikr extends Game {
     public void resize(int width, int height) {
         super.resize(width, height);
     }
+    
+    
+    public static void beginConsole(Leikr game){
+        game.setScreen(new ConsoleScreen(game));
+        Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
+    }
+    
 
 }

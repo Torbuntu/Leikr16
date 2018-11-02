@@ -23,7 +23,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
@@ -33,7 +32,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Leikr;
 
@@ -387,8 +385,7 @@ final class SpriteEditor implements InputProcessor {
         if (keycode == Input.Keys.ESCAPE) {
             if (exitDialog) {
                 savePixmapImage();
-                game.setScreen(new ConsoleScreen(game));
-                Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+                Leikr.beginConsole(game);
             }
 
             exitDialog = true;
@@ -401,8 +398,7 @@ final class SpriteEditor implements InputProcessor {
                     return true;
                 case Keys.Y:
                     savePixmapImage();
-                    game.setScreen(new ConsoleScreen(game));
-                    Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+                    Leikr.beginConsole(game);
                     return true;
             }
         }
