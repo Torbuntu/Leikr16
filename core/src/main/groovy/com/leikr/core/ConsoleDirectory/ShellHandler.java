@@ -17,14 +17,10 @@ package com.leikr.core.ConsoleDirectory;
 
 import com.leikr.core.System.LeikrSystem;
 import com.leikr.core.System.CustomSettings;
-import com.leikr.core.DesktopEnvironment.DesktopEnvironmentScreen;
 import com.leikr.core.Leikr;
-import com.leikr.core.LeikrGameScreen;
-import com.leikr.core.MapEditor.MapEditorScreen;
 import com.leikr.core.RepoDirectory.RepoHandler;
 import com.leikr.core.SoundEngine.SoundEngine;
 import com.leikr.core.SoundEngine.SoundFxEditorScreen;
-import com.leikr.core.SpriteEditor.SpriteEditorScreen;
 import groovy.lang.GroovyClassLoader;
 import java.io.IOException;
 import java.util.ArrayList;
