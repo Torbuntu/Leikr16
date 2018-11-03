@@ -20,6 +20,8 @@ import groovy.lang.GroovyObject;
 import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
+import com.leikr.core.ConsoleDirectory.ConsoleScreen;
+import com.leikr.core.Leikr;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import groovy.util.GroovyScriptEngine;
@@ -36,7 +38,6 @@ import java.util.logging.Logger;
  */
 public class LeikrSystem {
 
-    final GroovyClassLoader classLoader;
     GroovyShell groovyShell;
 
     SystemMethodsApi groovySystemMethods;
@@ -47,9 +48,14 @@ public class LeikrSystem {
     Binding binding;
     GroovyScriptEngine engine;
     GroovyScriptEngine sysEngine;
+    
+    final Leikr game;
+    ConsoleScreen consoleScreen;
 
-    public LeikrSystem() throws IOException, InstantiationException, IllegalAccessException {
-        classLoader = new GroovyClassLoader();
+    public LeikrSystem(Leikr game, ConsoleScreen consoleScreen) throws IOException, InstantiationException, IllegalAccessException {
+        this.game = game;
+        this.consoleScreen = consoleScreen;
+        
         groovyShell = new GroovyShell();
         groovySystemMethods = new SystemMethodsApi();
 
@@ -63,6 +69,8 @@ public class LeikrSystem {
         try {
             customMethods = (GroovyObject) engine.run("Methods.groovy", binding);
             systemMethods = (GroovyObject) sysEngine.run("SystemMethods.groovy", binding);
+            systemMethods.setProperty("game", game);
+            systemMethods.setProperty("screen", consoleScreen);
         } catch (ResourceException | ScriptException ex) {
             Logger.getLogger(LeikrSystem.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -73,6 +81,8 @@ public class LeikrSystem {
         try {
             customMethods = (GroovyObject) engine.run("Methods.groovy", binding);
             systemMethods = (GroovyObject) sysEngine.run("SystemMethods.groovy", binding);
+            systemMethods.setProperty("game", game);
+            systemMethods.setProperty("screen", consoleScreen);
             return "Custom and System methods reloaded.";
         } catch (ResourceException | ScriptException ex) {
             return "Custom and System Methods failed to reload... " + ex.getMessage();

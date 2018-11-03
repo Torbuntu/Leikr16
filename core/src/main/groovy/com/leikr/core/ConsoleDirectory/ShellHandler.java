@@ -62,7 +62,7 @@ public class ShellHandler {
         repoHandler = new RepoHandler();
         soundEngine = new SoundEngine(this.game);
         try {
-            leikrSystem = new LeikrSystem();
+            leikrSystem = new LeikrSystem(this.game, this.consoleScreen);
         } catch (IOException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -143,11 +143,6 @@ public class ShellHandler {
                     fontHandler.clearHistoryBuffer();
                     fontHandler.clearCommandBuffer();
                     break;
-                case "start":
-                case "run":
-                    game.setScreen(new LeikrGameScreen(game));
-                    consoleScreen.dispose();
-                    break;
                 case "getLoadedGame":
                 case "gameName":
                 case "loadedGame":
@@ -172,22 +167,6 @@ public class ShellHandler {
                     break;
                 case "testsfx":
                     soundEngine.playNewAudio(inputList[1], Integer.parseInt(inputList[2]), Integer.parseInt(inputList[3]));
-                    break;
-                case "./ME":
-                case "MapEditor":
-                    game.setScreen(new MapEditorScreen(game));
-                    consoleScreen.dispose();
-                    break;
-                case "./DE":
-                case "DesktopEnvironment":
-                case "startx":
-                    game.setScreen(new DesktopEnvironmentScreen(game));
-                    consoleScreen.dispose();
-                    break;
-                case "./SPE":
-                case "SpriteEditor":
-                    game.setScreen(new SpriteEditorScreen(game));
-                    consoleScreen.dispose();
                     break;
                 case "./SFX":
                 case "SoundFXEditor":

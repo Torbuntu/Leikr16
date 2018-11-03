@@ -35,6 +35,39 @@ public class Methods extends SystemMethodsApi {
         "System Name: $SystemName";
     }
     
+    
+    void run(){
+        startGame();
+    }
+    
+    void run(app){
+        switch(app){
+            case "Map":
+            case "MapEditor":
+                startMapEditor();
+                break;
+            case "Sprite":
+            case "SpriteEditor":
+                startSpriteEditor();
+                break;
+            case "gui":
+                startDesktop();
+                break;
+        }
+    }
+    
+    void SpriteEditor(){
+        startSpriteEditor();
+    }
+    
+    void MapEditor(){
+        startMapEditor();
+    }
+    
+    void Desktop(){
+        startDesktop();
+    }
+    
     String cd(String directory){
         locPath += "/"+directory;
         return locPath;
