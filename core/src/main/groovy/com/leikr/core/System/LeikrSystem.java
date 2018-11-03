@@ -39,7 +39,7 @@ public class LeikrSystem {
     final GroovyClassLoader classLoader;
     GroovyShell groovyShell;
 
-    SystemMethods groovySystemMethods;
+    SystemMethodsApi groovySystemMethods;
 
     GroovyObject customMethods;
     GroovyObject systemMethods;
@@ -51,7 +51,7 @@ public class LeikrSystem {
     public LeikrSystem() throws IOException, InstantiationException, IllegalAccessException {
         classLoader = new GroovyClassLoader();
         groovyShell = new GroovyShell();
-        groovySystemMethods = new SystemMethods();
+        groovySystemMethods = new SystemMethodsApi();
 
         if (!Gdx.files.external("Leikr/").exists() || !Gdx.files.external("Leikr/ChipSpace/").exists()) {
             groovySystemMethods.initFileSystem();

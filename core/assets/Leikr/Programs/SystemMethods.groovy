@@ -24,13 +24,13 @@ import java.lang.String;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
+import com.leikr.core.System.SystemMethodsApi;
 
-public class Methods {
+public class Methods extends SystemMethodsApi {
     String SystemName = "Leikr 16";
-    String RootFileSystem = Gdx.files.getExternalStoragePath()+"Leikr";
     
     String locPath = "";
-    
+
     String printSystemInfo(){
         "System Name: $SystemName";
     }
@@ -45,16 +45,16 @@ public class Methods {
         if(!Gdx.files.isExternalStorageAvailable()){
             return "No permission to write to virtual drive";
         }
-        if(!Gdx.files.external("Leikr/").exists()){
+        if(!pathExists("Leikr/")){
             result += "No root file system detected. Initializing...   ";
             initFileSystem();
             result += "Directories initialized";
         }
         if(locPath.length() > 0){
-            new File(RootFileSystem+"/"+name).mkdir();
+            new File(ROOT_PATH+"/"+name).mkdir();
 
         }else{
-            new File(RootFileSystem+"/"+locPath+"/"+name).mkdir();
+            new File(ROOT_PATH+"/"+locPath+"/"+name).mkdir();
 
         }
         return result += "New directory `$name` successfully created.";
@@ -122,58 +122,58 @@ public class Methods {
     }
     
     String mnt(String from){
-        new AntBuilder().copy( todir: RootFileSystem+"/ChipSpace/"+from) {
-            fileset( dir: RootFileSystem+"/Download/"+from);
+        new AntBuilder().copy( todir: ROOT_PATH+"/ChipSpace/"+from) {
+            fileset( dir: ROOT_PATH+"/Download/"+from);
         }
         return "mounted "+from+" to ChipSpace from Downloads";
     }
     
     String newGame(String name, String type){
-        new File(RootFileSystem+"/ChipSpace/"+name).mkdir();
+        new File(ROOT_PATH+"/ChipSpace/"+name).mkdir();
         switch(type.toLowerCase()){
         case "python":
         case "jython":
         case "py":
         case "jy":
-            new AntBuilder().copy( file:Gdx.files.classpath("GameModels/JythonTemplate.py"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".py");
-            new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".py", token: "GAME_NAME", value: name);        
+            new AntBuilder().copy( file:Gdx.files.classpath("GameModels/JythonTemplate.py"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/"+name+".py");
+            new AntBuilder().replace(file: ROOT_PATH+"/ChipSpace/"+name+"/"+name+".py", token: "GAME_NAME", value: name);        
             break;
         case "java":
-            new AntBuilder().copy( file:Gdx.files.classpath("GameModels/JavaTemplate.java"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".java");
-            new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".java", token: "GAME_NAME", value: name);
+            new AntBuilder().copy( file:Gdx.files.classpath("GameModels/JavaTemplate.java"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/"+name+".java");
+            new AntBuilder().replace(file: ROOT_PATH+"/ChipSpace/"+name+"/"+name+".java", token: "GAME_NAME", value: name);
             break;
         case "groovy":
         default:
             //new File( RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy")
-            new AntBuilder().copy( file:Gdx.files.classpath("GameModels/GroovyTemplate.groovy"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy");
-            new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy", token: "GAME_NAME", value: name);
+            new AntBuilder().copy( file:Gdx.files.classpath("GameModels/GroovyTemplate.groovy"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/"+name+".groovy");
+            new AntBuilder().replace(file: ROOT_PATH+"/ChipSpace/"+name+"/"+name+".groovy", token: "GAME_NAME", value: name);
             //return "Not imnplemented yet";
             break;
         }
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/Graphics/"+name+"_0.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/"+name+"_0.png");
         
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/Graphics/"+name+"_1.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/"+name+"_1.png");
         
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/Graphics/"+name+"_2.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/"+name+"_2.png");
         
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/Graphics/"+name+"_3.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/"+name+"_3.png");
         
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/tmxTemplate.tmx"), tofile:RootFileSystem+"/ChipSpace/"+name+"/"+name+".tmx");
-        new AntBuilder().replace(file: RootFileSystem+"/ChipSpace/"+name+"/"+name+".tmx", token: "GAME_NAME", value: name);
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/tmxTemplate.tmx"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/"+name+".tmx");
+        new AntBuilder().replace(file: ROOT_PATH+"/ChipSpace/"+name+"/"+name+".tmx", token: "GAME_NAME", value: name);
         
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/Graphics/Palette_0.png");
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/Graphics/Palette_1.png");
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/Graphics/Palette_2.png");
-        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:RootFileSystem+"/ChipSpace/"+name+"/Graphics/Palette_3.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/Palette_0.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/Palette_1.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/Palette_2.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/Palette_3.png");
         
-        new File(RootFileSystem+"/ChipSpace/"+name+"/Audio").mkdir();
+        new File(ROOT_PATH+"/ChipSpace/"+name+"/Audio").mkdir();
         
         return "New game project `"+name+"` initialized with type `"+type+"`";
     }
    
     
     String initFileSystem(){        
-        new AntBuilder().copy( todir: RootFileSystem) {
+        new AntBuilder().copy( todir: ROOT_PATH) {
             fileset( dir: Gdx.files.classpath("Leikr"));
         } 
         return "File system init.";
@@ -181,8 +181,8 @@ public class Methods {
     
     String restartSystem(){
         
-        new AntBuilder().copy( todir: RootFileSystem+"Backup") {
-            fileset( dir: RootFileSystem);
+        new AntBuilder().copy( todir: ROOT_PATH+"Backup") {
+            fileset( dir: ROOT_PATH);
         }
        
         Gdx.files.external("Leikr/").deleteDirectory();

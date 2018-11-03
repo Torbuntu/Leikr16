@@ -17,6 +17,7 @@
 
 package com.leikr.core.System;
 
+import com.leikr.core.Leikr;
 import groovy.io.FileType;
 import java.io.File;
 import java.lang.String;
@@ -25,10 +26,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 
-public class SystemMethods {
+public class SystemMethodsApi {
+    
+    String ROOT_PATH = Leikr.ROOT_PATH;
+    Boolean pathExists(String path){
+        Gdx.files.external(path).exists();
+    }
+    
 //    String BiosVersion = "V0.0.1";
 //    String SystemName = "Leikr 16";
-//    String RootFileSystem = Gdx.files.getExternalStoragePath()+"Leikr";
 //    
 //    String locPath = "";
 //    
@@ -174,7 +180,7 @@ public class SystemMethods {
 //   
     
     String initFileSystem(){        
-        new AntBuilder().copy( todir: RootFileSystem) {
+        new AntBuilder().copy( todir: ROOT_PATH) {
             fileset( dir: Gdx.files.classpath("Leikr"));
         } 
         return "File system init.";

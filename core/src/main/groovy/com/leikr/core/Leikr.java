@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.leikr.core;
 
 import com.leikr.core.System.CustomSettings;
@@ -24,37 +23,36 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.TitleScreen.TitleScreen;
-import com.leikr.core.System.SystemMethods;
+import com.leikr.core.System.SystemMethodsApi;
 
 public class Leikr extends Game {
 
     public SpriteBatch batch;
     public BitmapFont font;
 
-    public static final float WIDTH = 320, HEIGHT = 240;  
+    public static final float WIDTH = 320, HEIGHT = 240;
     public static String gameName = "LeikrGame";
     public static String gameType = "groovy";
 
     // Environment Variables
     public static String ROOT_PATH;
-    
+
     public CustomSettings customSettings;
-    
+
     @Override
     public void create() {
         //Init new console
         batch = new SpriteBatch();
         font = new BitmapFont();
-        
+        ROOT_PATH = Gdx.files.getExternalStoragePath() + "Leikr/";
+
         if (!Gdx.files.external("Leikr/").exists() || !Gdx.files.external("Leikr/ChipSpace/").exists() || !Gdx.files.external("Leikr/OS/").exists()) {
-            SystemMethods groovySystemMethods = new SystemMethods();            
+            SystemMethodsApi groovySystemMethods = new SystemMethodsApi();
             groovySystemMethods.initFileSystem();
         }
-        
-        ROOT_PATH = Gdx.files.getExternalStoragePath() + "Leikr/";
-        
+
         customSettings = new CustomSettings();
-        
+
         TitleScreen title = new TitleScreen(this);
         title.setInput();
         this.setScreen(title);
@@ -76,12 +74,10 @@ public class Leikr extends Game {
     public void resize(int width, int height) {
         super.resize(width, height);
     }
-    
-    
-    public static void beginConsole(Leikr game){
+
+    public static void beginConsole(Leikr game) {
         game.setScreen(new ConsoleScreen(game));
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
     }
-    
 
 }
