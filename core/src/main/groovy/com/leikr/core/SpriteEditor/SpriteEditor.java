@@ -32,7 +32,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Leikr;
 
 /**
@@ -46,7 +45,6 @@ final class SpriteEditor implements InputProcessor {
     Viewport viewport;
     Camera camera;
     ShapeRenderer renderer;
-    PaintBrush paintBrush;
     Texture font;
     Texture cursor;
 
@@ -106,13 +104,12 @@ final class SpriteEditor implements InputProcessor {
         cursor = new Texture(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/OS/Cursor.png"));
 
         renderer = new ShapeRenderer();
-        paintBrush = new PaintBrush(renderer, game);
 
         // gets the sprite sheet from the given fileName (which is the loaded game)
-        firstSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/Graphics/" + Leikr.GAME_NAME + "_0.png";
-        secondSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/Graphics/" + Leikr.GAME_NAME + "_1.png";
-        thirdSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/Graphics/" + Leikr.GAME_NAME + "_2.png";
-        fourthSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/Graphics/" + Leikr.GAME_NAME + "_3.png";
+        firstSpriteSheet = Leikr.ROOT_PATH + "ChipSpace/" + Leikr.GAME_NAME + "/Graphics/" + Leikr.GAME_NAME + "_0.png";
+        secondSpriteSheet = Leikr.ROOT_PATH + "ChipSpace/" + Leikr.GAME_NAME + "/Graphics/" + Leikr.GAME_NAME + "_1.png";
+        thirdSpriteSheet = Leikr.ROOT_PATH + "ChipSpace/" + Leikr.GAME_NAME + "/Graphics/" + Leikr.GAME_NAME + "_2.png";
+        fourthSpriteSheet = Leikr.ROOT_PATH + "ChipSpace/" + Leikr.GAME_NAME + "/Graphics/" + Leikr.GAME_NAME + "_3.png";
 
         selectedSpriteSheet = firstSpriteSheet;
         setSelectedSpriteSheet(selectedSpriteSheet);
@@ -131,7 +128,7 @@ final class SpriteEditor implements InputProcessor {
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
 
-        speButtons = new SpriteEditorButtons(viewport, this, paintBrush);
+        speButtons = new SpriteEditorButtons(viewport, this, renderer, game);
 
         Pixmap pm = new Pixmap(Gdx.files.internal("HideCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));

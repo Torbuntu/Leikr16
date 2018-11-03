@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -29,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Graphics.PaintBrush;
+import com.leikr.core.Leikr;
 
 /**
  *
@@ -56,10 +58,10 @@ public class SpriteEditorButtons {
     SpriteEditor spe;
     PaintBrush pBrush;
 
-    SpriteEditorButtons(Viewport viewport, SpriteEditor spe, PaintBrush pBrush) {
+    SpriteEditorButtons(Viewport viewport, SpriteEditor spe, ShapeRenderer renderer, Leikr game) {
         this.viewport = viewport;
         this.spe = spe;
-        this.pBrush = pBrush;
+        this.pBrush = new PaintBrush(renderer, game);
         stage = new Stage(viewport);
         confirmExitStage = new Stage(viewport);
 
