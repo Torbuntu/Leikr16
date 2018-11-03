@@ -117,10 +117,10 @@ public class ShellHandler {
                     //do nothing
                     break;
                 case "load":
-                    Leikr.gameName = inputList[1];
+                    Leikr.GAME_NAME = inputList[1];
                     result = "File " + inputList[1] + " has been loaded";
                     if (inputList.length > 2) {
-                        Leikr.gameType = inputList[2];
+                        Leikr.GAME_TYPE = inputList[2];
                         result += ". Game type " + inputList[2] + " set.";
                     }
                     break;
@@ -151,16 +151,16 @@ public class ShellHandler {
                 case "getLoadedGame":
                 case "gameName":
                 case "loadedGame":
-                    result = Leikr.gameName;
+                    result = Leikr.GAME_NAME;
                     break;
                 case "getLoadedType":
                 case "gameType":
                 case "loadedType":
-                    result = Leikr.gameType;
+                    result = Leikr.GAME_TYPE;
                     break;
                 case "loadInfo":
                 case "gameInfo":
-                    result = "Name: " + Leikr.gameName + " Type: " + Leikr.gameType;
+                    result = "Name: " + Leikr.GAME_NAME + " Type: " + Leikr.GAME_TYPE;
                     break;
                 case "sfx":
                     result = soundEngine.writeAudioToDisk(inputList[1], Integer.parseInt(inputList[2]), Integer.parseInt(inputList[3]), Integer.parseInt(inputList[4]));

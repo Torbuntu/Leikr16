@@ -31,8 +31,8 @@ public class Leikr extends Game {
     public BitmapFont font;
 
     public static final float WIDTH = 320, HEIGHT = 240;
-    public static String gameName = "LeikrGame";
-    public static String gameType = "groovy";
+    public static String GAME_NAME = "LeikrGame";
+    public static String GAME_TYPE = "groovy";
 
     // Environment Variables
     public static String ROOT_PATH;

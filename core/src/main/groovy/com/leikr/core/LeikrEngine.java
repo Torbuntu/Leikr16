@@ -116,7 +116,7 @@ public class LeikrEngine {
     }
     
     public void setFont(String fontName, int width, int height) {
-        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "ChipSpace/" + Leikr.gameName + "/" + fontName + ".png"));
+        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "ChipSpace/" + Leikr.GAME_NAME + "/" + fontName + ".png"));
         fontWidth = width;
         fontHeight = height;
     }
@@ -124,7 +124,7 @@ public class LeikrEngine {
     // Map and Camera section
     public void loadMap() {
         useMap = true;
-        tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + Leikr.gameName + "/" + Leikr.gameName + ".tmx");
+        tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + Leikr.GAME_NAME + "/" + Leikr.GAME_NAME + ".tmx");
         tiledMapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
     }

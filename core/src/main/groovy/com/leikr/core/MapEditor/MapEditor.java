@@ -51,7 +51,7 @@ public class MapEditor implements InputProcessor {
     public MapEditor(Leikr game) {
         this.game = game;
 
-        tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + Leikr.gameName + "/" + Leikr.gameName + ".tmx");
+        tiledMap = new TmxMapLoader().load(Leikr.ROOT_PATH + "ChipSpace/" + Leikr.GAME_NAME + "/" + Leikr.GAME_NAME + ".tmx");
         tiledMapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1);
 

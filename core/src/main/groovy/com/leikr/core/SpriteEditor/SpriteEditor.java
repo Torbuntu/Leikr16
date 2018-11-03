@@ -109,10 +109,10 @@ final class SpriteEditor implements InputProcessor {
         paintBrush = new PaintBrush(renderer, game);
 
         // gets the sprite sheet from the given fileName (which is the loaded game)
-        firstSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/Graphics/" + Leikr.gameName + "_0.png";
-        secondSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/Graphics/" + Leikr.gameName + "_1.png";
-        thirdSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/Graphics/" + Leikr.gameName + "_2.png";
-        fourthSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/Graphics/" + Leikr.gameName + "_3.png";
+        firstSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/Graphics/" + Leikr.GAME_NAME + "_0.png";
+        secondSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/Graphics/" + Leikr.GAME_NAME + "_1.png";
+        thirdSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/Graphics/" + Leikr.GAME_NAME + "_2.png";
+        fourthSpriteSheet = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/Graphics/" + Leikr.GAME_NAME + "_3.png";
 
         selectedSpriteSheet = firstSpriteSheet;
         setSelectedSpriteSheet(selectedSpriteSheet);

@@ -45,7 +45,7 @@ public class SoundEngine {
     }
 
     public String playSound(int id, float dur) {
-        String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/" + "Audio/" + Leikr.gameName + "_" + id + ".wav";
+        String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/" + "Audio/" + Leikr.GAME_NAME + "_" + id + ".wav";
         Sound tmp = Gdx.audio.newSound(new FileHandle(file));
         tmp.loop();
         Time.sleep(dur);
@@ -55,7 +55,7 @@ public class SoundEngine {
     }
 
     public Sound getSfx(int id) {
-        return Gdx.audio.newSound(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/" + "Audio/" + Leikr.gameName + "_" + id + ".wav"));
+        return Gdx.audio.newSound(new FileHandle(Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/" + "Audio/" + Leikr.GAME_NAME + "_" + id + ".wav"));
     }
 
     public void playSfx(Sound snd) {
@@ -154,7 +154,7 @@ public class SoundEngine {
             byte[] sampleArray = new byte[44100 * seconds];
             osc.getWriteableSamples(sampleArray);
             AudioInputStream audioInStream = new AudioInputStream(new ByteArrayInputStream(sampleArray), audioFormat, sampleArray.length);
-            String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.gameName + "/" + "audio/" + Leikr.gameName + "_" + id + ".wav";
+            String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/" + "audio/" + Leikr.GAME_NAME + "_" + id + ".wav";
             try {
                 AudioSystem.write(audioInStream, AudioFileFormat.Type.WAVE, new File(file));
             } catch (Exception e) {

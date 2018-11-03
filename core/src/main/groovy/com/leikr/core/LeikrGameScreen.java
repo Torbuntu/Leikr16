@@ -53,10 +53,10 @@ public class LeikrGameScreen implements Screen, InputProcessor {
         LeikrGameScreen.game = game;
         scriptManager = new ScriptEngineManager();
 
-        String filePath = Leikr.ROOT_PATH + "ChipSpace/" + Leikr.gameName + "/";//sets game path
+        String filePath = Leikr.ROOT_PATH + "ChipSpace/" + Leikr.GAME_NAME + "/";//sets game path
 
         try {
-            switch (Leikr.gameType.toLowerCase()) {
+            switch (Leikr.GAME_TYPE.toLowerCase()) {
                 case "groovy":
                 case "gv":
                     loadGroovyGame(filePath);
@@ -96,11 +96,11 @@ public class LeikrGameScreen implements Screen, InputProcessor {
 
             //Compile the Java source code.
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            String toCompile = java.io.File.separator + filePath + Leikr.gameName + ".java";
+            String toCompile = java.io.File.separator + filePath + Leikr.GAME_NAME + ".java";
             compiler.run(null, null, null, toCompile);
 
             //New instance
-            Class jvGame = urlCl.loadClass(Leikr.gameName);
+            Class jvGame = urlCl.loadClass(Leikr.GAME_NAME);
             Constructor[]  cnst = jvGame.getConstructors();
             leikrGame = (LeikrEngine) cnst[0].newInstance();
             
@@ -112,7 +112,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     }
 
     private void loadJythonGame(String filePath) {
-        leikrGame = (LeikrEngine) getJythonObject("com.leikr.core.LeikrEngine", filePath + Leikr.gameName + ".py");
+        leikrGame = (LeikrEngine) getJythonObject("com.leikr.core.LeikrEngine", filePath + Leikr.GAME_NAME + ".py");
     }
 
     public Object getJythonObject(String interfaceName, String pathToJythonModule) {
@@ -146,7 +146,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     private void loadGroovyGame(String filePath) {
         groovyClassLoader = new GroovyClassLoader();
         try {
-            groovyGameClass = groovyClassLoader.parseClass(new File(filePath + Leikr.gameName + ".groovy"));//loads the game code  
+            groovyGameClass = groovyClassLoader.parseClass(new File(filePath + Leikr.GAME_NAME + ".groovy"));//loads the game code  
             Constructor[] cnst = groovyGameClass.getConstructors();//gets the constructos
             leikrGame = (LeikrEngine) cnst[0].newInstance();//instantiates based on first constructor
         } catch (SecurityException | IllegalArgumentException | InvocationTargetException | InstantiationException | CompilationFailedException | IOException | IllegalAccessException ex) {
