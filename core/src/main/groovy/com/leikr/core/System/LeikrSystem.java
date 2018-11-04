@@ -22,6 +22,7 @@ import java.io.IOException;
 import com.badlogic.gdx.Gdx;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Leikr;
+import com.leikr.core.RepoDirectory.RepoHandler;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import groovy.util.GroovyScriptEngine;
@@ -38,9 +39,11 @@ import java.util.logging.Logger;
  */
 public class LeikrSystem {
 
-    GroovyShell groovyShell;
+    final Leikr game;
 
-    SystemMethodsApi groovySystemMethods;
+    GroovyShell groovyShell;
+    RepoHandler repoHandler;
+    ConsoleScreen consoleScreen;
 
     GroovyObject customMethods;
     GroovyObject systemMethods;
@@ -48,20 +51,13 @@ public class LeikrSystem {
     Binding binding;
     GroovyScriptEngine engine;
     GroovyScriptEngine sysEngine;
-    
-    final Leikr game;
-    ConsoleScreen consoleScreen;
 
     public LeikrSystem(Leikr game, ConsoleScreen consoleScreen) throws IOException, InstantiationException, IllegalAccessException {
         this.game = game;
         this.consoleScreen = consoleScreen;
-        
-        groovyShell = new GroovyShell();
-        groovySystemMethods = new SystemMethodsApi();
 
-        if (!Gdx.files.external("Leikr/").exists() || !Gdx.files.external("Leikr/ChipSpace/").exists()) {
-            groovySystemMethods.initFileSystem();
-        }
+        repoHandler = new RepoHandler();
+        groovyShell = new GroovyShell();
 
         binding = new Binding();
         engine = new GroovyScriptEngine(Gdx.files.getExternalStoragePath() + "Leikr/Programs");
@@ -71,6 +67,7 @@ public class LeikrSystem {
             systemMethods = (GroovyObject) sysEngine.run("SystemMethods.groovy", binding);
             systemMethods.setProperty("game", game);
             systemMethods.setProperty("screen", consoleScreen);
+            systemMethods.setProperty("repoHandler", repoHandler);
         } catch (ResourceException | ScriptException ex) {
             Logger.getLogger(LeikrSystem.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -83,26 +80,24 @@ public class LeikrSystem {
             systemMethods = (GroovyObject) sysEngine.run("SystemMethods.groovy", binding);
             systemMethods.setProperty("game", game);
             systemMethods.setProperty("screen", consoleScreen);
+            systemMethods.setProperty("repoHandler", repoHandler);
             return "Custom and System methods reloaded.";
         } catch (ResourceException | ScriptException ex) {
             return "Custom and System Methods failed to reload... " + ex.getMessage();
         }
     }
-    
 
     public Object runSystemMethod(String[] inputList) {
         Object result;
 
-        switch (inputList[0]) {         
+        switch (inputList[0]) {
             case "reloadMethods":
                 result = reloadCustomMethods();
                 break;
             case "exec":
                 try {
                     if (inputList.length == 2) {
-
                         result = customMethods.invokeMethod(inputList[1], null);
-
                     } else {
                         String[] args = Arrays.copyOfRange(inputList, 2, inputList.length);
                         result = customMethods.invokeMethod(inputList[1], args);
@@ -113,12 +108,9 @@ public class LeikrSystem {
                 }
                 break;
             default:
-
                 try {
                     if (inputList.length == 1) {
-
                         result = systemMethods.invokeMethod(inputList[0], null);
-
                     } else {
                         String[] args = Arrays.copyOfRange(inputList, 1, inputList.length);
                         result = systemMethods.invokeMethod(inputList[0], args);
@@ -136,7 +128,6 @@ public class LeikrSystem {
 //                    System.out.println(e.toString());
 //                    result = "GroovyShell cannot evaluate input: " + inputString;
 //                }
-
                 break;
         }
         return result.toString();

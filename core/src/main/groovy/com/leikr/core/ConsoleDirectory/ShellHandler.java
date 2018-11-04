@@ -16,12 +16,8 @@
 package com.leikr.core.ConsoleDirectory;
 
 import com.leikr.core.System.LeikrSystem;
-import com.leikr.core.System.CustomSettings;
 import com.leikr.core.Leikr;
-import com.leikr.core.RepoDirectory.RepoHandler;
 import com.leikr.core.SoundEngine.SoundEngine;
-import com.leikr.core.SoundEngine.SoundFxEditorScreen;
-import groovy.lang.GroovyClassLoader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -37,10 +33,7 @@ public class ShellHandler {
     ConsoleScreen consoleScreen;
     FontHandler fontHandler;
     LeikrSystem leikrSystem;
-    RepoHandler repoHandler;
-    GroovyClassLoader groovyClassLoader;
-    Class groovyGameLoader;
-    CustomSettings customSettings;
+    SoundEngine soundEngine;
 
     float fontRed;
     float fontGreen;
@@ -49,13 +42,11 @@ public class ShellHandler {
     float bgRed;
     float bgGreen;
     float bgBlue;
-    SoundEngine soundEngine;
 
     public ShellHandler(Leikr game, ConsoleScreen consoleScreen, FontHandler fontHandler) {
         this.game = game;
         this.consoleScreen = consoleScreen;
         this.fontHandler = fontHandler;
-        repoHandler = new RepoHandler();
         soundEngine = new SoundEngine(this.game);
         try {
             leikrSystem = new LeikrSystem(this.game, this.consoleScreen);
@@ -81,7 +72,6 @@ public class ShellHandler {
             bgBlue = 0;
             System.out.println("No custom settings file in OS: " + e.getMessage());
         }
-
     }
 
     private void setFontColor(String red, String green, String blue) {
@@ -112,87 +102,24 @@ public class ShellHandler {
                 case "":
                     //do nothing
                     break;
-                case "load":
-                    Leikr.GAME_NAME = inputList[1];
-                    result = "File " + inputList[1] + " has been loaded";
-                    if (inputList.length > 2) {
-                        Leikr.GAME_TYPE = inputList[2];
-                        result += ". Game type " + inputList[2] + " set.";
-                    }
-                    break;
-
                 case "setFontColor":
                     setFontColor(inputList[1], inputList[2], inputList[3]);
                     break;
                 case "setBgColor":
                     setBgColor(inputList[1], inputList[2], inputList[3]);
                     break;
-                case "help":
-                    result = "Type `load` followed by the game you wish to load. Then type `run` to play. Type Exit to quit Leikr. More help coming soon...";
-                    break;
-                case "close":
-                case "exit": //close on exit command.
-                    System.exit(0);
-                    break;
-                case "cls":
                 case "clear":
                     fontHandler.clearHistoryBuffer();
                     fontHandler.clearCommandBuffer();
                     break;
-                case "getLoadedGame":
-                case "gameName":
-                case "loadedGame":
-                    result = Leikr.GAME_NAME;
-                    break;
-                case "getLoadedType":
-                case "gameType":
-                case "loadedType":
-                    result = Leikr.GAME_TYPE;
-                    break;
-                case "loadInfo":
-                case "gameInfo":
-                    result = "Name: " + Leikr.GAME_NAME + " Type: " + Leikr.GAME_TYPE;
-                    break;
                 case "sfx":
                     result = soundEngine.writeAudioToDisk(inputList[1], Integer.parseInt(inputList[2]), Integer.parseInt(inputList[3]), Integer.parseInt(inputList[4]));
-
                     break;
                 case "playsfx":
                     result = soundEngine.playSound(Integer.parseInt(inputList[1]), Float.parseFloat(inputList[2]));
-
                     break;
                 case "testsfx":
                     soundEngine.playNewAudio(inputList[1], Integer.parseInt(inputList[2]), Integer.parseInt(inputList[3]));
-                    break;
-                case "./SFX":
-                case "SoundFXEditor":
-                    game.setScreen(new SoundFxEditorScreen(game));
-                    consoleScreen.dispose();
-                    break;
-                case "setUserRepo":                    
-                    repoHandler.setUserRepo(inputList[1]);
-                    result = "User repository set to " + inputList[1];
-                    break;
-                case "setRepoType":
-                    repoHandler.setRepoType(inputList[1]);
-                    result = "Repository type set to " + inputList[1];
-                    break;
-                case "repoSettings":
-                    repoHandler.repoSettings(inputList[1], inputList[2]);
-                    result = "User repository set to " + inputList[1] + ". Repository type set to " + inputList[2];
-                    break;
-                case "lpm":
-                    switch (inputList[1]) {
-                        case "install":
-                            result = repoHandler.lpmInstall(inputList[2]);
-                            break;
-                        case "update":
-                            result = repoHandler.lpmUpdate(inputList[2]);
-                            break;
-                        default:
-                            result = "lpm command `" + inputList[1] + "` not found.";
-                            break;
-                    }
                     break;
                 default: //Default, command not recognized.
 
@@ -213,6 +140,5 @@ public class ShellHandler {
             historyBuffer.add(result);
 
         }
-
     }
 }

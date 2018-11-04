@@ -34,6 +34,7 @@ import com.badlogic.gdx.files.FileHandle;
 public class SystemMethodsApi {
     public Leikr game;
     public ConsoleScreen screen;
+    public repoHandler;
       
     String ROOT_PATH = Leikr.ROOT_PATH;
     Boolean pathExists(String path){
@@ -57,6 +58,11 @@ public class SystemMethodsApi {
     
     void startDesktop(){
         game.setScreen(new DesktopEnvironmentScreen(game));
+        screen.dispose();
+    }
+    
+    void startSoundEditor(){
+        game.setScreen(new SoundFxEditorScreen(game));
         screen.dispose();
     }
     

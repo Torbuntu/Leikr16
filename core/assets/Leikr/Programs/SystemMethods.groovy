@@ -60,6 +60,10 @@ public class Methods extends SystemMethodsApi {
         startSpriteEditor();
     }
     
+    void SoundEditor(){
+        startSoundEditor();
+    }
+    
     void MapEditor(){
         startMapEditor();
     }
@@ -68,9 +72,58 @@ public class Methods extends SystemMethodsApi {
         startDesktop();
     }
     
+    String load(name){
+        game.GAME_NAME = name;
+        return "Game $name loaded. Currently set type $game.GAME_TYPE";
+    }
+    String load(name, type){
+        game.GAME_NAME = name;
+        game.GAME_TYPE = type;
+        return "Game $name loaded. Game type set to $type.";
+    }
+    
+    String setGameType(type){
+        game.GAME_TYPE = type;
+        return "Game type set: $type";
+    }
+    
     String cd(String directory){
         locPath += "/"+directory;
         return locPath;
+    }
+    
+    String env(){
+        return "Game Name: $game.GAME_NAME, Game Type: $game.GAME_TYPE, Current Directory: $locPath";
+    }
+    
+    void exit(){
+        System.exit(0);
+    }
+    
+    String help(){
+        return "Type `load` followed by the game you wish to load from the ChipSpace directory. Then type `run` to play. Type Exit to quit Leikr. More help coming soon...";
+    }
+    
+    String setUserRepo(repoName){
+        repoHandler.setUserRepo(repoName);
+        return "User repository set: $repoName";
+    }
+    String setRepoType(repoType){
+        repoHandler.setRepoType(repoType);
+        return "Repository type set: $repoType";
+    }
+    
+    String setRepoSettings(name, type){
+        repoHandler.repoSettings(name, type);
+        return "User repository set: $name, Repository type set: $type";
+    }
+    
+    String lpm(action, item){
+        if(action.equals("install")){
+            return repoHandler.lpmInstall(item);
+        }else{
+            return "Action $action not recognized";
+        }
     }
     
     String mkdir(def name){
