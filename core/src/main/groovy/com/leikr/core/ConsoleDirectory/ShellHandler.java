@@ -31,7 +31,7 @@ public class ShellHandler {
 
     final Leikr game;
     ConsoleScreen consoleScreen;
-    FontHandler fontHandler;
+    TextHandler fontHandler;
     LeikrSystem leikrSystem;
     SoundEngine soundEngine;
 
@@ -43,7 +43,7 @@ public class ShellHandler {
     float bgGreen;
     float bgBlue;
 
-    public ShellHandler(Leikr game, ConsoleScreen consoleScreen, FontHandler fontHandler) {
+    public ShellHandler(Leikr game, ConsoleScreen consoleScreen, TextHandler fontHandler) {
         this.game = game;
         this.consoleScreen = consoleScreen;
         this.fontHandler = fontHandler;

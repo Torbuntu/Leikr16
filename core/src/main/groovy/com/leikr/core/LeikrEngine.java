@@ -15,7 +15,6 @@
  */
 package com.leikr.core;
 
-import com.leikr.core.Graphics.LeikrPalette;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controllers;
@@ -40,6 +39,8 @@ import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Graphics.SpriteHandler;
 import com.leikr.core.SoundEngine.SoundEngine;
 import com.leikr.core.LeikrControls.LeikrControls;
+import com.leikr.core.Graphics.LeikrPalette;
+
 
 /**
  *

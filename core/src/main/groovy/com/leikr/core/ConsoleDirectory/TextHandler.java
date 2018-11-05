@@ -26,25 +26,46 @@ import java.util.ArrayList;
  *
  * @author tor
  */
-public class FontHandler {
+public class TextHandler {
 
-    TextBuffer textBuffer;
     SpriteBatch batch;
     Texture font;
     Viewport viewport;
-    float blink;
     Leikr game;
 
     float line;
     float carriage;
+    float blink;
 
     int glyphWidth;
     int glyphHeight;
 
-    public FontHandler(Leikr game, Viewport viewport) {
+    ArrayList<String> command;
+    ArrayList<String> history;
+    ArrayList<String> sessionHistory;
+
+    public String getCommandString() {
+        return String.join(",", command).replaceAll(",", "");
+    }
+
+    public void performBackspace() {
+        if (command.size() > 0) {
+            command.remove(command.size() - 1);
+        }
+    }
+
+    public void addCommand(char character) {
+        if ((int) character != 8 && (int) character != 10) {
+            command.add(String.valueOf(character));
+        }
+    }
+
+    public TextHandler(Leikr game, Viewport viewport) {
         this.batch = game.batch;
         this.viewport = viewport;
-        textBuffer = new TextBuffer();
+        command = new ArrayList<>();
+        history = new ArrayList<>();
+        sessionHistory = new ArrayList<>();
 
         font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/" + game.customSettings.fontName));
 
@@ -54,7 +75,7 @@ public class FontHandler {
         glyphHeight = (int) game.customSettings.glyphHeight;
     }
 
-    private void drawFont(String characters) {    
+    private void drawFont(String characters) {
         for (char C : characters.toCharArray()) {
             if (carriage >= viewport.getWorldWidth() - glyphWidth) {
                 carriage = 0;
@@ -70,7 +91,7 @@ public class FontHandler {
     //Runs through the history buffer and sets the items to the screen. Returns the line position to correctly set the command buffer input.
     public void displayHistoryString(float ln) {
         line = ln;
-        for (String item : textBuffer.history) {
+        for (String item : history) {
             carriage = 0;
             drawFont(item);
             line -= glyphHeight;
@@ -82,17 +103,17 @@ public class FontHandler {
         carriage = 0;
         line = viewport.getWorldHeight() - glyphHeight;
 
-        String result = textBuffer.getCommandString();
+        String result = getCommandString();
 
-        if (textBuffer.history.size() > 0) {
+        if (history.size() > 0) {
             displayHistoryString(line);
             carriage = 0;
         }
 
         drawFont("~$" + result);//pre-pend the path chars
 
-        if (line <= -glyphHeight && textBuffer.history.size() > 0) {
-            System.out.println(textBuffer.history.remove(0));
+        if (line <= -glyphHeight && history.size() > 0) {
+            System.out.println(history.remove(0));
         }
 
         if (blink > 0.4) {
@@ -108,37 +129,37 @@ public class FontHandler {
 
     public void addKeyStroke(char character) {
         //If the character not backspace or enter.
-        textBuffer.addCommand(character);
+        addCommand(character);
     }
 
     public void clearCommandBuffer() {
-        textBuffer.command.clear();
+        command.clear();
     }
 
     public void clearHistoryBuffer() {
-        textBuffer.history.clear();
+        history.clear();
     }
 
     public void backspaceHandler() {
-        textBuffer.performBackspace();
+        performBackspace();
     }
 
     public ArrayList<String> getHistory() {
-        return textBuffer.history;
+        return history;
     }
 
-    public void setHistory(String history) {
-        if (textBuffer.history.size() > 60) {
+    public void setHistory(String historical) {
+        if (history.size() > 60) {
             for (int i = 0; i < 10; i++) {
-                textBuffer.history.remove(0);
+                history.remove(0);
             }
-            System.out.println(textBuffer.history);
+            System.out.println(historical);
         }
-        textBuffer.history.add(history);
+        history.add(historical);
     }
 
     public ArrayList<String> getCommands() {
-        return textBuffer.command;
+        return command;
     }
 
     //Updates the view on resize in the Leikr main.

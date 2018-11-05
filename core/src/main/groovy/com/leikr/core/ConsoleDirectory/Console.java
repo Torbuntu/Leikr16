@@ -42,7 +42,7 @@ public class Console implements InputProcessor {
     final Leikr game;
     ConsoleScreen consoleScreen;
 
-    FontHandler fontHandler;
+    TextHandler fontHandler;
     ShellHandler shellHandler;
     
     ShapeRenderer renderer;
@@ -57,7 +57,7 @@ public class Console implements InputProcessor {
         camera = viewport.getCamera();
         Gdx.input.setInputProcessor(this);
 
-        fontHandler = new FontHandler(game, viewport);//handles command and history buffer for displaying font to screen.
+        fontHandler = new TextHandler(game, viewport);//handles command and history buffer for displaying font to screen.
         shellHandler = new ShellHandler(game, consoleScreen, fontHandler);
         renderer = new ShapeRenderer();
     }
@@ -71,7 +71,7 @@ public class Console implements InputProcessor {
         camera = viewport.getCamera();
         Gdx.input.setInputProcessor(this);
 
-        fontHandler = new FontHandler(game, viewport);//handles command and history buffer for displaying font to screen.
+        fontHandler = new TextHandler(game, viewport);//handles command and history buffer for displaying font to screen.
         fontHandler.setHistory(error);
         shellHandler = new ShellHandler(game, consoleScreen, fontHandler);
         renderer = new ShapeRenderer();
