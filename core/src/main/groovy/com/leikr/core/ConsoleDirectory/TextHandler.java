@@ -167,8 +167,9 @@ public class TextHandler {
         viewport.update(width, height, true);
     }
 
-    public void disposeFont() {
+    public void disposeTextHandler() {
         font.dispose();
+        
     }
 
 }

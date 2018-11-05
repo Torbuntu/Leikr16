@@ -31,7 +31,6 @@ public class ShellHandler {
 
     final Leikr game;
     ConsoleScreen consoleScreen;
-    TextHandler fontHandler;
     LeikrSystem leikrSystem;
     SoundEngine soundEngine;
 
@@ -43,10 +42,9 @@ public class ShellHandler {
     float bgGreen;
     float bgBlue;
 
-    public ShellHandler(Leikr game, ConsoleScreen consoleScreen, TextHandler fontHandler) {
+    public ShellHandler(Leikr game, ConsoleScreen consoleScreen) {
         this.game = game;
         this.consoleScreen = consoleScreen;
-        this.fontHandler = fontHandler;
         soundEngine = new SoundEngine(this.game);
         try {
             leikrSystem = new LeikrSystem(this.game, this.consoleScreen);
@@ -108,10 +106,6 @@ public class ShellHandler {
                 case "setBgColor":
                     setBgColor(inputList[1], inputList[2], inputList[3]);
                     break;
-                case "clear":
-                    fontHandler.clearHistoryBuffer();
-                    fontHandler.clearCommandBuffer();
-                    break;
                 case "sfx":
                     result = soundEngine.writeAudioToDisk(inputList[1], Integer.parseInt(inputList[2]), Integer.parseInt(inputList[3]), Integer.parseInt(inputList[4]));
                     break;
@@ -125,6 +119,9 @@ public class ShellHandler {
 
                     try {
                         result = (String) leikrSystem.runSystemMethod(inputList);
+                        if(result == null){
+                            result = "";
+                        }
                     } catch (Exception e) {
                         result = "System commands failed: " + e.getMessage();
                     }

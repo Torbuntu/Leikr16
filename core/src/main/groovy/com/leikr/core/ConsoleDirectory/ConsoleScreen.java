@@ -25,7 +25,7 @@ import com.leikr.core.Leikr;
 public class ConsoleScreen implements Screen{
     final Leikr game;
     
-    Console console;
+    public Console console;
     public ConsoleScreen(final Leikr game){
         this.game = game;
         console = new Console(this);

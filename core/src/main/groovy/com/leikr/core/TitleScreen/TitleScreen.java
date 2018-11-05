@@ -43,8 +43,6 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
     Leikr game;
     Texture font;
-    int glyphWidth;
-    int glyphHeight;
 
     SpriteBatch batch;
     Camera camera;
@@ -53,15 +51,18 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     Texture animTexture;
     Array<TextureRegion> animationFrames;
     Animation<TextureRegion> animation;
-    float elapsedTime;
 
     TextureRegion[][] tmpFrames;
 
-    float blink;
-    String introText = "Press button to start...";
     int halfX;
     int halfY;
     int len;
+    int glyphWidth;
+    int glyphHeight;
+    float elapsedTime;
+    float blink;
+
+    String introText = "Press button to start...";
 
     public TitleScreen(Leikr game) {
         this.game = game;
@@ -71,10 +72,8 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         tmpFrames = TextureRegion.split(animTexture, 64, 24);
 
         animationFrames = new Array<>();
-        int index = 0;
         for (int j = 0; j < 27; j++) {
             animationFrames.add(tmpFrames[j][0]);
-            index++;
         }
         float tmp = 1f / 27f;
         animation = new Animation<>(tmp, animationFrames);
@@ -151,9 +150,7 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
                 blink += delta;
             }
             batch.end();
-
         }
-
     }
 
     @Override
@@ -228,6 +225,8 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
     @Override
     public void dispose() {
+        font.dispose();
+        animTexture.dispose();
     }
 
 }

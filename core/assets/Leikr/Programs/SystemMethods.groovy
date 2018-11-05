@@ -35,6 +35,9 @@ public class Methods extends SystemMethodsApi {
         "System Name: $SystemName";
     }
     
+    void clear(){
+        clearConsole();
+    }
     
     void run(){
         startGame();
@@ -97,7 +100,7 @@ public class Methods extends SystemMethodsApi {
     }
     
     void exit(){
-        System.exit(0);
+        leikrSystemExit();
     }
     
     String help(){

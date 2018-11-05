@@ -42,7 +42,7 @@ public class Console implements InputProcessor {
     final Leikr game;
     ConsoleScreen consoleScreen;
 
-    TextHandler fontHandler;
+    public TextHandler textHandler;
     ShellHandler shellHandler;
     
     ShapeRenderer renderer;
@@ -57,8 +57,8 @@ public class Console implements InputProcessor {
         camera = viewport.getCamera();
         Gdx.input.setInputProcessor(this);
 
-        fontHandler = new TextHandler(game, viewport);//handles command and history buffer for displaying font to screen.
-        shellHandler = new ShellHandler(game, consoleScreen, fontHandler);
+        textHandler = new TextHandler(game, viewport);//handles command and history buffer for displaying font to screen.
+        shellHandler = new ShellHandler(game, consoleScreen);
         renderer = new ShapeRenderer();
     }
     
@@ -71,10 +71,15 @@ public class Console implements InputProcessor {
         camera = viewport.getCamera();
         Gdx.input.setInputProcessor(this);
 
-        fontHandler = new TextHandler(game, viewport);//handles command and history buffer for displaying font to screen.
-        fontHandler.setHistory(error);
-        shellHandler = new ShellHandler(game, consoleScreen, fontHandler);
+        textHandler = new TextHandler(game, viewport);//handles command and history buffer for displaying font to screen.
+        textHandler.setHistory(error);
+        shellHandler = new ShellHandler(game, consoleScreen);
         renderer = new ShapeRenderer();
+    }
+    
+    public void clearConsoleText(){
+        textHandler.clearCommandBuffer();
+        textHandler.clearHistoryBuffer();
     }
     
     
@@ -94,35 +99,36 @@ public class Console implements InputProcessor {
         batch.begin();
         batch.setColor(shellHandler.fontRed, shellHandler.fontGreen, shellHandler.fontBlue, 1); // sets font color
 
-        fontHandler.displayBufferedString(delta);
+        textHandler.displayBufferedString(delta);
         batch.end();
 
     }
 
     //Updates the view on resize in the Leikr main.
     public void updateViewport(int width, int height) {
-        fontHandler.updateViewport(width, height);
+        textHandler.updateViewport(width, height);
     }
     
     //Disposes batch and font
     public void disposeConsole() {
-        fontHandler.disposeFont();
+        textHandler.disposeTextHandler();
+        renderer.dispose();
     }
 
     @Override
     public boolean keyUp(int keycode) {
         switch (keycode) {
             case Input.Keys.BACKSPACE:
-                fontHandler.backspaceHandler();
+                textHandler.backspaceHandler();
                 break;
             case Input.Keys.ENTER: {
                 try {
-                    shellHandler.handleInput(fontHandler.getCommands(), fontHandler.getHistory());
+                    shellHandler.handleInput(textHandler.getCommands(), textHandler.getHistory());
                 } catch (IOException ex) {
                     Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            fontHandler.clearCommandBuffer();
+            textHandler.clearCommandBuffer();
             break;
             default:
                 break;
@@ -133,7 +139,7 @@ public class Console implements InputProcessor {
     @Override
     public boolean keyTyped(char character) {
         //If the character not backspace or enter.
-        fontHandler.addKeyStroke(character);
+        textHandler.addKeyStroke(character);
         return false;
     }
     

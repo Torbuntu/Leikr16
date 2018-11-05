@@ -35,8 +35,19 @@ public class SystemMethodsApi {
     public Leikr game;
     public ConsoleScreen screen;
     public repoHandler;
+    public textHandler;
       
     String ROOT_PATH = Leikr.ROOT_PATH;
+    
+    void leikrSystemExit(){
+        screen.dispose();
+        System.exit(0);
+    }
+    
+    void clearConsole(){
+        screen.console.clearConsoleText();
+    }
+    
     Boolean pathExists(String path){
         Gdx.files.external(path).exists();
     }

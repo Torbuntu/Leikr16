@@ -15,7 +15,6 @@
  */
 package com.leikr.core.System;
 
-import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import java.io.IOException;
 
