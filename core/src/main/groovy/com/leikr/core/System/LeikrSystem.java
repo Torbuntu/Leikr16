@@ -20,8 +20,10 @@ import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
+import com.leikr.core.ConsoleDirectory.TextHandler;
 import com.leikr.core.Leikr;
 import com.leikr.core.RepoDirectory.RepoHandler;
+import com.leikr.core.SoundEngine.SoundEngine;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import groovy.util.GroovyScriptEngine;
@@ -43,18 +45,21 @@ public class LeikrSystem {
     GroovyShell groovyShell;
     RepoHandler repoHandler;
     ConsoleScreen consoleScreen;
-
-    GroovyObject customMethods;
-    GroovyObject systemMethods;
+    SoundEngine soundEngine;
+    TextHandler textHandler;
 
     Binding binding;
+    GroovyObject customMethods;
+    GroovyObject systemMethods;
     GroovyScriptEngine engine;
     GroovyScriptEngine sysEngine;
 
-    public LeikrSystem(Leikr game, ConsoleScreen consoleScreen) throws IOException, InstantiationException, IllegalAccessException {
-        this.game = game;
-        this.consoleScreen = consoleScreen;
+    public LeikrSystem(TextHandler textHandler) throws IOException, InstantiationException, IllegalAccessException {
+        this.game = textHandler.game;
+        this.consoleScreen = textHandler.consoleScreen;
+        this.textHandler = textHandler;
 
+        soundEngine = new SoundEngine(this.game);
         repoHandler = new RepoHandler();
         groovyShell = new GroovyShell();
 
@@ -67,19 +72,23 @@ public class LeikrSystem {
             systemMethods.setProperty("game", game);
             systemMethods.setProperty("screen", consoleScreen);
             systemMethods.setProperty("repoHandler", repoHandler);
+            systemMethods.setProperty("soundEngine", soundEngine);
+            systemMethods.setProperty("textHandler", textHandler);
         } catch (ResourceException | ScriptException ex) {
             Logger.getLogger(LeikrSystem.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    public String reloadCustomMethods() {
+    public String reloadMethods() {
         try {
             customMethods = (GroovyObject) engine.run("Methods.groovy", binding);
             systemMethods = (GroovyObject) sysEngine.run("SystemMethods.groovy", binding);
             systemMethods.setProperty("game", game);
             systemMethods.setProperty("screen", consoleScreen);
             systemMethods.setProperty("repoHandler", repoHandler);
+            systemMethods.setProperty("soundEngine", soundEngine);
+            systemMethods.setProperty("textHandler", textHandler);
             return "Custom and System methods reloaded.";
         } catch (ResourceException | ScriptException ex) {
             return "Custom and System Methods failed to reload... " + ex.getMessage();
@@ -91,7 +100,7 @@ public class LeikrSystem {
 
         switch (inputList[0]) {
             case "reloadMethods":
-                result = reloadCustomMethods();
+                result = reloadMethods();
                 break;
             case "exec":
                 try {

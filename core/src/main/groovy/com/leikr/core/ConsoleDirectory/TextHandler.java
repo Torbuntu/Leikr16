@@ -20,7 +20,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.Leikr;
+import com.leikr.core.System.LeikrSystem;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,7 +35,7 @@ public class TextHandler {
     SpriteBatch batch;
     Texture font;
     Viewport viewport;
-    Leikr game;
+    public Leikr game;
 
     float line;
     float carriage;
@@ -40,9 +44,19 @@ public class TextHandler {
     int glyphWidth;
     int glyphHeight;
 
+    float fontRed;
+    float fontGreen;
+    float fontBlue;
+
+    float bgRed;
+    float bgGreen;
+    float bgBlue;
+
     ArrayList<String> command;
     ArrayList<String> history;
     ArrayList<String> sessionHistory;
+    public LeikrSystem leikrSystem;
+    public ConsoleScreen consoleScreen;
 
     public String getCommandString() {
         return String.join(",", command).replaceAll(",", "");
@@ -60,12 +74,40 @@ public class TextHandler {
         }
     }
 
-    public TextHandler(Leikr game, Viewport viewport) {
+    public TextHandler(Leikr game, Viewport viewport, ConsoleScreen consoleScreen) {
         this.batch = game.batch;
         this.viewport = viewport;
+        this.game = game;
         command = new ArrayList<>();
         history = new ArrayList<>();
         sessionHistory = new ArrayList<>();
+        
+        this.consoleScreen = consoleScreen;
+
+        try {
+            leikrSystem = new LeikrSystem(this);
+        } catch (IOException | InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            fontRed = game.customSettings.fontRed;
+            fontGreen = game.customSettings.fontGreen;
+            fontBlue = game.customSettings.fontBlue;
+
+            bgRed = game.customSettings.bgRed;
+            bgGreen = game.customSettings.bgGreen;
+            bgBlue = game.customSettings.bgBlue;
+        } catch (Exception e) {
+            fontRed = 1;
+            fontGreen = 1;
+            fontBlue = 1;
+
+            bgRed = 0;
+            bgGreen = 0;
+            bgBlue = 0;
+            System.out.println("No custom settings file in OS: " + e.getMessage());
+        }
 
         font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/" + game.customSettings.fontName));
 
@@ -73,6 +115,18 @@ public class TextHandler {
 
         glyphWidth = (int) game.customSettings.glyphWidth;
         glyphHeight = (int) game.customSettings.glyphHeight;
+    }
+
+    public void setFontColor(String red, String green, String blue) {
+        fontRed = Float.valueOf(red);
+        fontGreen = Float.valueOf(green);
+        fontBlue = Float.valueOf(blue);
+    }
+
+    public void setBgColor(String red, String green, String blue) {
+        bgRed = Float.valueOf(red);
+        bgGreen = Float.valueOf(green);
+        bgBlue = Float.valueOf(blue);
     }
 
     private void drawFont(String characters) {
@@ -169,7 +223,47 @@ public class TextHandler {
 
     public void disposeTextHandler() {
         font.dispose();
-        
+
+    }
+
+    // Handles the command input.
+    public void handleInput(ArrayList<String> commandBuffer, ArrayList<String> historyBuffer) throws IOException {
+        //parse the command buffer into a String.
+        String inputString = String.join(",", commandBuffer).replaceAll(",", "");
+
+        // Convert to list for switch checking.
+        String[] inputList = inputString.split(" ");
+
+        historyBuffer.add("~$" + inputString);
+
+        String result = "";
+        try {
+            switch (inputList[0]) {
+                case "":
+                    //do nothing
+                    break;
+                default: //Default, command not recognized.
+
+                    try {
+                        result = (String) leikrSystem.runSystemMethod(inputList);
+                        if (result == null) {
+                            result = "";
+                        }
+                    } catch (Exception e) {
+                        result = "System commands failed: " + e.getMessage();
+                    }
+                    break;
+            }
+        } catch (Exception e) {
+            // return any error to the screen.
+            historyBuffer.add(e.getMessage());
+        }
+
+        // If result, add to history.
+        if (result.length() > 0) {
+            historyBuffer.add(result);
+
+        }
     }
 
 }

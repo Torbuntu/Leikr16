@@ -36,8 +36,32 @@ public class SystemMethodsApi {
     public ConsoleScreen screen;
     public repoHandler;
     public textHandler;
+    public soundEngine;
       
     String ROOT_PATH = Leikr.ROOT_PATH;
+    
+    
+    String sfx(wave, frequency, seconds, id){
+        return soundEngine.writeAudioToDisk(wave, frequency, seconds, id);
+    }
+    
+    String playsfx(id, dur){
+        return soundEngine.playSound(id, dur);
+    }
+    
+    
+    void testsfx(wave, frequency, seconds){
+        soundEngine.playNewAudio(wave, frequency, seconds);
+    }
+    
+    
+    void setBgColor(r, g, b){
+        textHandler.setBgColor(r, g, b);
+    }
+    
+    void setFontColor(r, g, b){
+        textHandler.setFontColor(r, g, b);
+    }
     
     void leikrSystemExit(){
         screen.dispose();

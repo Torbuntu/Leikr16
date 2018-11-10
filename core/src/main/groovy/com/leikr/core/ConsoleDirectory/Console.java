@@ -37,17 +37,14 @@ public class Console implements InputProcessor {
     SpriteBatch batch;
     Camera camera;
     Viewport viewport;
-    
 
     final Leikr game;
     ConsoleScreen consoleScreen;
 
     public TextHandler textHandler;
-    ShellHandler shellHandler;
-    
+
     ShapeRenderer renderer;
-    
-    
+
     public Console(ConsoleScreen consoleScreen) {
         this.game = consoleScreen.game;
         this.consoleScreen = consoleScreen;
@@ -57,11 +54,10 @@ public class Console implements InputProcessor {
         camera = viewport.getCamera();
         Gdx.input.setInputProcessor(this);
 
-        textHandler = new TextHandler(game, viewport);//handles command and history buffer for displaying font to screen.
-        shellHandler = new ShellHandler(game, consoleScreen);
+        textHandler = new TextHandler(game, viewport, this.consoleScreen);//handles command and history buffer for displaying font to screen.
         renderer = new ShapeRenderer();
     }
-    
+
     public Console(ConsoleScreen consoleScreen, String error) {
         this.game = consoleScreen.game;
         this.consoleScreen = consoleScreen;
@@ -71,33 +67,30 @@ public class Console implements InputProcessor {
         camera = viewport.getCamera();
         Gdx.input.setInputProcessor(this);
 
-        textHandler = new TextHandler(game, viewport);//handles command and history buffer for displaying font to screen.
+        textHandler = new TextHandler(game, viewport, this.consoleScreen);//handles command and history buffer for displaying font to screen.
         textHandler.setHistory(error);
-        shellHandler = new ShellHandler(game, consoleScreen);
         renderer = new ShapeRenderer();
     }
-    
-    public void clearConsoleText(){
+
+    public void clearConsoleText() {
         textHandler.clearCommandBuffer();
         textHandler.clearHistoryBuffer();
     }
-    
-    
 
     //Sets the camera projection. Begins the sprite batch, runs the console buffer to display text.
     public void renderConsole(float delta) {
-        Gdx.gl.glClearColor(0,0,0,0);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        
+
         renderer.setProjectionMatrix(camera.combined);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
-        renderer.setColor(shellHandler.bgRed, shellHandler.bgGreen, shellHandler.bgBlue, 0);
+        renderer.setColor(textHandler.bgRed, textHandler.bgGreen, textHandler.bgBlue, 0);
         renderer.rect(0, 0, Leikr.WIDTH, Leikr.HEIGHT);
         renderer.end();
-        
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.setColor(shellHandler.fontRed, shellHandler.fontGreen, shellHandler.fontBlue, 1); // sets font color
+        batch.setColor(textHandler.fontRed, textHandler.fontGreen, textHandler.fontBlue, 1); // sets font color
 
         textHandler.displayBufferedString(delta);
         batch.end();
@@ -108,7 +101,7 @@ public class Console implements InputProcessor {
     public void updateViewport(int width, int height) {
         textHandler.updateViewport(width, height);
     }
-    
+
     //Disposes batch and font
     public void disposeConsole() {
         textHandler.disposeTextHandler();
@@ -123,7 +116,7 @@ public class Console implements InputProcessor {
                 break;
             case Input.Keys.ENTER: {
                 try {
-                    shellHandler.handleInput(textHandler.getCommands(), textHandler.getHistory());
+                    textHandler.handleInput(textHandler.getCommands(), textHandler.getHistory());
                 } catch (IOException ex) {
                     Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -142,8 +135,8 @@ public class Console implements InputProcessor {
         textHandler.addKeyStroke(character);
         return false;
     }
-    
-      @Override
+
+    @Override
     public boolean keyDown(int keycode) {
         return false;
     }
