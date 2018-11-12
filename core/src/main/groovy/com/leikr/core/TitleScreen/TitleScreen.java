@@ -32,6 +32,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.DesktopEnvironment.DesktopEnvironmentScreen;
 import com.leikr.core.Leikr;
 
@@ -63,6 +64,7 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     float blink;
 
     String introText = "Press button to start...";
+    ConsoleScreen consoleScreen;
 
     public TitleScreen(Leikr game) {
         this.game = game;
@@ -95,6 +97,8 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         len = ((halfX / 2) - 20) + (introText.length() * glyphWidth);
 
         blink = 0;
+        consoleScreen = new ConsoleScreen(game);
+
     }
 
     public void setInput() {
@@ -102,10 +106,11 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     }
 
     void BeginLeikr() {
+
         if (game.customSettings.startx) {
             game.setScreen(new DesktopEnvironmentScreen(game));
         } else {
-            Leikr.beginConsole(game);
+            game.setScreen(consoleScreen);
         }
         this.dispose();
     }

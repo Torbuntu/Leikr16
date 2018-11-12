@@ -93,6 +93,12 @@ final class SpriteEditor implements InputProcessor {
     boolean exitDialog = false;
     SpriteEditorButtons speButtons;
 
+    int spriteIdLabelFontX;
+    int spriteIdLabelFontY;
+    int spriteIdLabelX;
+    int spriteIdLabelY;
+    int sheetOffset = 0;
+
     public SpriteEditor(Leikr game, SpriteEditorScreen speScreen) {
         this.game = game;
         batch = game.batch;
@@ -197,7 +203,7 @@ final class SpriteEditor implements InputProcessor {
             batch.draw(zoomSpriteSheet, spriteSheet.getWidth() + 12, 8, zoomBoxWidth, zoomBoxHeight);
         }
 
-        drawText();
+        drawSpriteID();
 
         batch.end();
 
@@ -234,7 +240,7 @@ final class SpriteEditor implements InputProcessor {
         int x = (int) (viewport.getWorldWidth() / 2 - 98);
         int y = (int) (viewport.getWorldHeight() / 2 + 40);
         // Set the variable test for evaluating the x and y position of the ASCII set.
-        String text = "Would you like exit (y/n)?";
+        String text = "Save and exit (y/n)?";
         for (char C : text.toCharArray()) {
             fontX = ((int) C % 16) * 8;
             fontY = ((int) C / 16) * 8;
@@ -243,12 +249,9 @@ final class SpriteEditor implements InputProcessor {
         }
     }
 
-    public void drawText() {
-        int fontX;
-        int fontY;
-        int x = 8;
-        int y = spriteSheet.getHeight() + 12;
-        int sheetOffset = 0;
+    public void drawSpriteID() {
+        spriteIdLabelX = 8;
+        spriteIdLabelY = spriteSheet.getHeight() + 12;
         if (selectedSpriteSheet.contains("_0")) {
             sheetOffset = 0 + spriteId;
         } else if (selectedSpriteSheet.contains("_1")) {
@@ -262,10 +265,10 @@ final class SpriteEditor implements InputProcessor {
 
         String text = "Sprite ID: " + sheetOffset;
         for (char C : text.toCharArray()) {
-            fontX = ((int) C % 16) * 8;
-            fontY = ((int) C / 16) * 8;
-            batch.draw(font, x, y, fontX, fontY, 8, 8);
-            x = x + 8;
+            spriteIdLabelFontX = ((int) C % 16) * 8;
+            spriteIdLabelFontY = ((int) C / 16) * 8;
+            batch.draw(font, spriteIdLabelX, spriteIdLabelY, spriteIdLabelFontX, spriteIdLabelFontY, 8, 8);
+            spriteIdLabelX = spriteIdLabelX + 8;
         }
     }
 
@@ -290,6 +293,7 @@ final class SpriteEditor implements InputProcessor {
         PixmapIO.writePNG(new FileHandle(selectedSpriteSheet), pixmap);
     }
 
+    // Undos any edits since the last load of the sprite sheet. All unsaved edits are destroyed.
     public void undoRecentEdits() {
         pixmap = new Pixmap(new FileHandle(selectedSpriteSheet));
         pixmap.setBlending(Pixmap.Blending.None);
@@ -302,6 +306,7 @@ final class SpriteEditor implements InputProcessor {
         zoomSpriteSheet.draw(zoomPixmap, 0, 0);
     }
 
+    // Updates the main sprite sheet to match after drawing to the minimap
     public void drawSelectedPixmapToMain() {
         zoomPixmap.setColor(drawColor);
         zoomPixmap.drawPixel(zoomX, zoomY);
@@ -312,10 +317,12 @@ final class SpriteEditor implements InputProcessor {
         spriteSheet.draw(pixmap, 0, 0);
     }
 
-    public void setDrawingCoords() {
+    public void adjustClickCoords(int screenX, int screenY) {
+        viewport.unproject(coords.set(screenX, screenY));
+
         graphicsY = (int) (camera.viewportHeight - (coords.y));
 
-        actualX = (int) (coords.x - 9);
+        actualX = (int) (coords.x - 8);
         actualY = (int) (graphicsY - 104);
 
         if (spriteWidth == 16) {
@@ -325,7 +332,6 @@ final class SpriteEditor implements InputProcessor {
             zoomX = (actualX / 16) - 8;
             zoomY = (actualY / 16);
         }
-
     }
 
     //0: left click, 1: right click, 2: middle click
@@ -351,16 +357,14 @@ final class SpriteEditor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        viewport.unproject(coords.set(screenX, screenY));
-        setDrawingCoords();
+        adjustClickCoords(screenX, screenY);
         handleMouseButton(button);
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        viewport.unproject(coords.set(screenX, screenY));
-        setDrawingCoords();
+        adjustClickCoords(screenX, screenY);
         drawSelectedPixmapToMain();
         return false;
     }
