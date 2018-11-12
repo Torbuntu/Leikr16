@@ -46,13 +46,13 @@ public class SamplePlayer extends Thread {
     private SourceDataLine auline;
     private boolean done;
     private byte[] sampleData = new byte[BUFFER_SIZE];
-    private SampleProviderIntfc provider;
+    private BasicOscillator provider;
 
     public SamplePlayer() {
 
         // Create the audio format we wish to use
         format = new AudioFormat(SAMPLE_RATE, SAMPLE_SIZE, CHANNELS, SIGNED, BIG_ENDIAN);
-
+        
         // Create dataline info object describing line format
         info = new DataLine.Info(SourceDataLine.class, format);
     }
@@ -93,7 +93,7 @@ public class SamplePlayer extends Thread {
         done = true;
     }
 
-    public void setSampleProvider(SampleProviderIntfc provider) {
+    public void setSampleProvider(BasicOscillator provider) {
         this.provider = provider;
     }
 

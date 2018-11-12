@@ -46,12 +46,12 @@ public class SystemMethodsApi {
     }
     
     String playsfx(id, dur){
-        return soundEngine.playSound(id, dur);
+        return soundEngine.playSound(id.toInteger(), dur.toFloat());
     }
     
     
     void testsfx(wave, frequency, seconds){
-        soundEngine.playNewAudio(wave, frequency, seconds);
+        soundEngine.playNewAudio(wave, frequency.toInteger(), seconds.toInteger());
     }
     
     
@@ -65,6 +65,8 @@ public class SystemMethodsApi {
     
     void leikrSystemExit(){
         screen.dispose();
+        soundEngine.disposeSoundEngine();
+        textHandler.disposeTextHandler();
         System.exit(0);
     }
     

@@ -41,7 +41,7 @@ public class SoundEngine {
     public SoundEngine(Leikr game) {
         this.game = game;
         device = Gdx.audio.newAudioDevice(44100, true);
-        audioFormat = new AudioFormat(44100, 16, 1, true, true);
+        audioFormat = new AudioFormat(44100, 16, 1, true, true);        
     }
 
     public String playSound(int id, float dur) {

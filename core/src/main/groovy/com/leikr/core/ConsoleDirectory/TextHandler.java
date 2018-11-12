@@ -245,10 +245,7 @@ public class TextHandler {
                 default: //Default, command not recognized.
 
                     try {
-                        result = (String) leikrSystem.runSystemMethod(inputList);
-                        if (result == null) {
-                            result = "";
-                        }
+                        result = (String) leikrSystem.runSystemMethod(inputList);                        
                     } catch (Exception e) {
                         result = "System commands failed: " + e.getMessage();
                     }
@@ -262,7 +259,6 @@ public class TextHandler {
         // If result, add to history.
         if (result.length() > 0) {
             historyBuffer.add(result);
-
         }
     }
 

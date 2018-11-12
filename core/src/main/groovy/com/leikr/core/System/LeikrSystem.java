@@ -136,6 +136,11 @@ public class LeikrSystem {
 //                    System.out.println(e.toString());
 //                    result = "GroovyShell cannot evaluate input: " + inputString;
 //                }
+                
+                // No result returned for void system methods.
+                if(result == null){
+                    result = "";
+                }
                 break;
         }
         return result.toString();

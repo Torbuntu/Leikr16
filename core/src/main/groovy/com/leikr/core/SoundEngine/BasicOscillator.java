@@ -25,7 +25,7 @@ import ddf.minim.ugens.Waves;
  *
  * @author tor
  */
-public class BasicOscillator implements SampleProviderIntfc {
+public class BasicOscillator {
 
     // Instance data
     private WAVESHAPE waveshape;
@@ -123,7 +123,6 @@ public class BasicOscillator implements SampleProviderIntfc {
      *
      * @return Count of bytes produced.
      */
-    @Override
     public int getSamples(byte[] buffer) {
         int index = 0;
         for (int i = 0; i < SamplePlayer.SAMPLES_PER_BUFFER; i++) {
