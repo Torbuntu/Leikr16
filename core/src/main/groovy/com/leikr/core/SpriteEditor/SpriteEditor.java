@@ -55,6 +55,7 @@ final class SpriteEditor implements InputProcessor {
     Texture spriteSheet;
     Texture zoomSpriteSheet;
 
+    // Should these be in a string array list?
     String firstSpriteSheet;
     String secondSpriteSheet;
     String thirdSpriteSheet;
@@ -302,27 +303,13 @@ final class SpriteEditor implements InputProcessor {
     }
 
     public void drawSelectedPixmapToMain() {
-        if (actualX > 129) {
+        zoomPixmap.setColor(drawColor);
+        zoomPixmap.drawPixel(zoomX, zoomY);
+        zoomSpriteSheet.draw(zoomPixmap, 0, 0);
 
-            zoomPixmap.setColor(drawColor);
-            zoomPixmap.drawPixel(zoomX, zoomY);
-            zoomSpriteSheet.draw(zoomPixmap, 0, 0);
+        pixmap.drawPixmap(zoomPixmap, spriteIdX * 8, spriteIdY * 8, 0, 0, spriteWidth, spriteHeight);
 
-            pixmap.drawPixmap(zoomPixmap, spriteIdX * 8, spriteIdY * 8, 0, 0, spriteWidth, spriteHeight);
-
-            spriteSheet.draw(pixmap, 0, 0);
-        } else {
-
-            pixmap.setColor(drawColor);
-            pixmap.drawPixel(actualX, actualY);
-            spriteSheet.draw(pixmap, 0, 0);
-
-            zoomPixmap = new Pixmap(spriteWidth, spriteHeight, Pixmap.Format.RGBA8888);
-            zoomPixmap.setBlending(Pixmap.Blending.None);
-            zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);            
-            zoomSpriteSheet.draw(zoomPixmap, 0, 0);
-        }
-
+        spriteSheet.draw(pixmap, 0, 0);
     }
 
     public void setDrawingCoords() {
@@ -341,12 +328,14 @@ final class SpriteEditor implements InputProcessor {
 
     }
 
-    public void drawPixelsOnTouch(int button) {
-
+    //0: left click, 1: right click, 2: middle click
+    // 1 and 2 select sprite from the spritesheet, 0 draws on the minimap
+    public void handleMouseButton(int button) {
         switch (button) {
             case 0:
                 drawSelectedPixmapToMain();
                 break;
+            case 1:
             case 2:
                 spriteIdX = (actualX) / 8;
                 spriteIdY = (actualY) / 8;
@@ -354,18 +343,17 @@ final class SpriteEditor implements InputProcessor {
 
                 zoomPixmap = new Pixmap(spriteWidth, spriteHeight, Pixmap.Format.RGBA8888);
                 zoomPixmap.setBlending(Pixmap.Blending.None);
-                zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);                
+                zoomPixmap.drawPixmap(pixmap, spriteIdX * 8, spriteIdY * 8, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
                 zoomSpriteSheet.draw(zoomPixmap, 0, 0);
                 break;
         }
-
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         viewport.unproject(coords.set(screenX, screenY));
         setDrawingCoords();
-        drawPixelsOnTouch(button);
+        handleMouseButton(button);
         return false;
     }
 
@@ -399,7 +387,7 @@ final class SpriteEditor implements InputProcessor {
                     return true;
             }
         }
-        
+
         return false;
     }
 
