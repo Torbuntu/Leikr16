@@ -74,15 +74,15 @@ public class TextHandler {
         }
     }
 
-    public TextHandler(Leikr game, Viewport viewport, ConsoleScreen consoleScreen) {
-        this.batch = game.batch;
+    public TextHandler(Leikr game, Viewport viewport, Console console) {
+        this.batch = console.batch;
         this.viewport = viewport;
         this.game = game;
         command = new ArrayList<>();
         history = new ArrayList<>();
         sessionHistory = new ArrayList<>();
         
-        this.consoleScreen = consoleScreen;
+        this.consoleScreen = console.consoleScreen;
 
         try {
             leikrSystem = new LeikrSystem(this);

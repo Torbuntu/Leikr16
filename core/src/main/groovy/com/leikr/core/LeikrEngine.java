@@ -70,9 +70,11 @@ public class LeikrEngine {
     int fontWidth;
     int fontHeight;
     
+    void setCoreGame(Leikr game){
+        this.game = game;
+    }
     void preCreate() {
-        game = LeikrGameScreen.game;
-        batch = game.batch;
+        batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         
         spriteHandler = new SpriteHandler(game);
@@ -280,6 +282,7 @@ public class LeikrEngine {
         shapeRenderer.dispose();
         font.dispose();
         soundEngine.disposeSoundEngine();
+        
     }
     
     public boolean key(String name) {

@@ -39,10 +39,9 @@ public class SystemMethodsApi {
     public soundEngine;
       
     String ROOT_PATH = Leikr.ROOT_PATH;
-    
-    
+
     String sfx(wave, frequency, seconds, id){
-        return soundEngine.writeAudioToDisk(wave, frequency, seconds, id);
+        return soundEngine.writeAudioToDisk(wave, frequency.toInteger(), seconds.toInteger(), id.toInteger());
     }
     
     String playsfx(id, dur){
@@ -64,14 +63,14 @@ public class SystemMethodsApi {
     }
     
     void leikrSystemExit(){
-        screen.dispose();
         soundEngine.disposeSoundEngine();
-        textHandler.disposeTextHandler();
+        screen.dispose();
         System.exit(0);
     }
     
     void clearConsole(){
-        screen.console.clearConsoleText();
+        textHandler.clearHistoryBuffer();
+        textHandler.clearCommandBuffer();
     }
     
     Boolean pathExists(String path){
@@ -80,27 +79,72 @@ public class SystemMethodsApi {
     
     void startGame(){
         game.setScreen(new LeikrGameScreen(game));
-        screen.dispose();
     }
     
     void startSpriteEditor(){
         game.setScreen(new SpriteEditorScreen(game));
-        screen.dispose();
     }
     
     void startMapEditor(){
         game.setScreen(new MapEditorScreen(game));
-        screen.dispose();
     }
     
     void startDesktop(){
         game.setScreen(new DesktopEnvironmentScreen(game));
-        screen.dispose();
     }
     
     void startSoundEditor(){
         game.setScreen(new SoundFxEditorScreen(game));
-        screen.dispose();
+    }
+       
+    String mnt(String from){
+        new AntBuilder().copy( todir: ROOT_PATH+"/ChipSpace/"+from) {
+            fileset( dir: ROOT_PATH+"/Download/"+from);
+        }
+        return "mounted "+from+" to ChipSpace from Downloads";
+    }
+    
+    String newGame(String name, String type){
+        new File(ROOT_PATH+"/ChipSpace/"+name).mkdir();
+        switch(type.toLowerCase()){
+        case "python":
+        case "jython":
+        case "py":
+        case "jy":
+            new AntBuilder().copy( file:Gdx.files.classpath("GameModels/JythonTemplate.py"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/"+name+".py");
+            new AntBuilder().replace(file: ROOT_PATH+"/ChipSpace/"+name+"/"+name+".py", token: "GAME_NAME", value: name);        
+            break;
+        case "java":
+            new AntBuilder().copy( file:Gdx.files.classpath("GameModels/JavaTemplate.java"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/"+name+".java");
+            new AntBuilder().replace(file: ROOT_PATH+"/ChipSpace/"+name+"/"+name+".java", token: "GAME_NAME", value: name);
+            break;
+        case "groovy":
+        default:
+            //new File( RootFileSystem+"/ChipSpace/"+name+"/"+name+".groovy")
+            new AntBuilder().copy( file:Gdx.files.classpath("GameModels/GroovyTemplate.groovy"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/"+name+".groovy");
+            new AntBuilder().replace(file: ROOT_PATH+"/ChipSpace/"+name+"/"+name+".groovy", token: "GAME_NAME", value: name);
+            //return "Not imnplemented yet";
+            break;
+        }
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/"+name+"_0.png");
+        
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/"+name+"_1.png");
+        
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/"+name+"_2.png");
+        
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/spriteTemplate.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/"+name+"_3.png");
+        
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/tmxTemplate.tmx"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/"+name+".tmx");
+        new AntBuilder().replace(file: ROOT_PATH+"/ChipSpace/"+name+"/"+name+".tmx", token: "GAME_NAME", value: name);
+        
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/Palette_0.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/Palette_1.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/Palette_2.png");
+        new AntBuilder().copy( file:Gdx.files.classpath("GameModels/Palette.png"), tofile:ROOT_PATH+"/ChipSpace/"+name+"/Graphics/Palette_3.png");
+        
+        new File(ROOT_PATH+"/ChipSpace/"+name+"/Audio").mkdir();
+        
+        return "New game project `"+name+"` initialized with type `"+type+"`";
     }
     
     String initFileSystem(){        
@@ -108,6 +152,18 @@ public class SystemMethodsApi {
             fileset( dir: Gdx.files.classpath("Leikr"));
         } 
         return "File system init.";
+    }
+    
+    String restartSystem(){
+        
+        new AntBuilder().copy( todir: ROOT_PATH+"Backup") {
+            fileset( dir: ROOT_PATH);
+        }
+       
+        Gdx.files.external("Leikr/").deleteDirectory();
+         
+        initFileSystem();
+        return "System files restored. Backup image created.";
     }
     
 }

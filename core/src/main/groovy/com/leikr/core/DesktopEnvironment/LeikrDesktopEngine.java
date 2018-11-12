@@ -76,7 +76,7 @@ public class LeikrDesktopEngine {
         consoleButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Leikr.beginConsole(game);
+                game.beginConsole();
                 dispose();
                 System.out.println("App Menu clicked!");
             }

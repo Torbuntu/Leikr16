@@ -39,6 +39,8 @@ public class Leikr extends Game {
     public static String ROOT_PATH;
 
     public CustomSettings customSettings;
+    
+    public ConsoleScreen consoleScreen;
 
     @Override
     public void create() {
@@ -55,6 +57,8 @@ public class Leikr extends Game {
         customSettings = new CustomSettings();
 
         TitleScreen title = new TitleScreen(this);
+        consoleScreen = new ConsoleScreen(this);
+        
         title.setInput();
         this.setScreen(title);
 
@@ -76,8 +80,8 @@ public class Leikr extends Game {
         super.resize(width, height);
     }
 
-    public static void beginConsole(Leikr game) {
-        game.setScreen(new ConsoleScreen(game));
+    public void beginConsole() {
+        this.setScreen(consoleScreen);
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
     }
 

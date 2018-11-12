@@ -15,6 +15,7 @@
  */
 package com.leikr.core.ConsoleDirectory;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.leikr.core.Leikr;
 
@@ -38,6 +39,7 @@ public class ConsoleScreen implements Screen{
     
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(console);
     }
 
     @Override

@@ -42,7 +42,7 @@ import com.leikr.core.Leikr;
  */
 public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
-    Leikr game;
+    final Leikr game;
     Texture font;
 
     SpriteBatch batch;
@@ -110,7 +110,7 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         if (game.customSettings.startx) {
             game.setScreen(new DesktopEnvironmentScreen(game));
         } else {
-            game.setScreen(consoleScreen);
+            game.beginConsole();
         }
         this.dispose();
     }

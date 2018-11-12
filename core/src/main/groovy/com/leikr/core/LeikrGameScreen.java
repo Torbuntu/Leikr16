@@ -41,7 +41,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class LeikrGameScreen implements Screen, InputProcessor {
 
-    public static Leikr game;
+    final Leikr game;
     GroovyClassLoader groovyClassLoader;
     Class groovyGameClass;
     LeikrEngine leikrGame;
@@ -50,7 +50,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     ScriptEngine scriptEngine;
 
     public LeikrGameScreen(Leikr game) {
-        LeikrGameScreen.game = game;
+        this.game = game;
         scriptManager = new ScriptEngineManager();
 
         String filePath = Leikr.ROOT_PATH + "ChipSpace/" + Leikr.GAME_NAME + "/";//sets game path
@@ -69,14 +69,14 @@ public class LeikrGameScreen implements Screen, InputProcessor {
                 case "python":
                 case "jy":
                 case "py":
-                    loadJythonGame(filePath);
+                    loadJythonGame("com.leikr.core.LeikrEngine", filePath + Leikr.GAME_NAME + ".py");
                     break;
                 default:
                     loadGroovyGame(filePath);
                     break;
             }
         } catch (Exception e) {
-            game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            game.beginConsole();
             this.dispose();
         }
 
@@ -103,19 +103,21 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             Class jvGame = urlCl.loadClass(Leikr.GAME_NAME);
             Constructor[]  cnst = jvGame.getConstructors();
             leikrGame = (LeikrEngine) cnst[0].newInstance();
+            leikrGame.setCoreGame(game);
             
         } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            game.beginConsole();
             this.dispose();
         }
 
     }
 
-    private void loadJythonGame(String filePath) {
-        leikrGame = (LeikrEngine) getJythonObject("com.leikr.core.LeikrEngine", filePath + Leikr.GAME_NAME + ".py");
-    }
+//    private void loadJythonGame(String filePath) {
+//        leikrGame = (LeikrEngine) getJythonObject("com.leikr.core.LeikrEngine", filePath + Leikr.GAME_NAME + ".py");
+//        leikrGame.setCoreGame(game);
+//    }
 
-    public Object getJythonObject(String interfaceName, String pathToJythonModule) {
+    public void loadJythonGame(String interfaceName, String pathToJythonModule) {
         Object javaInt = null;
 
         try {
@@ -136,11 +138,11 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             Class JavaInterface = Class.forName(interfaceName);
             javaInt = interpreter.get(instanceName).__tojava__(JavaInterface);
         } catch (ClassNotFoundException ex) {
-            game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            game.beginConsole();
             this.dispose();
         }
-
-        return javaInt;
+        leikrGame = (LeikrEngine)javaInt;
+        leikrGame.setCoreGame(game);
     }
 
     private void loadGroovyGame(String filePath) {
@@ -149,8 +151,9 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             groovyGameClass = groovyClassLoader.parseClass(new File(filePath + Leikr.GAME_NAME + ".groovy"));//loads the game code  
             Constructor[] cnst = groovyGameClass.getConstructors();//gets the constructos
             leikrGame = (LeikrEngine) cnst[0].newInstance();//instantiates based on first constructor
+            leikrGame.setCoreGame(game);
         } catch (SecurityException | IllegalArgumentException | InvocationTargetException | InstantiationException | CompilationFailedException | IOException | IllegalAccessException ex) {
-            game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            game.beginConsole();
             this.dispose();
         } 
     }
@@ -162,7 +165,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             leikrGame.create();
             Gdx.input.setInputProcessor(leikrGame.leikrControls);
         } catch (Exception e) {
-            game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            game.beginConsole();
             this.dispose();
         }
     }
@@ -179,7 +182,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
             leikrGame.render();
 
         } catch (Exception e) {
-            game.setScreen(new ConsoleScreen(game, e.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            game.beginConsole();
             this.dispose();
         }
     }
@@ -206,7 +209,6 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     public final void dispose() {
         if (leikrGame != null) {
             leikrGame.dispose();
-
         }
     }
 
@@ -218,7 +220,7 @@ public class LeikrGameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyUp(int keycode) {
         if (keycode == Keys.ESCAPE) {
-            game.setScreen(new ConsoleScreen(game));
+            game.beginConsole();
             this.dispose();
         }
         return false;

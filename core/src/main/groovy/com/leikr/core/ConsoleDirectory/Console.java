@@ -48,26 +48,26 @@ public class Console implements InputProcessor {
     public Console(ConsoleScreen consoleScreen) {
         this.game = consoleScreen.game;
         this.consoleScreen = consoleScreen;
-        batch = game.batch;
+        batch = new SpriteBatch();
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
         Gdx.input.setInputProcessor(this);
 
-        textHandler = new TextHandler(game, viewport, this.consoleScreen);//handles command and history buffer for displaying font to screen.
+        textHandler = new TextHandler(game, viewport, this);//handles command and history buffer for displaying font to screen.
         renderer = new ShapeRenderer();
     }
 
     public Console(ConsoleScreen consoleScreen, String error) {
         this.game = consoleScreen.game;
         this.consoleScreen = consoleScreen;
-        batch = game.batch;
+        batch = new SpriteBatch();
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
         Gdx.input.setInputProcessor(this);
 
-        textHandler = new TextHandler(game, viewport, this.consoleScreen);//handles command and history buffer for displaying font to screen.
+        textHandler = new TextHandler(game, viewport, this);//handles command and history buffer for displaying font to screen.
         textHandler.setHistory(error);
         renderer = new ShapeRenderer();
     }
@@ -104,8 +104,9 @@ public class Console implements InputProcessor {
 
     //Disposes batch and font
     public void disposeConsole() {
-        textHandler.disposeTextHandler();
         renderer.dispose();
+        batch.dispose();
+        textHandler.disposeTextHandler();
     }
 
     @Override

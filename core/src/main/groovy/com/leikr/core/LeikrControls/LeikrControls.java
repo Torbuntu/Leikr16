@@ -140,7 +140,7 @@ public class LeikrControls implements InputProcessor, ControllerListener {
     @Override
     public boolean keyUp(int keycode) {
         if (keycode == Keys.ESCAPE) {
-            game.setScreen(new ConsoleScreen(game));
+            game.beginConsole();
             engine.dispose();
             return true;
         }
@@ -332,5 +332,5 @@ public class LeikrControls implements InputProcessor, ControllerListener {
     public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
         return false;
     }
-    
+
 }

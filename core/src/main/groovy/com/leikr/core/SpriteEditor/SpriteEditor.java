@@ -374,7 +374,7 @@ final class SpriteEditor implements InputProcessor {
         if (keycode == Input.Keys.ESCAPE) {
             if (exitDialog) {
                 savePixmapImage();
-                Leikr.beginConsole(game);
+                game.beginConsole();
             }
 
             exitDialog = true;
@@ -387,7 +387,7 @@ final class SpriteEditor implements InputProcessor {
                     return true;
                 case Keys.Y:
                     savePixmapImage();
-                    Leikr.beginConsole(game);
+                    game.beginConsole();
                     return true;
             }
         }
