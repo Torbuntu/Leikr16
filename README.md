@@ -6,6 +6,10 @@ A Java Fantasy Computer.
 - Written in Java using libgdx and Groovy.
 - Supports games written in Java, Groovy, and Jython (using the Leikr Engine)
 
+# Contributors
+- Uberoverlord
+- Torbuntu
+
 # Note
 - best built with Java 10. Java 11 currently breaks.
 
