@@ -33,7 +33,6 @@ import com.badlogic.gdx.files.FileHandle;
 
 public class SystemMethodsApi {
     public Leikr game;
-    public ConsoleScreen screen;
     public repoHandler;
     public textHandler;
     public soundEngine;
@@ -64,7 +63,6 @@ public class SystemMethodsApi {
     
     void leikrSystemExit(){
         soundEngine.disposeSoundEngine();
-        screen.dispose();
         System.exit(0);
     }
     

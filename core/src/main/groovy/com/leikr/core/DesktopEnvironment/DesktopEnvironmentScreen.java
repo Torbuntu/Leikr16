@@ -49,7 +49,7 @@ public class DesktopEnvironmentScreen implements Screen {
             Constructor[] cnst = groovyGameClass.getConstructors();
             leikrDesktopEngine = (LeikrDesktopEngine) cnst[0].newInstance();
         } catch (InstantiationException | CompilationFailedException | IOException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            game.setScreen(new ConsoleScreen(game, ex.getMessage() + String.format("%104s", "See host terminal output for more details.")));
+            game.beginConsole();
             this.dispose();
         }
     }

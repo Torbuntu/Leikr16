@@ -45,9 +45,8 @@ public class Console implements InputProcessor {
 
     ShapeRenderer renderer;
 
-    public Console(ConsoleScreen consoleScreen) {
-        this.game = consoleScreen.game;
-        this.consoleScreen = consoleScreen;
+    public Console(Leikr game) {
+        this.game = game;
         batch = new SpriteBatch();
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
@@ -58,9 +57,8 @@ public class Console implements InputProcessor {
         renderer = new ShapeRenderer();
     }
 
-    public Console(ConsoleScreen consoleScreen, String error) {
-        this.game = consoleScreen.game;
-        this.consoleScreen = consoleScreen;
+    public Console(Leikr game, String error) {
+        this.game = game;
         batch = new SpriteBatch();
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);

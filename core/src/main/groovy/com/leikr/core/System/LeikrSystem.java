@@ -56,7 +56,6 @@ public class LeikrSystem {
 
     public LeikrSystem(TextHandler textHandler) throws IOException, InstantiationException, IllegalAccessException {
         this.game = textHandler.game;
-        this.consoleScreen = textHandler.consoleScreen;
         this.textHandler = textHandler;
 
         soundEngine = new SoundEngine(this.game);
@@ -70,7 +69,6 @@ public class LeikrSystem {
             customMethods = (GroovyObject) engine.run("Methods.groovy", binding);
             systemMethods = (GroovyObject) sysEngine.run("SystemMethods.groovy", binding);
             systemMethods.setProperty("game", game);
-            systemMethods.setProperty("screen", consoleScreen);
             systemMethods.setProperty("repoHandler", repoHandler);
             systemMethods.setProperty("soundEngine", soundEngine);
             systemMethods.setProperty("textHandler", textHandler);
@@ -85,7 +83,6 @@ public class LeikrSystem {
             customMethods = (GroovyObject) engine.run("Methods.groovy", binding);
             systemMethods = (GroovyObject) sysEngine.run("SystemMethods.groovy", binding);
             systemMethods.setProperty("game", game);
-            systemMethods.setProperty("screen", consoleScreen);
             systemMethods.setProperty("repoHandler", repoHandler);
             systemMethods.setProperty("soundEngine", soundEngine);
             systemMethods.setProperty("textHandler", textHandler);
