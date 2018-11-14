@@ -7,7 +7,7 @@ A Java Fantasy Computer.
 - Supports games written in Java, Groovy, and Jython (using the Leikr Engine)
 
 # Contributors
-- Uberoverlord
+- Uberoverlord [ [github](https://github.com/uberoverlord) ]
 - Torbuntu
 
 # Note
