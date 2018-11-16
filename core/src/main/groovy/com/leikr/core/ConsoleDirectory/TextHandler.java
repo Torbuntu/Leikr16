@@ -81,7 +81,7 @@ public class TextHandler {
         command = new ArrayList<>();
         history = new ArrayList<>();
         sessionHistory = new ArrayList<>();
-        
+
         this.consoleScreen = console.consoleScreen;
 
         try {
@@ -129,16 +129,22 @@ public class TextHandler {
         bgBlue = Float.valueOf(blue);
     }
 
+    // Immediately checks for newline to prevent drawing the newline character
     private void drawFont(String characters) {
         for (char C : characters.toCharArray()) {
-            if (carriage >= viewport.getWorldWidth() - glyphWidth) {
+            if (C == '\n' || C == '\r') {
                 carriage = 0;
                 line -= glyphHeight;
+            } else {
+                if (carriage >= viewport.getWorldWidth() - glyphWidth) {
+                    carriage = 0;
+                    line -= glyphHeight;
+                }
+                int X = (((int) C % 16) * glyphWidth);
+                int Y = (((int) C / 16) * glyphHeight);
+                batch.draw(font, carriage, line, X, Y, glyphWidth, glyphHeight);
+                carriage += glyphWidth;
             }
-            int X = (((int) C % 16) * glyphWidth);
-            int Y = (((int) C / 16) * glyphHeight);
-            batch.draw(font, carriage, line, X, Y, glyphWidth, glyphHeight);
-            carriage += glyphWidth;
         }
     }
 
@@ -245,7 +251,7 @@ public class TextHandler {
                 default: //Default, command not recognized.
 
                     try {
-                        result = (String) leikrSystem.runSystemMethod(inputList);                        
+                        result = (String) leikrSystem.runSystemMethod(inputList);
                     } catch (Exception e) {
                         result = "System commands failed: " + e.getMessage();
                     }

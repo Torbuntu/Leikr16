@@ -130,7 +130,6 @@ public class Console implements InputProcessor {
 
     @Override
     public boolean keyTyped(char character) {
-        //If the character not backspace or enter.
         textHandler.addKeyStroke(character);
         return false;
     }
