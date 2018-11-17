@@ -90,7 +90,7 @@ public class Console implements InputProcessor {
         batch.begin();
         batch.setColor(textHandler.fontRed, textHandler.fontGreen, textHandler.fontBlue, 1); // sets font color
 
-        textHandler.displayBufferedString(delta);
+        textHandler.displayCurrentText(delta);
         batch.end();
 
     }
@@ -109,22 +109,6 @@ public class Console implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        switch (keycode) {
-            case Input.Keys.BACKSPACE:
-                textHandler.backspaceHandler();
-                break;
-            case Input.Keys.ENTER: {
-                try {
-                    textHandler.handleInput(textHandler.getCommands(), textHandler.getHistory());
-                } catch (IOException ex) {
-                    Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            textHandler.clearCommandBuffer();
-            break;
-            default:
-                break;
-        }
         return false;
     }
 
@@ -136,6 +120,16 @@ public class Console implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        switch (keycode) {
+            case Input.Keys.BACKSPACE:
+                textHandler.performBackspace();
+                break;
+            case Input.Keys.ENTER:
+                textHandler.handleInput();
+                break;
+            default:
+                break;
+        }
         return false;
     }
 

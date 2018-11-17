@@ -58,31 +58,15 @@ public class TextHandler {
     public LeikrSystem leikrSystem;
     public ConsoleScreen consoleScreen;
 
-    public String getCommandString() {
-        return String.join(",", command).replaceAll(",", "");
-    }
-
-    public void performBackspace() {
-        if (command.size() > 0) {
-            command.remove(command.size() - 1);
-        }
-    }
-
-    public void addCommand(char character) {
-        if ((int) character != 8 && (int) character != 10) {
-            command.add(String.valueOf(character));
-        }
-    }
-
     public TextHandler(Leikr game, Viewport viewport, Console console) {
         this.batch = console.batch;
         this.viewport = viewport;
         this.game = game;
+        this.consoleScreen = console.consoleScreen;
+
         command = new ArrayList<>();
         history = new ArrayList<>();
         sessionHistory = new ArrayList<>();
-
-        this.consoleScreen = console.consoleScreen;
 
         try {
             leikrSystem = new LeikrSystem(this);
@@ -129,7 +113,6 @@ public class TextHandler {
         bgBlue = Float.valueOf(blue);
     }
 
-    // Immediately checks for newline to prevent drawing the newline character
     private void drawFont(String characters) {
         for (char C : characters.toCharArray()) {
             switch (C) {
@@ -153,7 +136,7 @@ public class TextHandler {
     }
 
     //Runs through the history buffer and sets the items to the screen. Returns the line position to correctly set the command buffer input.
-    public void displayHistoryString(float ln) {
+    void displayHistoryString(float ln) {
         line = ln;
         for (String item : history) {
             carriage = 0;
@@ -163,37 +146,30 @@ public class TextHandler {
     }
 
     //Displays the command buffer after running the history and new path. Checks the height and removes history to keep on screen. Displays blank box for cursor.
-    public void displayBufferedString(float delta) {
-        carriage = 0;
+    public void displayCurrentText(float delta) {
         line = viewport.getWorldHeight() - glyphHeight;
-
-        String result = getCommandString();
 
         if (history.size() > 0) {
             displayHistoryString(line);
-            carriage = 0;
         }
 
-        drawFont("~$" + result);//pre-pend the path chars
+        carriage = 0;
+        drawFont("~$" + getCommandString());//pre-pend the path chars
 
+        // Removes history that is off the screen to fit the most recent at the bottom.
         if (line <= -glyphHeight && history.size() > 0) {
-            System.out.println(history.remove(0));
+            history.remove(0);
         }
 
-        if (blink > 0.4) {
-            batch.draw(font, carriage, line, 0, 0, glyphWidth, glyphHeight);
-            blink += delta;
-            if (blink > 1) {
-                blink = 0;
-            }
-        } else {
-            blink += delta;
-        }
+        blinkCursor(delta);
     }
 
-    public void addKeyStroke(char character) {
-        //If the character not backspace or enter.
-        addCommand(character);
+    void blinkCursor(float delta) {
+        if (blink > 0.4) {
+            batch.draw(font, carriage, line, 0, 0, glyphWidth, glyphHeight);
+            blink = blink > 1 ? 0 : blink;
+        }
+        blink += delta;
     }
 
     public void clearCommandBuffer() {
@@ -204,12 +180,16 @@ public class TextHandler {
         history.clear();
     }
 
-    public void backspaceHandler() {
-        performBackspace();
-    }
-
     public ArrayList<String> getHistory() {
         return history;
+    }
+
+    public ArrayList<String> getCommands() {
+        return command;
+    }
+
+    public String getCommandString() {
+        return String.join(",", command).replaceAll(",", "");
     }
 
     public void setHistory(String historical) {
@@ -217,13 +197,53 @@ public class TextHandler {
             for (int i = 0; i < 10; i++) {
                 history.remove(0);
             }
-            System.out.println(historical);
         }
         history.add(historical);
     }
 
-    public ArrayList<String> getCommands() {
-        return command;
+    public void performBackspace() {
+        if (command.size() > 0) {
+            command.remove(command.size() - 1);
+        }
+    }
+
+    public void addKeyStroke(char character) {
+        if ((int) character != 8 && (int) character != 10) {
+            command.add(String.valueOf(character));
+        }
+    }
+
+    // Handles the command input.
+    public void handleInput() {
+        //parse the command buffer into a String. Add to history line.
+        String inputString = String.join(",", command).replaceAll(",", "");
+        history.add("~$" + inputString);
+
+        // Convert to list for switch checking.
+        String[] inputList = inputString.split(" ");
+
+        // Skip the input if there is no item to check against.
+        if (inputList[0].length() < 1) {
+            return;
+        }
+        String result = "";
+        try {
+
+            try {
+                result = (String) leikrSystem.runSystemMethod(inputList);
+            } catch (Exception e) {
+                result = "System commands failed: " + e.getMessage();
+            }
+        } catch (Exception e) {
+            // return any error to the screen.
+            history.add(e.getMessage());
+        }
+
+        // If result, add to history.
+        if (result.length() > 0) {
+            history.add(result);
+        }
+        clearCommandBuffer();//Clear the command when finished processing.
     }
 
     //Updates the view on resize in the Leikr main.
@@ -233,43 +253,5 @@ public class TextHandler {
 
     public void disposeTextHandler() {
         font.dispose();
-
     }
-
-    // Handles the command input.
-    public void handleInput(ArrayList<String> commandBuffer, ArrayList<String> historyBuffer) throws IOException {
-        //parse the command buffer into a String.
-        String inputString = String.join(",", commandBuffer).replaceAll(",", "");
-
-        // Convert to list for switch checking.
-        String[] inputList = inputString.split(" ");
-
-        historyBuffer.add("~$" + inputString);
-
-        String result = "";
-        try {
-            switch (inputList[0]) {
-                case "":
-                    //do nothing
-                    break;
-                default: //Default, command not recognized.
-
-                    try {
-                        result = (String) leikrSystem.runSystemMethod(inputList);
-                    } catch (Exception e) {
-                        result = "System commands failed: " + e.getMessage();
-                    }
-                    break;
-            }
-        } catch (Exception e) {
-            // return any error to the screen.
-            historyBuffer.add(e.getMessage());
-        }
-
-        // If result, add to history.
-        if (result.length() > 0) {
-            historyBuffer.add(result);
-        }
-    }
-
 }
