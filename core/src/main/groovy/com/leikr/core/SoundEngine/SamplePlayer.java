@@ -20,6 +20,7 @@ package com.leikr.core.SoundEngine;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 /**
@@ -75,8 +76,8 @@ public class SamplePlayer extends Thread {
                     auline.write(sampleData, 0, nBytesRead);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.getMessage();
         } finally {
             auline.drain();
             auline.close();

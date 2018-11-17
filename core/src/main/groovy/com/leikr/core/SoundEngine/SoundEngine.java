@@ -22,6 +22,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.leikr.core.Leikr;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -118,9 +119,13 @@ public class SoundEngine {
     }
 
     public String writeAudioToDisk(String wave, int frequency, int seconds, int id) {
+        if (id > 127) {
+            return "ID is too large. Must be between 0 and 127";
+        }
+        
         BasicOscillator osc = new BasicOscillator();
-
         osc.setFrequency(frequency);
+        
         switch (wave.toLowerCase()) {
             default:
             case "sine":
@@ -147,17 +152,15 @@ public class SoundEngine {
                 osc.setOscWaveshape(BasicOscillator.WAVESHAPE.PHA);
                 break;
         }
-        if (id > 127) {
-            return "ID is too large. Must be between 0 and 127";
-        }
+        
         try {
             byte[] sampleArray = new byte[44100 * seconds];
             osc.getWriteableSamples(sampleArray);
             AudioInputStream audioInStream = new AudioInputStream(new ByteArrayInputStream(sampleArray), audioFormat, sampleArray.length);
-            String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/" + "audio/" + Leikr.GAME_NAME + "_" + id + ".wav";
+            String file = Gdx.files.getExternalStoragePath() + "Leikr/ChipSpace/" + Leikr.GAME_NAME + "/" + "Audio/" + Leikr.GAME_NAME + "_" + id + ".wav";
             try {
                 AudioSystem.write(audioInStream, AudioFileFormat.Type.WAVE, new File(file));
-            } catch (Exception e) {
+            } catch (IOException e) {
                 return "Failed to write to file with id: " + id + " Error: " + e.getMessage();
             }
             return "Audio sample saved successfully with id: " + id;
