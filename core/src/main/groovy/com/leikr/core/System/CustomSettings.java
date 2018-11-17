@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 .
+ * Copyright 2018 . torbuntu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -80,6 +78,7 @@ public class CustomSettings {
             customPalette = (prop.getProperty("customPalette") != null) ? prop.getProperty("customPalette") : "";
             
         } catch (IOException | NumberFormatException  ex ) {
+            System.out.println(ex.getMessage());
         } 
 
     }
