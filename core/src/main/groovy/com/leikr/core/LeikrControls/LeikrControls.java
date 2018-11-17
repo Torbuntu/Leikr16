@@ -22,7 +22,6 @@ import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.math.Vector3;
 import com.leikr.core.Leikr;
-import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.LeikrEngine;
 
 /**

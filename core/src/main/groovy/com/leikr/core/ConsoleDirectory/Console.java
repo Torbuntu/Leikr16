@@ -16,8 +16,6 @@
 package com.leikr.core.ConsoleDirectory;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,13 +23,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.Leikr;
-import java.io.IOException;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 // TODO: This class is way too big. Needs to be cut up into solid pieces
-public class Console implements InputProcessor {
+public class Console{
 
     //global variables for the console.
     SpriteBatch batch;
@@ -42,6 +36,7 @@ public class Console implements InputProcessor {
     ConsoleScreen consoleScreen;
 
     public TextHandler textHandler;
+    ConsoleInputProcessor cip;
 
     ShapeRenderer renderer;
 
@@ -51,23 +46,11 @@ public class Console implements InputProcessor {
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
-        Gdx.input.setInputProcessor(this);
 
         textHandler = new TextHandler(game, viewport, this);//handles command and history buffer for displaying font to screen.
         renderer = new ShapeRenderer();
-    }
-
-    public Console(Leikr game, String error) {
-        this.game = game;
-        batch = new SpriteBatch();
-
-        viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
-        camera = viewport.getCamera();
-        Gdx.input.setInputProcessor(this);
-
-        textHandler = new TextHandler(game, viewport, this);//handles command and history buffer for displaying font to screen.
-        textHandler.setHistory(error);
-        renderer = new ShapeRenderer();
+        cip = new ConsoleInputProcessor(textHandler);
+        Gdx.input.setInputProcessor(cip);
     }
 
     public void clearConsoleText() {
@@ -106,56 +89,4 @@ public class Console implements InputProcessor {
         batch.dispose();
         textHandler.disposeTextHandler();
     }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        textHandler.addKeyStroke(character);
-        return false;
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        switch (keycode) {
-            case Input.Keys.BACKSPACE:
-                textHandler.performBackspace();
-                break;
-            case Input.Keys.ENTER:
-                textHandler.handleInput();
-                break;
-            default:
-                break;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
-
 }

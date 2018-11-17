@@ -48,7 +48,7 @@ import com.leikr.core.Graphics.LeikrPalette;
  */
 public class LeikrEngine {
     
-    public static Leikr game;
+    public Leikr game;
     SpriteBatch batch;
     ShapeRenderer shapeRenderer;
     Camera camera;

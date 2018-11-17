@@ -34,7 +34,7 @@ public class ConsoleScreen implements Screen{
     
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(console);
+        Gdx.input.setInputProcessor(console.cip);
     }
 
     @Override

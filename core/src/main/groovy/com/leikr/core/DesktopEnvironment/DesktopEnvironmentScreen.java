@@ -16,7 +16,6 @@
 package com.leikr.core.DesktopEnvironment;
 
 import com.badlogic.gdx.Screen;
-import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Leikr;
 import groovy.lang.GroovyClassLoader;
 import java.io.File;

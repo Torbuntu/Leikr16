@@ -15,7 +15,6 @@
  */
 package com.leikr.core;
 
-import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;

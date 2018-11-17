@@ -64,7 +64,6 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     float blink;
 
     String introText = "Press button to start...";
-    ConsoleScreen consoleScreen;
 
     public TitleScreen(Leikr game) {
         this.game = game;
@@ -97,8 +96,6 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         len = ((halfX / 2) - 20) + (introText.length() * glyphWidth);
 
         blink = 0;
-        consoleScreen = new ConsoleScreen(game);
-
     }
 
     public void setInput() {
