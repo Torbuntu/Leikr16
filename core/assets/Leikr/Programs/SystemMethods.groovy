@@ -45,17 +45,17 @@ public class Methods extends SystemMethodsApi {
     
     void run(app){
         switch(app){
-            case "Map":
-            case "MapEditor":
-                startMapEditor();
-                break;
-            case "Sprite":
-            case "SpriteEditor":
-                startSpriteEditor();
-                break;
-            case "gui":
-                startDesktop();
-                break;
+        case "Map":
+        case "MapEditor":
+            startMapEditor();
+            break;
+        case "Sprite":
+        case "SpriteEditor":
+            startSpriteEditor();
+            break;
+        case "gui":
+            startDesktop();
+            break;
         }
     }
     
@@ -122,9 +122,12 @@ public class Methods extends SystemMethodsApi {
     }
     
     String lpm(action, item){
-        if(action.equals("install")){
+        switch(action){
+        case "install":
             return repoHandler.lpmInstall(item);
-        }else{
+        case "update":
+            return repoHandler.lpmUpdate(item);
+        default:
             return "Action $action not recognized";
         }
     }
