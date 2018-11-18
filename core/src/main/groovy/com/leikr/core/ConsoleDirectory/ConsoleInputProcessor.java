@@ -50,6 +50,9 @@ public class ConsoleInputProcessor implements InputProcessor{
             case Input.Keys.ENTER:
                 textHandler.handleInput();
                 break;
+            case Input.Keys.UP:
+                textHandler.restorePreviousInput();
+                break;
             default:
                 break;
         }

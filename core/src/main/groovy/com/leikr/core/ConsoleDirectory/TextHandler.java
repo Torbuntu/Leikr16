@@ -55,6 +55,8 @@ public class TextHandler {
     ArrayList<String> command;
     ArrayList<String> history;
     ArrayList<String> sessionHistory;
+    int sessionOffset;
+
     public LeikrSystem leikrSystem;
     public ConsoleScreen consoleScreen;
 
@@ -113,7 +115,19 @@ public class TextHandler {
         bgBlue = Float.valueOf(blue);
     }
 
-    private void drawFont(String characters) {
+    private void parseWords(String words) {
+        String[] wordList = words.split(" ");
+        for (String w : wordList) {
+            drawFontString(w);
+            carriage += glyphWidth;//add spaces
+        }
+    }
+
+    private void drawFontString(String characters) {
+        if ((characters.length() * glyphWidth) + carriage > (viewport.getWorldWidth() - glyphWidth)) {
+            carriage = 0;
+            line -= glyphHeight;
+        }
         for (char C : characters.toCharArray()) {
             switch (C) {
                 case '\n':
@@ -140,7 +154,7 @@ public class TextHandler {
         line = ln;
         for (String item : history) {
             carriage = 0;
-            drawFont(item);
+            parseWords(item);
             line -= glyphHeight;
         }
     }
@@ -154,7 +168,7 @@ public class TextHandler {
         }
 
         carriage = 0;
-        drawFont("~$" + getCommandString());//pre-pend the path chars
+        drawFontString("~$" + getCommandString());//pre-pend the path chars
 
         // Removes history that is off the screen to fit the most recent at the bottom.
         if (line <= -glyphHeight && history.size() > 0) {
@@ -213,10 +227,33 @@ public class TextHandler {
         }
     }
 
+    // Clears the current command buffer and sets the command to the sessionHistory of the current offset.
+    public void restorePreviousInput() {
+        command.clear();
+        for (char C : sessionHistory.get(sessionOffset).toCharArray()) {
+            addKeyStroke(C);
+        }
+        if (sessionOffset > 0) {
+            sessionOffset--;
+        }
+    }
+
     // Handles the command input.
     public void handleInput() {
         //parse the command buffer into a String. Add to history line.
         String inputString = String.join(",", command).replaceAll(",", "");
+
+        // If a command is entered and the size is greater or equal to the size set in commandHistory, add input and remove the final entry.
+        if (inputString.length() > 0) {
+            if (sessionHistory.size() >= game.customSettings.sessionHistorySize) {
+                sessionHistory.remove(0);
+                sessionHistory.add(inputString);
+                sessionOffset = sessionHistory.size() - 1;
+            } else {
+                sessionHistory.add(inputString);//add input to session history for retrieval. 
+                sessionOffset = sessionHistory.size() - 1;
+            }
+        }
         history.add("~$" + inputString);
 
         // Convert to list for switch checking.

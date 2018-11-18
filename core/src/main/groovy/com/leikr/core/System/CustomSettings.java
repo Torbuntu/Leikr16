@@ -46,6 +46,8 @@ public class CustomSettings {
     
     public String customPalette = "";
     
+    public int sessionHistorySize;
+    
     
     public CustomSettings(){
         loadCustomSettings();
@@ -76,6 +78,8 @@ public class CustomSettings {
             userDesktop = (prop.getProperty("userDesktop") != null) ? prop.getProperty("userDesktop") : "userDesktop";
             
             customPalette = (prop.getProperty("customPalette") != null) ? prop.getProperty("customPalette") : "";
+            
+            sessionHistorySize = (prop.getProperty("sessionHistorySize") != null) ? Integer.parseInt(prop.getProperty("sessionHistorySize")) : 15;
             
         } catch (IOException | NumberFormatException  ex ) {
             System.out.println(ex.getMessage());
