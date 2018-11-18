@@ -143,10 +143,14 @@ final class SpriteEditor implements InputProcessor {
 
         // input processors
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(this);
+        setInputThis(inputMultiplexer);
         inputMultiplexer.addProcessor(speButtons.stage);
         inputMultiplexer.addProcessor(speButtons.confirmExitStage);
         Gdx.input.setInputProcessor(inputMultiplexer);
+    }
+    
+    void setInputThis(InputMultiplexer inputMultiplexer){
+        inputMultiplexer.addProcessor(this);
     }
 
     public void setSelectedSpriteSheet(String selected) {
@@ -370,7 +374,22 @@ final class SpriteEditor implements InputProcessor {
     }
 
     @Override
-    public boolean keyUp(int keycode) {
+    public boolean keyUp(int keycode) {      
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.ESCAPE) {
             if (exitDialog) {
                 savePixmapImage();
@@ -391,22 +410,6 @@ final class SpriteEditor implements InputProcessor {
                     return true;
             }
         }
-
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
         return false;
     }
 

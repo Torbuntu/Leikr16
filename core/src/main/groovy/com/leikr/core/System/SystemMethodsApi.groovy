@@ -20,6 +20,7 @@ package com.leikr.core.System;
 import com.leikr.core.Leikr;
 import com.leikr.core.DesktopEnvironment.DesktopEnvironmentScreen;
 import com.leikr.core.ConsoleDirectory.ConsoleScreen;
+import com.leikr.core.CodeEditor.CodeEditorScreen;
 import com.leikr.core.LeikrGameScreen;
 import com.leikr.core.SoundEngine.SoundFxEditorScreen;
 import com.leikr.core.SpriteEditor.SpriteEditorScreen;
@@ -93,6 +94,10 @@ public class SystemMethodsApi {
     
     void startSoundEditor(){
         game.setScreen(new SoundFxEditorScreen(game));
+    }
+    
+    void startCodeEditor(){
+        game.setScreen(new CodeEditorScreen(game));
     }
        
     String mnt(String from){
