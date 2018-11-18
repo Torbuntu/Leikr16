@@ -28,7 +28,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.leikr.core.ConsoleDirectory.ConsoleScreen;
 import com.leikr.core.Graphics.PaintBrush;
 import com.leikr.core.Leikr;
 
@@ -102,7 +101,7 @@ public class SpriteEditorButtons {
             public void clicked(InputEvent event, float x, float y) {
                 if (spe.exitDialog) {
                     spe.savePixmapImage();
-                    spe.game.setScreen(new ConsoleScreen(spe.game));
+                    spe.game.beginConsole();
                     Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
                     System.out.println("Exit clicked!");
                 }

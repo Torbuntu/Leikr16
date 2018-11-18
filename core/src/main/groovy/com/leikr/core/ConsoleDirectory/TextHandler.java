@@ -229,13 +229,18 @@ public class TextHandler {
 
     // Clears the current command buffer and sets the command to the sessionHistory of the current offset.
     public void restorePreviousInput() {
-        command.clear();
-        for (char C : sessionHistory.get(sessionOffset).toCharArray()) {
-            addKeyStroke(C);
+        try {
+            command.clear();
+            for (char C : sessionHistory.get(sessionOffset).toCharArray()) {
+                addKeyStroke(C);
+            }
+            if (sessionOffset > 0) {
+                sessionOffset--;
+            }
+        } catch (Exception e) {
+            history.add(e.getMessage());
         }
-        if (sessionOffset > 0) {
-            sessionOffset--;
-        }
+
     }
 
     // Handles the command input.
