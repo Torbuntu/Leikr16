@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.Leikr;
+import java.util.Arrays;
 
 /**
  *
@@ -44,8 +45,6 @@ public class CodeEditor {
 
     int glyphWidth;
     int glyphHeight;
-    
-    
 
     public CodeEditor(Leikr game) {
         this.game = game;
@@ -60,7 +59,7 @@ public class CodeEditor {
 
         glyphWidth = (int) game.customSettings.glyphWidth;
         glyphHeight = (int) game.customSettings.glyphHeight;
-        
+
         line = viewport.getWorldHeight() - glyphHeight;
         carriage = 0;
         Gdx.input.setInputProcessor(ceip);
@@ -69,17 +68,28 @@ public class CodeEditor {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         line = viewport.getWorldHeight() - glyphHeight;
         carriage = 0;
-        drawFont("Hello World! The Code Editor isn't currently available. Come back after a future update to try it out!");
+        parseWords("Hello World! The Code Editor isn't currently available. Come back after a future update to try it out!");
         batch.end();
 
     }
 
-    private void drawFont(String characters) {
+    private void parseWords(String words) {
+        String[] wordList = words.split(" ");
+        for (String w : wordList) {
+            drawFontString(w);
+        }
+    }
+
+    private void drawFontString(String characters) {
+        if ((characters.length()*glyphWidth)+carriage > (viewport.getWorldWidth()-glyphWidth)) {
+            carriage = 0;
+            line -= glyphHeight;
+        }
         for (char C : characters.toCharArray()) {
             switch (C) {
                 case '\n':
@@ -99,6 +109,7 @@ public class CodeEditor {
                     break;
             }
         }
+        carriage += glyphWidth;//space after each word
     }
 
     public void updateViewport(int width, int height) {
