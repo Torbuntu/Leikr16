@@ -9,6 +9,7 @@ A Java Fantasy Computer.
 # Contributors
 - Uberoverlord [ [github](https://github.com/uberoverlord) ]
 - Torbuntu
+- mhbert [ [github](https://github.com/mhbert) ]
 
 # Note
 - best built with Java 10. Java 11 currently breaks.
