@@ -62,22 +62,13 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     float elapsedTime;
     float blink;
 
-    String introText = "Press button to start...";
+    String introText = "Press any button to start...";
 
     public TitleScreen(Leikr game) {
         this.game = game;
         batch = game.batch;
 
-        animTexture = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/TitleAnimation/TitleAnimation.png"));
-        tmpFrames = TextureRegion.split(animTexture, 64, 24);
-
-        animationFrames = new Array<>();
-        for (int j = 0; j < 27; j++) {
-            animationFrames.add(tmpFrames[j][0]);
-        }
-        float tmp = 1f / 27f;
-        animation = new Animation<>(tmp, animationFrames);
-        animation.setPlayMode(Animation.PlayMode.NORMAL);
+        animation = createFullWidthSpriteAnimation(Leikr.ROOT_PATH + "OS/TitleAnimation/TitleAnimation.png", 27, Animation.PlayMode.NORMAL);
 
         font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/" + game.customSettings.fontName));
         Pixmap pm = new Pixmap(new FileHandle(Leikr.ROOT_PATH + "OS/HideCursor.png"));
@@ -95,6 +86,24 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         len = ((halfX / 2) - 20) + (introText.length() * glyphWidth);
 
         blink = 0;
+    }
+
+
+    protected Animation<TextureRegion> createFullWidthSpriteAnimation(String image, int verticalFrames, Animation.PlayMode playMode)
+    {
+        Texture animTexture = new Texture(new FileHandle(image));
+
+        TextureRegion[][] tmpFrames = TextureRegion.split(animTexture, animTexture.getWidth(), animTexture.getHeight() / verticalFrames);
+
+
+        Array animationFrames = new Array<>();
+        for (int j = 0; j < verticalFrames; j++) {
+            animationFrames.add(tmpFrames[j][0]);
+        }
+        float tmp = 1f / verticalFrames;
+        Animation<TextureRegion> animation = new Animation<>(tmp, animationFrames);
+        animation.setPlayMode(playMode);
+        return animation;
     }
 
     public void setInput() {
@@ -227,7 +236,6 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     @Override
     public void dispose() {
         font.dispose();
-        animTexture.dispose();
     }
 
 }
