@@ -33,10 +33,11 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.leikr.core.DesktopEnvironment.DesktopEnvironmentScreen;
+import com.leikr.core.Graphics.AssetLocator;
+import com.leikr.core.Graphics.AssetManagerFx;
 import com.leikr.core.Leikr;
 
 /**
- *
  * @author tor
  */
 public class TitleScreen extends Controllers implements InputProcessor, Screen {
@@ -61,19 +62,25 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
     int glyphHeight;
     float elapsedTime;
     float blink;
+    AssetManagerFx assetManagerFx;
 
     String introText = "Press any button to start...";
 
-    public TitleScreen(Leikr game) {
+    public TitleScreen(Leikr game, AssetManagerFx assetManagerFx) {
         this.game = game;
         batch = game.batch;
+        this.assetManagerFx = assetManagerFx;
+        run();
 
-        animation = createFullWidthSpriteAnimation(Leikr.ROOT_PATH + "OS/TitleAnimation/TitleAnimation.png", 27, Animation.PlayMode.NORMAL);
+    }
 
-        font = new Texture(new FileHandle(Leikr.ROOT_PATH + "OS/" + game.customSettings.fontName));
-        Pixmap pm = new Pixmap(new FileHandle(Leikr.ROOT_PATH + "OS/HideCursor.png"));
+    public void run()
+    {
+        animation = assetManagerFx.createFullWidthSpriteAnimation(AssetLocator.TITLE_ANIMATION, 27, Animation.PlayMode.NORMAL);
+        font = assetManagerFx.getTextureFromPath(AssetLocator.DEFAULT_CONSOLE_FONT);
+        Pixmap pm = assetManagerFx.getPixmapFromPath(AssetLocator.HIDDEN_CURSOR);
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-        pm.dispose();
+        assetManagerFx.disposeAsset(AssetLocator.HIDDEN_CURSOR);
 
         viewport = new FitViewport(Leikr.WIDTH, Leikr.HEIGHT);
         camera = viewport.getCamera();
@@ -86,24 +93,6 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
         len = ((halfX / 2) - 20) + (introText.length() * glyphWidth);
 
         blink = 0;
-    }
-
-
-    protected Animation<TextureRegion> createFullWidthSpriteAnimation(String image, int verticalFrames, Animation.PlayMode playMode)
-    {
-        Texture animTexture = new Texture(new FileHandle(image));
-
-        TextureRegion[][] tmpFrames = TextureRegion.split(animTexture, animTexture.getWidth(), animTexture.getHeight() / verticalFrames);
-
-
-        Array animationFrames = new Array<>();
-        for (int j = 0; j < verticalFrames; j++) {
-            animationFrames.add(tmpFrames[j][0]);
-        }
-        float tmp = 1f / verticalFrames;
-        Animation<TextureRegion> animation = new Animation<>(tmp, animationFrames);
-        animation.setPlayMode(playMode);
-        return animation;
     }
 
     public void setInput() {
@@ -235,7 +224,9 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
     @Override
     public void dispose() {
-        font.dispose();
+
+        assetManagerFx.disposeAsset(AssetLocator.TITLE_ANIMATION);
+        assetManagerFx.disposeAsset(AssetLocator.DEFAULT_CONSOLE_FONT);
     }
 
 }

@@ -15,6 +15,8 @@
  */
 package com.leikr.core;
 
+import com.badlogic.gdx.assets.AssetManager;
+import com.leikr.core.Graphics.AssetManagerFx;
 import com.leikr.core.System.CustomSettings;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -42,9 +44,12 @@ public class Leikr extends Game {
     
     public ConsoleScreen consoleScreen;
 
+    private AssetManager assetManager;
+
     @Override
     public void create() {
         //Init new console
+        assetManager = new AssetManager();
         batch = new SpriteBatch();
         font = new BitmapFont();
         ROOT_PATH = Gdx.files.getExternalStoragePath() + "Leikr/";
@@ -56,12 +61,17 @@ public class Leikr extends Game {
 
         customSettings = new CustomSettings();
 
-        TitleScreen title = new TitleScreen(this);
+        TitleScreen title = new TitleScreen(this, new AssetManagerFx(this.assetManager));
         consoleScreen = new ConsoleScreen(this);
         
         title.setInput();
         this.setScreen(title);
 
+    }
+
+    public AssetManager getAssetManager()
+    {
+        return assetManager;
     }
 
     @Override
