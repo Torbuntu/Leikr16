@@ -44,12 +44,12 @@ public class Leikr extends Game {
     
     public ConsoleScreen consoleScreen;
 
-    private AssetManager assetManager;
+    private AssetManagerFx assetManager;
 
     @Override
     public void create() {
         //Init new console
-        assetManager = new AssetManager();
+        assetManager = new AssetManagerFx(new AssetManager());
         batch = new SpriteBatch();
         font = new BitmapFont();
         ROOT_PATH = Gdx.files.getExternalStoragePath() + "Leikr/";
@@ -61,7 +61,7 @@ public class Leikr extends Game {
 
         customSettings = new CustomSettings();
 
-        TitleScreen title = new TitleScreen(this, new AssetManagerFx(this.assetManager));
+        TitleScreen title = new TitleScreen(this);
         consoleScreen = new ConsoleScreen(this);
         
         title.setInput();
@@ -69,7 +69,7 @@ public class Leikr extends Game {
 
     }
 
-    public AssetManager getAssetManager()
+    public AssetManagerFx getAssetManager()
     {
         return assetManager;
     }

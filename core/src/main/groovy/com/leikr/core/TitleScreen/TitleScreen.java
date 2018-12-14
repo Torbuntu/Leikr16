@@ -66,10 +66,10 @@ public class TitleScreen extends Controllers implements InputProcessor, Screen {
 
     String introText = "Press any button to start...";
 
-    public TitleScreen(Leikr game, AssetManagerFx assetManagerFx) {
+    public TitleScreen(Leikr game) {
         this.game = game;
         batch = game.batch;
-        this.assetManagerFx = assetManagerFx;
+        assetManagerFx = game.getAssetManager();
         run();
 
     }
