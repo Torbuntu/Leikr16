@@ -1,8 +1,9 @@
 # Leikr16
+#### (Martyr16: the project that scope creeped itself to death to show the path to a better system)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # Info
-This version is deprecated and no longer supported. No working on [ [Leikr](https://github.com/torbuntu/leikr) ] (no 16)
+This version is deprecated and no longer supported. Now working on [ [Leikr](https://github.com/torbuntu/leikr) ] (without the 16)
 
 A Java Fantasy Computer.
 - Written in Java using libgdx and Groovy.
